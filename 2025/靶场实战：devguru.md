@@ -1,10 +1,10 @@
 ---
 title: 靶场实战：devguru
-tags: 新建,模板,小书匠
+tags: linux提权,web渗透,vulnhub靶场
 category: /ctf study/日记/2025-05
 renderNumberedHeading: true
 slug:  storywriter/tutorial
-emoji: 😀
+emoji: 🎇
 color: 'var(--base0A)'
 cover: '![](./img/use_cover.jpg)'
 theme: xsj-fall
