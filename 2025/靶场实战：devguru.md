@@ -13,7 +13,7 @@ color: 'var(--base0A)'
 
 靶机地址[devguru](https://www.vulnhub.com/entry/devguru-1,620/)
 
-#### 信息收集
+## 信息收集
 
 常规扫描
 
@@ -27,7 +27,7 @@ color: 'var(--base0A)'
 
 `sudo nmap $ip -p$ports -sT -sC -sV -O -oA devguru/detail`细节扫描，tcp协议扫描对应端口，-sC使用默认脚本，-SV扫描版本信息，-O确定操作系统，-oA格式化输出
 
-![](https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746278893053.png)
+ ![](https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746278893053.png)
 
 ![](https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746278903236.png)
 
@@ -47,7 +47,7 @@ color: 'var(--base0A)'
 
 ![enter description here](https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746278981133.png)
 
-#### 开始渗透
+## 开始渗透
 
 80端口存在git泄露，使用githack工具下载下来
 
@@ -93,15 +93,14 @@ function onStart(){
 成功拿到shell
 ![](https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279147662.png)
 
-#### 权限提升
+## 权限提升
 
-##### 获取高交互shell
+### 获取高交互shell
 
 使用`python3 -c 'import pty;pty.spawn("/bin/bash")'`获得交互更好的shell（使用什么版本的python主要看环境有什么版本）
 
 读取/etc/passwd文件发现只有root和frank用户有/bin/bash即允许ssh且有高交互shell
 
-1
 
 尝试读取shadow文件权限不允许，通常shadow文件都是只有root用户有权限的，但是也不一定，如果可以读取就可以利用该文件进行hash碰撞
 
@@ -122,7 +121,7 @@ suid不存在提权，看看sudo，需要密码，无法获得
 查看备份文件
 ![](https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279217041.png)
 
-##### 获取普通用户
+### 获取普通用户
 
 发现新的服务器连接
 ![enter description here](https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279262092.png)
@@ -152,7 +151,7 @@ setting -> git hook输入命令
 存在sqlite3无需密码使用
 ![enter description here](https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279453993.png)
 
-#### sqlite3配合sudo漏洞提权
+## sqlite3配合sudo漏洞提权
 
 发现特权命令/usr/bin/sqlite3使用网站查找[GTFOBins](https://gtfobins.github.io/)
 
