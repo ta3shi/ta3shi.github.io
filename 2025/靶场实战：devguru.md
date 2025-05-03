@@ -1,7 +1,7 @@
 ---
 title: 靶场实战：devguru
 tags: linux提权,web渗透,vulnhub靶场
-category: /ctf study/日记/2025-05
+category: 靶场实战
 renderNumberedHeading: true
 slug:  storywriter/tutorial
 emoji: 🎇
