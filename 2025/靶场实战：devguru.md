@@ -7,11 +7,8 @@ tags:
 -  vulnhub靶场
 category: 靶场实战
 renderNumberedHeading: true
-slug:  storywriter/tutorial
 emoji: 🎇
 color: 'var(--base0A)'
-cover: '![](./img/use_cover.jpg)'
-theme: xsj-fall
 ---
 
 靶机地址[devguru](https://www.vulnhub.com/entry/devguru-1,620/)
