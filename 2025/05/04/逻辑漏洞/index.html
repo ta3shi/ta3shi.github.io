@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="1 验证码漏洞产生原理 验证码未失效：同一验证码可多次使用，或未设置超时限制。 验证码与用户未绑定：未与手机号&#x2F;邮箱关联，导致可被劫持或篡改。 验证码回显：验证码明文返回至前端或数据包中。 分步校验：验证码校验与后续操作未绑定，导致绕过。  利用方式 爆破&#x2F;重放：通过Burp Suite等工具对验证码进行爆破或重放请求 。  劫持验证码：修改数据包中的手机号&#x2F;邮箱参数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="逻辑漏洞产生原理及利用">
+<meta property="og:url" content="https://ta3shi.github.io/2025/05/04/%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E/index.html">
+<meta property="og:site_name" content="ta3shi 个人学习自用">
+<meta property="og:description" content="1 验证码漏洞产生原理 验证码未失效：同一验证码可多次使用，或未设置超时限制。 验证码与用户未绑定：未与手机号&#x2F;邮箱关联，导致可被劫持或篡改。 验证码回显：验证码明文返回至前端或数据包中。 分步校验：验证码校验与后续操作未绑定，导致绕过。  利用方式 爆破&#x2F;重放：通过Burp Suite等工具对验证码进行爆破或重放请求 。  劫持验证码：修改数据包中的手机号&#x2F;邮箱参数">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-05-03T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-05-03T18:14:20.880Z">
+<meta property="article:author" content="ta3shi">
+<meta property="article:tag" content="ctf-web">
+<meta property="article:tag" content="逻辑漏洞">
+<meta property="article:tag" content="漏洞修复">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>逻辑漏洞产生原理及利用</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/tags/">Tags</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Categories</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2025/05/04/%E8%B6%8A%E6%9D%83%E6%BC%8F%E6%B4%9E/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://ta3shi.github.io/2025/05/04/%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://ta3shi.github.io/2025/05/04/%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E/&text=逻辑漏洞产生原理及利用"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://ta3shi.github.io/2025/05/04/%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E/&title=逻辑漏洞产生原理及利用"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://ta3shi.github.io/2025/05/04/%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E/&is_video=false&description=逻辑漏洞产生原理及利用"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=逻辑漏洞产生原理及利用&body=Check out this article: https://ta3shi.github.io/2025/05/04/%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://ta3shi.github.io/2025/05/04/%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E/&title=逻辑漏洞产生原理及利用"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://ta3shi.github.io/2025/05/04/%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E/&title=逻辑漏洞产生原理及利用"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://ta3shi.github.io/2025/05/04/%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E/&title=逻辑漏洞产生原理及利用"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://ta3shi.github.io/2025/05/04/%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E/&title=逻辑漏洞产生原理及利用"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://ta3shi.github.io/2025/05/04/%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E/&name=逻辑漏洞产生原理及利用&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://ta3shi.github.io/2025/05/04/%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E/&t=逻辑漏洞产生原理及利用"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E9%AA%8C%E8%AF%81%E7%A0%81%E6%BC%8F%E6%B4%9E"><span class="toc-number">1.</span> <span class="toc-text">1 验证码漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%A7%E7%94%9F%E5%8E%9F%E7%90%86"><span class="toc-number">1.1.</span> <span class="toc-text">产生原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E6%96%B9%E5%BC%8F"><span class="toc-number">1.2.</span> <span class="toc-text">利用方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%B3%95"><span class="toc-number">1.3.</span> <span class="toc-text">修复方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%AF%86%E7%A0%81%E6%89%BE%E5%9B%9E%E6%BC%8F%E6%B4%9E"><span class="toc-number">2.</span> <span class="toc-text">2 密码找回漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%A7%E7%94%9F%E5%8E%9F%E7%90%86-1"><span class="toc-number">2.1.</span> <span class="toc-text">产生原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E6%96%B9%E5%BC%8F-1"><span class="toc-number">2.2.</span> <span class="toc-text">利用方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%B3%95-1"><span class="toc-number">2.3.</span> <span class="toc-text">修复方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%94%AF%E4%BB%98%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E"><span class="toc-number">3.</span> <span class="toc-text">3 支付逻辑漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%A7%E7%94%9F%E5%8E%9F%E7%90%86-2"><span class="toc-number">3.1.</span> <span class="toc-text">产生原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E6%96%B9%E5%BC%8F-2"><span class="toc-number">3.2.</span> <span class="toc-text">利用方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%B3%95-2"><span class="toc-number">3.3.</span> <span class="toc-text">修复方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4%E3%80%81%E4%B8%9A%E5%8A%A1%E6%95%B0%E6%8D%AE%E7%AF%A1%E6%94%B9"><span class="toc-number">4.</span> <span class="toc-text">4、业务数据篡改</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%A7%E7%94%9F%E5%8E%9F%E7%90%86-3"><span class="toc-number">4.1.</span> <span class="toc-text">产生原理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E6%96%B9%E5%BC%8F-3"><span class="toc-number">4.1.1.</span> <span class="toc-text">利用方式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%B3%95-3"><span class="toc-number">4.1.2.</span> <span class="toc-text">修复方法</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5%E3%80%81%E4%BC%9A%E8%AF%9D%E5%9B%BA%E5%AE%9A%E4%B8%8E%E4%BC%9A%E8%AF%9D%E5%8A%AB%E6%8C%81"><span class="toc-number">5.</span> <span class="toc-text">5、会话固定与会话劫持</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%A7%E7%94%9F%E5%8E%9F%E7%90%86-4"><span class="toc-number">5.1.</span> <span class="toc-text">产生原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E6%96%B9%E5%BC%8F-4"><span class="toc-number">5.2.</span> <span class="toc-text">利用方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%B3%95-4"><span class="toc-number">5.3.</span> <span class="toc-text">修复方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6%E3%80%81%E7%9F%AD%E4%BF%A1-%E9%82%AE%E4%BB%B6%E8%BD%B0%E7%82%B8"><span class="toc-number">6.</span> <span class="toc-text">6、短信&#x2F;邮件轰炸</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%A7%E7%94%9F%E5%8E%9F%E7%90%86-5"><span class="toc-number">6.1.</span> <span class="toc-text">产生原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E6%96%B9%E5%BC%8F-5"><span class="toc-number">6.2.</span> <span class="toc-text">利用方式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%B3%95-5"><span class="toc-number">6.2.1.</span> <span class="toc-text">修复方法</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7%E3%80%81%E6%9D%A1%E4%BB%B6%E7%AB%9E%E4%BA%89%E6%BC%8F%E6%B4%9E%EF%BC%88Race-Condition%EF%BC%89"><span class="toc-number">7.</span> <span class="toc-text">7、条件竞争漏洞（Race Condition）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%A7%E7%94%9F%E5%8E%9F%E7%90%86-6"><span class="toc-number">7.1.</span> <span class="toc-text">产生原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E6%96%B9%E5%BC%8F-6"><span class="toc-number">7.2.</span> <span class="toc-text">利用方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%B3%95-6"><span class="toc-number">7.3.</span> <span class="toc-text">修复方法</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        逻辑漏洞产生原理及利用
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">ta3shi</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-05-03T16:00:00.000Z" class="dt-published" itemprop="datePublished">2025-05-04</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86/">漏洞原理</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/ctf-web/" rel="tag">ctf-web</a>, <a class="p-category" href="/tags/%E6%BC%8F%E6%B4%9E%E4%BF%AE%E5%A4%8D/" rel="tag">漏洞修复</a>, <a class="p-category" href="/tags/%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E/" rel="tag">逻辑漏洞</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="1-验证码漏洞"><a href="#1-验证码漏洞" class="headerlink" title="1 验证码漏洞"></a>1 验证码漏洞</h2><h3 id="产生原理"><a href="#产生原理" class="headerlink" title="产生原理"></a>产生原理</h3><ol>
+<li><strong>验证码未失效</strong>：同一验证码可多次使用，或未设置超时限制。</li>
+<li><strong>验证码与用户未绑定</strong>：未与手机号&#x2F;邮箱关联，导致可被劫持或篡改。</li>
+<li><strong>验证码回显</strong>：验证码明文返回至前端或数据包中。</li>
+<li><strong>分步校验</strong>：验证码校验与后续操作未绑定，导致绕过。</li>
+</ol>
+<h3 id="利用方式"><a href="#利用方式" class="headerlink" title="利用方式"></a>利用方式</h3><ul>
+<li><p><strong>爆破&#x2F;重放</strong>：通过Burp Suite等工具对验证码进行爆破或重放请求 。</p>
+</li>
+<li><p><strong>劫持验证码</strong>：修改数据包中的手机号&#x2F;邮箱参数，将验证码发送至攻击者设备 。</p>
+</li>
+</ul>
+<h3 id="修复方法"><a href="#修复方法" class="headerlink" title="修复方法"></a>修复方法</h3><ul>
+<li><strong>绑定用户信息</strong>：验证码需与用户身份（如Session ID）绑定。</li>
+<li><strong>时效性限制</strong>：设置单次有效且超时失效（如5分钟）。</li>
+<li><strong>加密传输</strong>：验证码凭证需加密且不返回前端</li>
+</ul>
+<h2 id="2-密码找回漏洞"><a href="#2-密码找回漏洞" class="headerlink" title="2 密码找回漏洞"></a>2 密码找回漏洞</h2><h3 id="产生原理-1"><a href="#产生原理-1" class="headerlink" title="产生原理"></a>产生原理</h3><ol>
+<li><p><strong>验证步骤缺失</strong>：未校验用户身份与验证码的绑定关系。</p>
+</li>
+<li><p><strong>凭证泄露</strong>：重置密码的Token或链接可被预测或截获。</p>
+</li>
+<li><p><strong>分步逻辑缺陷</strong>：跳过验证步骤直接进入密码修改页面 。</p>
+</li>
+</ol>
+<h3 id="利用方式-1"><a href="#利用方式-1" class="headerlink" title="利用方式"></a>利用方式</h3><ul>
+<li><p><strong>篡改参数</strong>：修改数据包中的手机号或邮箱，劫持他人验证码。</p>
+</li>
+<li><p><strong>Token爆破</strong>：利用弱随机性生成的Token进行枚举 。</p>
+</li>
+</ul>
+<h3 id="修复方法-1"><a href="#修复方法-1" class="headerlink" title="修复方法"></a>修复方法</h3><ul>
+<li><strong>多因素校验</strong>：结合短信验证码、邮箱验证和用户身份信息。</li>
+<li><strong>随机Token</strong>：使用强随机算法生成一次性Token，并绑定用户IP</li>
+</ul>
+<h2 id="3-支付逻辑漏洞"><a href="#3-支付逻辑漏洞" class="headerlink" title="3 支付逻辑漏洞"></a>3 支付逻辑漏洞</h2><h3 id="产生原理-2"><a href="#产生原理-2" class="headerlink" title="产生原理"></a>产生原理</h3><ol>
+<li><p><strong>金额篡改</strong>：前端提交金额未与服务端校验，允许负数或超额。</p>
+</li>
+<li><p><strong>竞争条件</strong>：并发请求绕过库存或余额校验（如多次支付仅扣款一次）。</p>
+</li>
+<li><p><strong>订单替换</strong>：修改订单ID或商品参数，低价购买高价商品 。</p>
+</li>
+</ol>
+<h3 id="利用方式-2"><a href="#利用方式-2" class="headerlink" title="利用方式"></a>利用方式</h3><ul>
+<li><p><strong>篡改金额参数</strong>：修改数据包中的<code>amount</code>、<code>price</code>等字段。</p>
+</li>
+<li><p><strong>并发请求攻击</strong>：利用Burp Suite多线程发送支付请求 。</p>
+</li>
+</ul>
+<h3 id="修复方法-2"><a href="#修复方法-2" class="headerlink" title="修复方法"></a>修复方法</h3><ul>
+<li><p><strong>服务端校验</strong>：重新计算订单金额，禁止依赖前端提交的数据。</p>
+</li>
+<li><p><strong>事务锁机制</strong>：使用数据库事务锁或分布式锁防止竞争条件 .</p>
+</li>
+</ul>
+<h2 id="4、业务数据篡改"><a href="#4、业务数据篡改" class="headerlink" title="4、业务数据篡改"></a>4、业务数据篡改</h2><h3 id="产生原理-3"><a href="#产生原理-3" class="headerlink" title="产生原理"></a>产生原理</h3><ol>
+<li><p><strong>参数可预测</strong>：商品ID、订单号等参数规律性强，可遍历或猜测。</p>
+</li>
+<li><p><strong>客户端信任过度</strong>：依赖前端校验，未在服务端验证数据合法性 。</p>
+</li>
+</ol>
+<h4 id="利用方式-3"><a href="#利用方式-3" class="headerlink" title="利用方式"></a>利用方式</h4><ul>
+<li><p><strong>遍历参数</strong>：修改商品ID或订单号，获取未授权数据。</p>
+</li>
+<li><p><strong>负数攻击</strong>：提交负数库存或金额，导致逻辑错误（如余额增加）。</p>
+</li>
+</ul>
+<h4 id="修复方法-3"><a href="#修复方法-3" class="headerlink" title="修复方法"></a>修复方法</h4><ul>
+<li><p><strong>数据签名</strong>：对关键参数附加哈希签名，防止篡改。</p>
+</li>
+<li><p><strong>服务端验证</strong>：校验参数合法性（如数值范围、格式） 。</p>
+</li>
+</ul>
+<h2 id="5、会话固定与会话劫持"><a href="#5、会话固定与会话劫持" class="headerlink" title="5、会话固定与会话劫持"></a>5、会话固定与会话劫持</h2><h3 id="产生原理-4"><a href="#产生原理-4" class="headerlink" title="产生原理"></a>产生原理</h3><ol>
+<li><p><strong>Session固定</strong>：登录前后Session ID不变，攻击者可预置Session诱导用户登录。</p>
+</li>
+<li><p><strong>Cookie未加密</strong>：Cookie中存储明文身份信息，可被篡改 。</p>
+</li>
+</ol>
+<h3 id="利用方式-4"><a href="#利用方式-4" class="headerlink" title="利用方式"></a>利用方式</h3><ul>
+<li><p><strong>诱导登录</strong>：发送带有固定Session ID的链接给用户。</p>
+</li>
+<li><p><strong>Cookie伪造</strong>：修改Cookie中的<code>user_id</code>或<code>role</code>字段 。</p>
+</li>
+</ul>
+<h3 id="修复方法-4"><a href="#修复方法-4" class="headerlink" title="修复方法"></a>修复方法</h3><ul>
+<li><p><strong>登录后更新Session</strong>：用户认证成功后生成新Session ID。</p>
+</li>
+<li><p><strong>HttpOnly &amp; Secure标记</strong>：防止XSS窃取Cookie，强制HTTPS传输 。</p>
+</li>
+</ul>
+<h2 id="6、短信-邮件轰炸"><a href="#6、短信-邮件轰炸" class="headerlink" title="6、短信&#x2F;邮件轰炸"></a>6、短信&#x2F;邮件轰炸</h2><h3 id="产生原理-5"><a href="#产生原理-5" class="headerlink" title="产生原理"></a>产生原理</h3><ol>
+<li><p><strong>无频率限制</strong>：未限制同一手机号&#x2F;邮箱的发送次数。</p>
+</li>
+<li><p><strong>接口暴露</strong>：短信发送接口未鉴权，可被恶意调用 。</p>
+</li>
+</ol>
+<h3 id="利用方式-5"><a href="#利用方式-5" class="headerlink" title="利用方式"></a>利用方式</h3><ul>
+<li><p><strong>重放攻击</strong>：多次发送同一请求导致目标设备接收大量短信。</p>
+</li>
+<li><p><strong>参数遍历</strong>：修改手机号末位或添加特殊符号绕过限制（如<code>1380013800+1</code>） 。</p>
+</li>
+</ul>
+<h4 id="修复方法-5"><a href="#修复方法-5" class="headerlink" title="修复方法"></a>修复方法</h4><ul>
+<li><p><strong>频率控制</strong>：限制同一用户&#x2F;IP的发送频率（如每分钟1次）。</p>
+</li>
+<li><p><strong>图形验证码</strong>：高风险操作前需通过人机验证 。</p>
+</li>
+</ul>
+<h2 id="7、条件竞争漏洞（Race-Condition）"><a href="#7、条件竞争漏洞（Race-Condition）" class="headerlink" title="7、条件竞争漏洞（Race Condition）"></a>7、条件竞争漏洞（Race Condition）</h2><h3 id="产生原理-6"><a href="#产生原理-6" class="headerlink" title="产生原理"></a>产生原理</h3><p>多线程并发操作未加锁，导致数据不一致（如余额检查与扣款分离）。</p>
+<h3 id="利用方式-6"><a href="#利用方式-6" class="headerlink" title="利用方式"></a>利用方式</h3><ul>
+<li><strong>并发请求</strong>：同时发起多次支付或提现请求，绕过余额校验。</li>
+</ul>
+<h3 id="修复方法-6"><a href="#修复方法-6" class="headerlink" title="修复方法"></a>修复方法</h3><ul>
+<li><p><strong>数据库锁机制</strong>：使用悲观锁或乐观锁控制并发。</p>
+</li>
+<li><p><strong>原子操作</strong>：将余额检查与扣款合并为事务操作 .</p>
+</li>
+</ul>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/tags/">Tags</a></li>
+        
+          <li><a href="/categories/">Categories</a></li>
+        
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E9%AA%8C%E8%AF%81%E7%A0%81%E6%BC%8F%E6%B4%9E"><span class="toc-number">1.</span> <span class="toc-text">1 验证码漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%A7%E7%94%9F%E5%8E%9F%E7%90%86"><span class="toc-number">1.1.</span> <span class="toc-text">产生原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E6%96%B9%E5%BC%8F"><span class="toc-number">1.2.</span> <span class="toc-text">利用方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%B3%95"><span class="toc-number">1.3.</span> <span class="toc-text">修复方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%AF%86%E7%A0%81%E6%89%BE%E5%9B%9E%E6%BC%8F%E6%B4%9E"><span class="toc-number">2.</span> <span class="toc-text">2 密码找回漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%A7%E7%94%9F%E5%8E%9F%E7%90%86-1"><span class="toc-number">2.1.</span> <span class="toc-text">产生原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E6%96%B9%E5%BC%8F-1"><span class="toc-number">2.2.</span> <span class="toc-text">利用方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%B3%95-1"><span class="toc-number">2.3.</span> <span class="toc-text">修复方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%94%AF%E4%BB%98%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E"><span class="toc-number">3.</span> <span class="toc-text">3 支付逻辑漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%A7%E7%94%9F%E5%8E%9F%E7%90%86-2"><span class="toc-number">3.1.</span> <span class="toc-text">产生原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E6%96%B9%E5%BC%8F-2"><span class="toc-number">3.2.</span> <span class="toc-text">利用方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%B3%95-2"><span class="toc-number">3.3.</span> <span class="toc-text">修复方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4%E3%80%81%E4%B8%9A%E5%8A%A1%E6%95%B0%E6%8D%AE%E7%AF%A1%E6%94%B9"><span class="toc-number">4.</span> <span class="toc-text">4、业务数据篡改</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%A7%E7%94%9F%E5%8E%9F%E7%90%86-3"><span class="toc-number">4.1.</span> <span class="toc-text">产生原理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E6%96%B9%E5%BC%8F-3"><span class="toc-number">4.1.1.</span> <span class="toc-text">利用方式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%B3%95-3"><span class="toc-number">4.1.2.</span> <span class="toc-text">修复方法</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5%E3%80%81%E4%BC%9A%E8%AF%9D%E5%9B%BA%E5%AE%9A%E4%B8%8E%E4%BC%9A%E8%AF%9D%E5%8A%AB%E6%8C%81"><span class="toc-number">5.</span> <span class="toc-text">5、会话固定与会话劫持</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%A7%E7%94%9F%E5%8E%9F%E7%90%86-4"><span class="toc-number">5.1.</span> <span class="toc-text">产生原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E6%96%B9%E5%BC%8F-4"><span class="toc-number">5.2.</span> <span class="toc-text">利用方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%B3%95-4"><span class="toc-number">5.3.</span> <span class="toc-text">修复方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6%E3%80%81%E7%9F%AD%E4%BF%A1-%E9%82%AE%E4%BB%B6%E8%BD%B0%E7%82%B8"><span class="toc-number">6.</span> <span class="toc-text">6、短信&#x2F;邮件轰炸</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%A7%E7%94%9F%E5%8E%9F%E7%90%86-5"><span class="toc-number">6.1.</span> <span class="toc-text">产生原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E6%96%B9%E5%BC%8F-5"><span class="toc-number">6.2.</span> <span class="toc-text">利用方式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%B3%95-5"><span class="toc-number">6.2.1.</span> <span class="toc-text">修复方法</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7%E3%80%81%E6%9D%A1%E4%BB%B6%E7%AB%9E%E4%BA%89%E6%BC%8F%E6%B4%9E%EF%BC%88Race-Condition%EF%BC%89"><span class="toc-number">7.</span> <span class="toc-text">7、条件竞争漏洞（Race Condition）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%A7%E7%94%9F%E5%8E%9F%E7%90%86-6"><span class="toc-number">7.1.</span> <span class="toc-text">产生原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E6%96%B9%E5%BC%8F-6"><span class="toc-number">7.2.</span> <span class="toc-text">利用方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%B3%95-6"><span class="toc-number">7.3.</span> <span class="toc-text">修复方法</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://ta3shi.github.io/2025/05/04/%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://ta3shi.github.io/2025/05/04/%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E/&text=逻辑漏洞产生原理及利用"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://ta3shi.github.io/2025/05/04/%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E/&title=逻辑漏洞产生原理及利用"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://ta3shi.github.io/2025/05/04/%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E/&is_video=false&description=逻辑漏洞产生原理及利用"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=逻辑漏洞产生原理及利用&body=Check out this article: https://ta3shi.github.io/2025/05/04/%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://ta3shi.github.io/2025/05/04/%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E/&title=逻辑漏洞产生原理及利用"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://ta3shi.github.io/2025/05/04/%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E/&title=逻辑漏洞产生原理及利用"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://ta3shi.github.io/2025/05/04/%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E/&title=逻辑漏洞产生原理及利用"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://ta3shi.github.io/2025/05/04/%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E/&title=逻辑漏洞产生原理及利用"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://ta3shi.github.io/2025/05/04/%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E/&name=逻辑漏洞产生原理及利用&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://ta3shi.github.io/2025/05/04/%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E/&t=逻辑漏洞产生原理及利用"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2025
+    ta3shi
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+      --><li><a href="/">Home</a></li><!--
+    --><!--
+      --><li><a href="/about/">About</a></li><!--
+    --><!--
+      --><li><a href="/tags/">Tags</a></li><!--
+    --><!--
+      --><li><a href="/categories/">Categories</a></li><!--
+    --><!--
+      --><li><a href="/search/">Search</a></li><!--
+    -->
+      </ul>
+      <ul>
+        
+          <!-- 不蒜子统计 -->
+          <span id="busuanzi_container_site_pv">
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+          </span>
+          <span class="post-meta-divider">|</span>
+          <span id="busuanzi_container_site_uv" style='display:none'>
+                  本站访客数<span id="busuanzi_value_site_uv"></span>人
+          </span>
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        
+      </ul>
+    </nav>
+  </div>
+  
+</footer>
+
+
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
