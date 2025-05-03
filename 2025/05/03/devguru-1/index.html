@@ -6,12 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta name="description" content="靶场实战：devguru 靶机地址devguru 信息收集常规扫描 sudo nmap 192.168.1.0&#x2F;24 -sn靶机发现192.168.1.138  sudo nmap $ip -p- --min-rate&#x3D;10000端口扫描22,80,8585  sudo nmap $ip -p$ports -sT -sC -sV -O -oA devguru&#x2F;detail细节扫描，tcp协议扫描对">
+    <meta name="description" content="靶机地址devguru 信息收集常规扫描 sudo nmap 192.168.1.0&#x2F;24 -sn靶机发现192.168.1.138  sudo nmap $ip -p- --min-rate&#x3D;10000端口扫描22,80,8585  sudo nmap $ip -p$ports -sT -sC -sV -O -oA devguru&#x2F;detail细节扫描，tcp协议扫描对应端口，-sC使用默认脚本">
 <meta property="og:type" content="article">
 <meta property="og:title" content="靶场实战：devguru">
 <meta property="og:url" content="https://ta3shi.github.io/2025/05/03/devguru-1/index.html">
 <meta property="og:site_name" content="ta3shi 个人学习自用">
-<meta property="og:description" content="靶场实战：devguru 靶机地址devguru 信息收集常规扫描 sudo nmap 192.168.1.0&#x2F;24 -sn靶机发现192.168.1.138  sudo nmap $ip -p- --min-rate&#x3D;10000端口扫描22,80,8585  sudo nmap $ip -p$ports -sT -sC -sV -O -oA devguru&#x2F;detail细节扫描，tcp协议扫描对">
+<meta property="og:description" content="靶机地址devguru 信息收集常规扫描 sudo nmap 192.168.1.0&#x2F;24 -sn靶机发现192.168.1.138  sudo nmap $ip -p- --min-rate&#x3D;10000端口扫描22,80,8585  sudo nmap $ip -p$ports -sT -sC -sV -O -oA devguru&#x2F;detail细节扫描，tcp协议扫描对应端口，-sC使用默认脚本">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746278830305.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746278873458.png">
@@ -41,9 +41,11 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279489723.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279496031.png">
 <meta property="article:published_time" content="2025-05-03T15:29:53.000Z">
-<meta property="article:modified_time" content="2025-05-03T16:50:05.061Z">
+<meta property="article:modified_time" content="2025-05-03T17:10:13.304Z">
 <meta property="article:author" content="ta3shi">
-<meta property="article:tag" content="linux提权,web渗透,vulnhub靶场">
+<meta property="article:tag" content="linux提权">
+<meta property="article:tag" content="web渗透">
+<meta property="article:tag" content="vulnhub靶场">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746278830305.png">
     
@@ -186,7 +188,7 @@
       
     <div class="article-tag">
         <i class="fa-solid fa-tag"></i>
-        <a class="p-category" href="/tags/linux%E6%8F%90%E6%9D%83-web%E6%B8%97%E9%80%8F-vulnhub%E9%9D%B6%E5%9C%BA/" rel="tag">linux提权,web渗透,vulnhub靶场</a>
+        <a class="p-category" href="/tags/linux%E6%8F%90%E6%9D%83/" rel="tag">linux提权</a>, <a class="p-category" href="/tags/vulnhub%E9%9D%B6%E5%9C%BA/" rel="tag">vulnhub靶场</a>, <a class="p-category" href="/tags/web%E6%B8%97%E9%80%8F/" rel="tag">web渗透</a>
     </div>
 
 
@@ -195,8 +197,7 @@
   
 
   <div class="content e-content" itemprop="articleBody">
-    <p>靶场实战：devguru</p>
-<p>靶机地址<a target="_blank" rel="noopener" href="https://www.vulnhub.com/entry/devguru-1,620/">devguru</a></p>
+    <p>靶机地址<a target="_blank" rel="noopener" href="https://www.vulnhub.com/entry/devguru-1,620/">devguru</a></p>
 <h4 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h4><p>常规扫描</p>
 <p><code>sudo nmap 192.168.1.0/24 -sn</code>靶机发现192.168.1.138</p>
 <p><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746278830305.png"></p>
