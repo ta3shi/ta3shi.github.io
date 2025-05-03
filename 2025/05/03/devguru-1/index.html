@@ -9,7 +9,7 @@
     <meta name="description" content="靶场实战：devguru 靶机地址devguru 信息收集常规扫描 sudo nmap 192.168.1.0&#x2F;24 -sn靶机发现192.168.1.138  sudo nmap $ip -p- --min-rate&#x3D;10000端口扫描22,80,8585  sudo nmap $ip -p$ports -sT -sC -sV -O -oA devguru&#x2F;detail细节扫描，tcp协议扫描对">
 <meta property="og:type" content="article">
 <meta property="og:title" content="靶场实战：devguru">
-<meta property="og:url" content="https://ta3shi.github.io/2025/05/03/devguru/index.html">
+<meta property="og:url" content="https://ta3shi.github.io/2025/05/03/devguru-1/index.html">
 <meta property="og:site_name" content="ta3shi 个人学习自用">
 <meta property="og:description" content="靶场实战：devguru 靶机地址devguru 信息收集常规扫描 sudo nmap 192.168.1.0&#x2F;24 -sn靶机发现192.168.1.138  sudo nmap $ip -p- --min-rate&#x3D;10000端口扫描22,80,8585  sudo nmap $ip -p$ports -sT -sC -sV -O -oA devguru&#x2F;detail细节扫描，tcp协议扫描对">
 <meta property="og:locale" content="zh_CN">
@@ -26,7 +26,6 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279119471.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279130337.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279147662.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279163760.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279178588.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279195376.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279207508.png">
@@ -42,7 +41,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279489723.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279496031.png">
 <meta property="article:published_time" content="2025-05-03T15:29:53.000Z">
-<meta property="article:modified_time" content="2025-05-03T16:40:11.446Z">
+<meta property="article:modified_time" content="2025-05-03T16:50:05.061Z">
 <meta property="article:author" content="ta3shi">
 <meta property="article:tag" content="linux提权,web渗透,vulnhub靶场">
 <meta name="twitter:card" content="summary">
@@ -125,17 +124,17 @@
     <br/>
     <div id="share" style="display: none">
       <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://ta3shi.github.io/2025/05/03/devguru/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://ta3shi.github.io/2025/05/03/devguru/&text=靶场实战：devguru"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://ta3shi.github.io/2025/05/03/devguru/&title=靶场实战：devguru"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://ta3shi.github.io/2025/05/03/devguru/&is_video=false&description=靶场实战：devguru"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=靶场实战：devguru&body=Check out this article: https://ta3shi.github.io/2025/05/03/devguru/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://ta3shi.github.io/2025/05/03/devguru/&title=靶场实战：devguru"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://ta3shi.github.io/2025/05/03/devguru/&title=靶场实战：devguru"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://ta3shi.github.io/2025/05/03/devguru/&title=靶场实战：devguru"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://ta3shi.github.io/2025/05/03/devguru/&title=靶场实战：devguru"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://ta3shi.github.io/2025/05/03/devguru/&name=靶场实战：devguru&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://ta3shi.github.io/2025/05/03/devguru/&t=靶场实战：devguru"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://ta3shi.github.io/2025/05/03/devguru-1/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://ta3shi.github.io/2025/05/03/devguru-1/&text=靶场实战：devguru"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://ta3shi.github.io/2025/05/03/devguru-1/&title=靶场实战：devguru"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://ta3shi.github.io/2025/05/03/devguru-1/&is_video=false&description=靶场实战：devguru"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=靶场实战：devguru&body=Check out this article: https://ta3shi.github.io/2025/05/03/devguru-1/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://ta3shi.github.io/2025/05/03/devguru-1/&title=靶场实战：devguru"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://ta3shi.github.io/2025/05/03/devguru-1/&title=靶场实战：devguru"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://ta3shi.github.io/2025/05/03/devguru-1/&title=靶场实战：devguru"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://ta3shi.github.io/2025/05/03/devguru-1/&title=靶场实战：devguru"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://ta3shi.github.io/2025/05/03/devguru-1/&name=靶场实战：devguru&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://ta3shi.github.io/2025/05/03/devguru-1/&t=靶场实战：devguru"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -231,7 +230,7 @@
 <p>成功拿到shell<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279147662.png"></p>
 <h4 id="权限提升"><a href="#权限提升" class="headerlink" title="权限提升"></a>权限提升</h4><h5 id="获取高交互shell"><a href="#获取高交互shell" class="headerlink" title="获取高交互shell"></a>获取高交互shell</h5><p>使用<code>python3 -c &#39;import pty;pty.spawn(&quot;/bin/bash&quot;)&#39;</code>获得交互更好的shell（使用什么版本的python主要看环境有什么版本）</p>
 <p>读取&#x2F;etc&#x2F;passwd文件发现只有root和frank用户有&#x2F;bin&#x2F;bash即允许ssh且有高交互shell</p>
-<p><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279163760.png"></p>
+<p>1</p>
 <p>尝试读取shadow文件权限不允许，通常shadow文件都是只有root用户有权限的，但是也不一定，如果可以读取就可以利用该文件进行hash碰撞</p>
 <p>使用python启动一个快速http服务共享文件<code>python -m http.server</code></p>
 <p>使用wget下载linpeas.sh和LinEnum.sh</p>
@@ -292,17 +291,17 @@
 
     <div id="share-footer" style="display: none">
       <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://ta3shi.github.io/2025/05/03/devguru/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://ta3shi.github.io/2025/05/03/devguru/&text=靶场实战：devguru"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://ta3shi.github.io/2025/05/03/devguru/&title=靶场实战：devguru"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://ta3shi.github.io/2025/05/03/devguru/&is_video=false&description=靶场实战：devguru"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=靶场实战：devguru&body=Check out this article: https://ta3shi.github.io/2025/05/03/devguru/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://ta3shi.github.io/2025/05/03/devguru/&title=靶场实战：devguru"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://ta3shi.github.io/2025/05/03/devguru/&title=靶场实战：devguru"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://ta3shi.github.io/2025/05/03/devguru/&title=靶场实战：devguru"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://ta3shi.github.io/2025/05/03/devguru/&title=靶场实战：devguru"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://ta3shi.github.io/2025/05/03/devguru/&name=靶场实战：devguru&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://ta3shi.github.io/2025/05/03/devguru/&t=靶场实战：devguru"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://ta3shi.github.io/2025/05/03/devguru-1/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://ta3shi.github.io/2025/05/03/devguru-1/&text=靶场实战：devguru"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://ta3shi.github.io/2025/05/03/devguru-1/&title=靶场实战：devguru"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://ta3shi.github.io/2025/05/03/devguru-1/&is_video=false&description=靶场实战：devguru"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=靶场实战：devguru&body=Check out this article: https://ta3shi.github.io/2025/05/03/devguru-1/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://ta3shi.github.io/2025/05/03/devguru-1/&title=靶场实战：devguru"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://ta3shi.github.io/2025/05/03/devguru-1/&title=靶场实战：devguru"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://ta3shi.github.io/2025/05/03/devguru-1/&title=靶场实战：devguru"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://ta3shi.github.io/2025/05/03/devguru-1/&title=靶场实战：devguru"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://ta3shi.github.io/2025/05/03/devguru-1/&name=靶场实战：devguru&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://ta3shi.github.io/2025/05/03/devguru-1/&t=靶场实战：devguru"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
