@@ -1,7 +1,10 @@
 ---
 title: 靶场实战：devguru
 date: 2025-5-3 23:29:53
-tags: linux提权,web渗透,vulnhub靶场
+tags: 
+	-  linux提权
+	-  web渗透
+	-  vulnhub靶场
 category: 靶场实战
 renderNumberedHeading: true
 slug:  storywriter/tutorial
@@ -103,7 +106,7 @@ function onStart(){
 
 读取/etc/passwd文件发现只有root和frank用户有/bin/bash即允许ssh且有高交互shell
 
-![](https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279163760.png)
+1
 
 尝试读取shadow文件权限不允许，通常shadow文件都是只有root用户有权限的，但是也不一定，如果可以读取就可以利用该文件进行hash碰撞
 
