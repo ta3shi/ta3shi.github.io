@@ -1,5 +1,6 @@
 ---
 title: 靶场实战：devguru
+date: 2025-5-3 23:29:53
 tags: linux提权,web渗透,vulnhub靶场
 category: 靶场实战
 renderNumberedHeading: true
@@ -9,8 +10,6 @@ color: 'var(--base0A)'
 cover: '![](./img/use_cover.jpg)'
 theme: xsj-fall
 ---
-
-
 
 靶场实战：devguru
 
@@ -130,7 +129,6 @@ suid不存在提权，看看sudo，需要密码，无法获得
 发现新的服务器连接
 ![enter description here](https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279262092.png)
 
-
 同样查看user，因为我们已经获取了web的权限，因此这里我们想要获取frank用户的权限，所以这里的选择是更改frank的密码
 ![enter description here](https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279271344.png)
 
@@ -155,6 +153,7 @@ setting -> git hook输入命令
 
 存在sqlite3无需密码使用
 ![enter description here](https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746279453993.png)
+
 #### sqlite3配合sudo漏洞提权
 
 发现特权命令/usr/bin/sqlite3使用网站查找[GTFOBins](https://gtfobins.github.io/)
