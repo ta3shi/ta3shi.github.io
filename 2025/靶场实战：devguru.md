@@ -14,7 +14,7 @@ cover: '![](./img/use_cover.jpg)'
 theme: xsj-fall
 ---
 
-靶场实战：devguru
+
 
 靶机地址[devguru](https://www.vulnhub.com/entry/devguru-1,620/)
 
