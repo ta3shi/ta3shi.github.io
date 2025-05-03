@@ -2,9 +2,9 @@
 title: 靶场实战：devguru
 date: 2025-5-3 23:29:53
 tags: 
-	-  linux提权
-	-  web渗透
-	-  vulnhub靶场
+-  linux提权
+-  web渗透  
+-  vulnhub靶场
 category: 靶场实战
 renderNumberedHeading: true
 slug:  storywriter/tutorial
@@ -13,8 +13,6 @@ color: 'var(--base0A)'
 cover: '![](./img/use_cover.jpg)'
 theme: xsj-fall
 ---
-
-
 
 靶机地址[devguru](https://www.vulnhub.com/entry/devguru-1,620/)
 
