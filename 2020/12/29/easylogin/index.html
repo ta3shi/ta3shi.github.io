@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="000 登录页面对着登录页面一通乱注，没有啥结果，抓包一看，是JWT，用工具没解出来。只能无奈看wp。（菜是原罪 001 知识点koa框架的源代码访问&#x2F;controllers&#x2F;api.js得到主要逻辑代码(这个题也用不到，随便试一下就能猜到需要admin用户才能获取flag) jwt知识点jwt即是json web token一般由三个部分组成，header、payload、s">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HFCTF2020]EasyLogin">
+<meta property="og:url" content="https://ta3shi.github.io/2020/12/29/easylogin/index.html">
+<meta property="og:site_name" content="ta3shi 个人学习自用">
+<meta property="og:description" content="000 登录页面对着登录页面一通乱注，没有啥结果，抓包一看，是JWT，用工具没解出来。只能无奈看wp。（菜是原罪 001 知识点koa框架的源代码访问&#x2F;controllers&#x2F;api.js得到主要逻辑代码(这个题也用不到，随便试一下就能猜到需要admin用户才能获取flag) jwt知识点jwt即是json web token一般由三个部分组成，header、payload、s">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-12-28T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-05-13T13:24:20.452Z">
+<meta property="article:author" content="ta3shi">
+<meta property="article:tag" content="ctfweb">
+<meta property="article:tag" content="jwt">
+<meta property="article:tag" content="nodejs">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>HFCTF2020]EasyLogin</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/tags/">Tags</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Categories</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2021/01/06/%E5%8F%8D%E5%BC%B9shell/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2020/12/29/Cybelpunk/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://ta3shi.github.io/2020/12/29/easylogin/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://ta3shi.github.io/2020/12/29/easylogin/&text=HFCTF2020]EasyLogin"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://ta3shi.github.io/2020/12/29/easylogin/&title=HFCTF2020]EasyLogin"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://ta3shi.github.io/2020/12/29/easylogin/&is_video=false&description=HFCTF2020]EasyLogin"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=HFCTF2020]EasyLogin&body=Check out this article: https://ta3shi.github.io/2020/12/29/easylogin/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://ta3shi.github.io/2020/12/29/easylogin/&title=HFCTF2020]EasyLogin"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://ta3shi.github.io/2020/12/29/easylogin/&title=HFCTF2020]EasyLogin"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://ta3shi.github.io/2020/12/29/easylogin/&title=HFCTF2020]EasyLogin"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://ta3shi.github.io/2020/12/29/easylogin/&title=HFCTF2020]EasyLogin"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://ta3shi.github.io/2020/12/29/easylogin/&name=HFCTF2020]EasyLogin&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://ta3shi.github.io/2020/12/29/easylogin/&t=HFCTF2020]EasyLogin"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#000-%E7%99%BB%E5%BD%95%E9%A1%B5%E9%9D%A2"><span class="toc-number">1.</span> <span class="toc-text">000 登录页面</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#001-%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="toc-number">2.</span> <span class="toc-text">001 知识点</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#koa%E6%A1%86%E6%9E%B6%E7%9A%84%E6%BA%90%E4%BB%A3%E7%A0%81"><span class="toc-number">2.1.</span> <span class="toc-text">koa框架的源代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#jwt%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="toc-number">2.2.</span> <span class="toc-text">jwt知识点</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#header"><span class="toc-number">2.2.1.</span> <span class="toc-text">header</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#payload"><span class="toc-number">2.2.2.</span> <span class="toc-text">payload</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Signature"><span class="toc-number">2.2.3.</span> <span class="toc-text">Signature</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#010-%E6%9C%AC%E9%A2%98%E8%80%83%E7%82%B9"><span class="toc-number">3.</span> <span class="toc-text">010 本题考点</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        HFCTF2020]EasyLogin
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">ta3shi</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-12-28T16:00:00.000Z" class="dt-published" itemprop="datePublished">2020-12-29</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/ctf%E7%BB%83%E4%B9%A0/">ctf练习</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/ctfweb/" rel="tag">ctfweb</a>, <a class="p-category" href="/tags/jwt/" rel="tag">jwt</a>, <a class="p-category" href="/tags/nodejs/" rel="tag">nodejs</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h1 id="000-登录页面"><a href="#000-登录页面" class="headerlink" title="000 登录页面"></a>000 登录页面</h1><p>对着登录页面一通乱注，没有啥结果，抓包一看，是JWT，用工具没解出来。只能无奈看wp。（菜是原罪</p>
+<h1 id="001-知识点"><a href="#001-知识点" class="headerlink" title="001 知识点"></a>001 知识点</h1><h2 id="koa框架的源代码"><a href="#koa框架的源代码" class="headerlink" title="koa框架的源代码"></a>koa框架的源代码</h2><p>访问&#x2F;controllers&#x2F;api.js得到主要逻辑代码<br>(这个题也用不到，随便试一下就能猜到需要admin用户才能获取flag)</p>
+<h2 id="jwt知识点"><a href="#jwt知识点" class="headerlink" title="jwt知识点"></a>jwt知识点</h2><p>jwt即是json web token<br>一般由三个部分组成，header、payload、signature</p>
+<h3 id="header"><a href="#header" class="headerlink" title="header"></a>header</h3><p>一般是以下格式</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">	&quot;alg&quot;:&quot;HS256&quot;,</span><br><span class="line">	&quot;typ&quot;:&quot;JWT&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后base64编码得到</p>
+<h3 id="payload"><a href="#payload" class="headerlink" title="payload"></a>payload</h3><p>JWT的第二部分是payload，它包含声明（要求）。声明是关于实体(通常是用户)和其他数据的声明。声明有三种类型: registered, public 和 private。</p>
+<pre><code>Registered claims : 这里有一组预定义的声明，它们不是强制的，但是推荐。比如：iss (issuer), exp (expiration time), sub (subject), aud (audience)等。
+Public claims : 可以随意定义。
+Private claims : 用于在同意使用它们的各方之间共享信息，并且不是注册的或公开的声明。
+</code></pre>
+<h3 id="Signature"><a href="#Signature" class="headerlink" title="Signature"></a>Signature</h3><p>为了得到签名部分，你必须有编码过的header、编码过的payload、一个秘钥，签名算法是header中指定的那个，然对它们签名即可。</p>
+<p>例如：</p>
+<p>HMACSHA256(base64UrlEncode(header) + “.” + base64UrlEncode(payload), secret)</p>
+<p>签名是用于验证消息在传递过程中有没有被更改，并且，对于使用私钥签名的token，它还可以验证JWT的发送方是否为它所称的发送方。</p>
+<h1 id="010-本题考点"><a href="#010-本题考点" class="headerlink" title="010 本题考点"></a>010 本题考点</h1><p>nodejs的jwt缺陷，当alg设置为none是不会验证signature部分，我们直接伪造就行了。</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/tags/">Tags</a></li>
+        
+          <li><a href="/categories/">Categories</a></li>
+        
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#000-%E7%99%BB%E5%BD%95%E9%A1%B5%E9%9D%A2"><span class="toc-number">1.</span> <span class="toc-text">000 登录页面</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#001-%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="toc-number">2.</span> <span class="toc-text">001 知识点</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#koa%E6%A1%86%E6%9E%B6%E7%9A%84%E6%BA%90%E4%BB%A3%E7%A0%81"><span class="toc-number">2.1.</span> <span class="toc-text">koa框架的源代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#jwt%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="toc-number">2.2.</span> <span class="toc-text">jwt知识点</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#header"><span class="toc-number">2.2.1.</span> <span class="toc-text">header</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#payload"><span class="toc-number">2.2.2.</span> <span class="toc-text">payload</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Signature"><span class="toc-number">2.2.3.</span> <span class="toc-text">Signature</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#010-%E6%9C%AC%E9%A2%98%E8%80%83%E7%82%B9"><span class="toc-number">3.</span> <span class="toc-text">010 本题考点</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://ta3shi.github.io/2020/12/29/easylogin/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://ta3shi.github.io/2020/12/29/easylogin/&text=HFCTF2020]EasyLogin"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://ta3shi.github.io/2020/12/29/easylogin/&title=HFCTF2020]EasyLogin"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://ta3shi.github.io/2020/12/29/easylogin/&is_video=false&description=HFCTF2020]EasyLogin"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=HFCTF2020]EasyLogin&body=Check out this article: https://ta3shi.github.io/2020/12/29/easylogin/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://ta3shi.github.io/2020/12/29/easylogin/&title=HFCTF2020]EasyLogin"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://ta3shi.github.io/2020/12/29/easylogin/&title=HFCTF2020]EasyLogin"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://ta3shi.github.io/2020/12/29/easylogin/&title=HFCTF2020]EasyLogin"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://ta3shi.github.io/2020/12/29/easylogin/&title=HFCTF2020]EasyLogin"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://ta3shi.github.io/2020/12/29/easylogin/&name=HFCTF2020]EasyLogin&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://ta3shi.github.io/2020/12/29/easylogin/&t=HFCTF2020]EasyLogin"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2025
+    ta3shi
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+      --><li><a href="/">Home</a></li><!--
+    --><!--
+      --><li><a href="/about/">About</a></li><!--
+    --><!--
+      --><li><a href="/tags/">Tags</a></li><!--
+    --><!--
+      --><li><a href="/categories/">Categories</a></li><!--
+    --><!--
+      --><li><a href="/search/">Search</a></li><!--
+    -->
+      </ul>
+      <ul>
+        
+          <!-- 不蒜子统计 -->
+          <span id="busuanzi_container_site_pv">
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+          </span>
+          <span class="post-meta-divider">|</span>
+          <span id="busuanzi_container_site_uv" style='display:none'>
+                  本站访客数<span id="busuanzi_value_site_uv"></span>人
+          </span>
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        
+      </ul>
+    </nav>
+  </div>
+  
+</footer>
+
+
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="(未完，用到什么更什么….) __destruct()是PHP中的析构方法，在对象被销毁时被调用，程序结束时会被自动调用销毁对象。 函数中发现了echo，那么要利用echo $this-&gt;test。 __toString方法在将一个对象转化成字符串时被自动调用，比如进行echo，print操作时会被调用并返回一个字符串。 利用$this-&gt;str[‘str’]-&gt;source;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="php魔术方法">
+<meta property="og:url" content="https://ta3shi.github.io/2020/11/20/%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/index.html">
+<meta property="og:site_name" content="ta3shi 个人学习自用">
+<meta property="og:description" content="(未完，用到什么更什么….) __destruct()是PHP中的析构方法，在对象被销毁时被调用，程序结束时会被自动调用销毁对象。 函数中发现了echo，那么要利用echo $this-&gt;test。 __toString方法在将一个对象转化成字符串时被自动调用，比如进行echo，print操作时会被调用并返回一个字符串。 利用$this-&gt;str[‘str’]-&gt;source;">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-11-19T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-05-13T13:33:05.194Z">
+<meta property="article:author" content="ta3shi">
+<meta property="article:tag" content="ctfweb">
+<meta property="article:tag" content="php">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>php魔术方法</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/tags/">Tags</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Categories</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2020/11/26/SUCTF2019EasyWeb/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2020/11/08/202011-8/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://ta3shi.github.io/2020/11/20/%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://ta3shi.github.io/2020/11/20/%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/&text=php魔术方法"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://ta3shi.github.io/2020/11/20/%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/&title=php魔术方法"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://ta3shi.github.io/2020/11/20/%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/&is_video=false&description=php魔术方法"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=php魔术方法&body=Check out this article: https://ta3shi.github.io/2020/11/20/%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://ta3shi.github.io/2020/11/20/%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/&title=php魔术方法"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://ta3shi.github.io/2020/11/20/%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/&title=php魔术方法"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://ta3shi.github.io/2020/11/20/%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/&title=php魔术方法"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://ta3shi.github.io/2020/11/20/%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/&title=php魔术方法"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://ta3shi.github.io/2020/11/20/%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/&name=php魔术方法&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://ta3shi.github.io/2020/11/20/%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/&t=php魔术方法"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#destruct"><span class="toc-number">1.</span> <span class="toc-text">__destruct()</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#toString-NaN"><span class="toc-number">2.</span> <span class="toc-text">__toString</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#get%EF%BC%88%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">__get（）</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        php魔术方法
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">ta3shi</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-11-19T16:00:00.000Z" class="dt-published" itemprop="datePublished">2020-11-20</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/ctf%E7%BB%83%E4%B9%A0/">ctf练习</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/ctfweb/" rel="tag">ctfweb</a>, <a class="p-category" href="/tags/php/" rel="tag">php</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>(未完，用到什么更什么….)</p>
+<h1 id="destruct"><a href="#destruct" class="headerlink" title="__destruct()"></a>__destruct()</h1><p>是PHP中的析构方法，在对象被销毁时被调用，程序结束时会被自动调用销毁对象。</p>
+<p>函数中发现了echo，那么要利用echo $this-&gt;test。</p>
+<h1 id="toString-NaN"><a href="#toString-NaN" class="headerlink" title="__toString"></a>__toString</h1><p>方法在将一个对象转化成字符串时被自动调用，比如进行echo，print操作时会被调用并返回一个字符串。</p>
+<p>利用$this-&gt;str[‘str’]-&gt;source;</p>
+<h1 id="get（）"><a href="#get（）" class="headerlink" title="__get（）"></a>__get（）</h1><p>当未定义的属性或没有权限访问的属性被访问时该方法被调用。</p>
+<p>利用 this-&gt;get –&gt;this−&gt;get−−&gt;this-&gt;file_get(value); –&gt;base64_encode(file_get_contents(value);</p>
+<p>__wakeup() &#x2F;&#x2F;使用unserialize时触发<br>__sleep() &#x2F;&#x2F;使用serialize时触发<br>__destruct() &#x2F;&#x2F;对象被销毁时触发<br>__call() &#x2F;&#x2F;在对象上下文中调用不可访问的方法时触发<br>__callStatic() &#x2F;&#x2F;在静态上下文中调用不可访问的方法时触发<br>__get() &#x2F;&#x2F;用于从不可访问的属性读取数据<br>__set() &#x2F;&#x2F;用于将数据写入不可访问的属性<br>__isset() &#x2F;&#x2F;在不可访问的属性上调用isset()或empty()触发<br>__unset() &#x2F;&#x2F;在不可访问的属性上使用unset()时触发<br>__toString() &#x2F;&#x2F;把类当作字符串使用时触发<br>__invoke() &#x2F;&#x2F;当脚本尝试将对象调用为函数时触发</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/tags/">Tags</a></li>
+        
+          <li><a href="/categories/">Categories</a></li>
+        
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#destruct"><span class="toc-number">1.</span> <span class="toc-text">__destruct()</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#toString-NaN"><span class="toc-number">2.</span> <span class="toc-text">__toString</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#get%EF%BC%88%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">__get（）</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://ta3shi.github.io/2020/11/20/%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://ta3shi.github.io/2020/11/20/%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/&text=php魔术方法"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://ta3shi.github.io/2020/11/20/%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/&title=php魔术方法"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://ta3shi.github.io/2020/11/20/%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/&is_video=false&description=php魔术方法"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=php魔术方法&body=Check out this article: https://ta3shi.github.io/2020/11/20/%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://ta3shi.github.io/2020/11/20/%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/&title=php魔术方法"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://ta3shi.github.io/2020/11/20/%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/&title=php魔术方法"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://ta3shi.github.io/2020/11/20/%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/&title=php魔术方法"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://ta3shi.github.io/2020/11/20/%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/&title=php魔术方法"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://ta3shi.github.io/2020/11/20/%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/&name=php魔术方法&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://ta3shi.github.io/2020/11/20/%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/&t=php魔术方法"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2025
+    ta3shi
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+      --><li><a href="/">Home</a></li><!--
+    --><!--
+      --><li><a href="/about/">About</a></li><!--
+    --><!--
+      --><li><a href="/tags/">Tags</a></li><!--
+    --><!--
+      --><li><a href="/categories/">Categories</a></li><!--
+    --><!--
+      --><li><a href="/search/">Search</a></li><!--
+    -->
+      </ul>
+      <ul>
+        
+          <!-- 不蒜子统计 -->
+          <span id="busuanzi_container_site_pv">
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+          </span>
+          <span class="post-meta-divider">|</span>
+          <span id="busuanzi_container_site_uv" style='display:none'>
+                  本站访客数<span id="busuanzi_value_site_uv"></span>人
+          </span>
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        
+      </ul>
+    </nav>
+  </div>
+  
+</footer>
+
+
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

