@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="靶机： dr4g0n-b4ll 问题描述在对该靶机进行渗透时发现，扫描不到靶机ip地址，我搜了一下，大致原因是作者制作靶场时使用的网卡和我们虚拟机支持的网卡不一致。 修复方法进入单用户模式重启靶机，在出现GRUP界面时，按e进入编辑模式找到ro quiet这段，把ro改成rw single init&#x3D;&#x2F;bin&#x2F;bash然后按下ctrl+x启动，会得到一个单用户模式，init&#x3D;&#x2F;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="virtualBox 扫不到vulnhub的靶机ip的问题">
+<meta property="og:url" content="https://ta3shi.github.io/2025/05/23/virtualBox%E6%89%AB%E4%B8%8D%E5%88%B0%E9%9D%B6%E6%9C%BAip%E7%9A%84%E9%97%AE%E9%A2%98/index.html">
+<meta property="og:site_name" content="ta3shi 个人学习自用">
+<meta property="og:description" content="靶机： dr4g0n-b4ll 问题描述在对该靶机进行渗透时发现，扫描不到靶机ip地址，我搜了一下，大致原因是作者制作靶场时使用的网卡和我们虚拟机支持的网卡不一致。 修复方法进入单用户模式重启靶机，在出现GRUP界面时，按e进入编辑模式找到ro quiet这段，把ro改成rw single init&#x3D;&#x2F;bin&#x2F;bash然后按下ctrl+x启动，会得到一个单用户模式，init&#x3D;&#x2F;">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1748016087110.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1748016262400.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1748016383380.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1748016850999.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1748017074430.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1748017132339.png">
+<meta property="article:published_time" content="2025-05-22T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-06-05T16:51:43.566Z">
+<meta property="article:author" content="ta3shi">
+<meta property="article:tag" content="linux提权">
+<meta property="article:tag" content="vulnhub靶场">
+<meta property="article:tag" content="靶场实战">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1748016087110.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>virtualBox 扫不到vulnhub的靶机ip的问题</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/tags/">Tags</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Categories</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2025/06/03/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Asickos%201.1/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2025/05/07/DeathStar-1/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://ta3shi.github.io/2025/05/23/virtualBox%E6%89%AB%E4%B8%8D%E5%88%B0%E9%9D%B6%E6%9C%BAip%E7%9A%84%E9%97%AE%E9%A2%98/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://ta3shi.github.io/2025/05/23/virtualBox%E6%89%AB%E4%B8%8D%E5%88%B0%E9%9D%B6%E6%9C%BAip%E7%9A%84%E9%97%AE%E9%A2%98/&text=virtualBox 扫不到vulnhub的靶机ip的问题"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://ta3shi.github.io/2025/05/23/virtualBox%E6%89%AB%E4%B8%8D%E5%88%B0%E9%9D%B6%E6%9C%BAip%E7%9A%84%E9%97%AE%E9%A2%98/&title=virtualBox 扫不到vulnhub的靶机ip的问题"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://ta3shi.github.io/2025/05/23/virtualBox%E6%89%AB%E4%B8%8D%E5%88%B0%E9%9D%B6%E6%9C%BAip%E7%9A%84%E9%97%AE%E9%A2%98/&is_video=false&description=virtualBox 扫不到vulnhub的靶机ip的问题"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=virtualBox 扫不到vulnhub的靶机ip的问题&body=Check out this article: https://ta3shi.github.io/2025/05/23/virtualBox%E6%89%AB%E4%B8%8D%E5%88%B0%E9%9D%B6%E6%9C%BAip%E7%9A%84%E9%97%AE%E9%A2%98/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://ta3shi.github.io/2025/05/23/virtualBox%E6%89%AB%E4%B8%8D%E5%88%B0%E9%9D%B6%E6%9C%BAip%E7%9A%84%E9%97%AE%E9%A2%98/&title=virtualBox 扫不到vulnhub的靶机ip的问题"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://ta3shi.github.io/2025/05/23/virtualBox%E6%89%AB%E4%B8%8D%E5%88%B0%E9%9D%B6%E6%9C%BAip%E7%9A%84%E9%97%AE%E9%A2%98/&title=virtualBox 扫不到vulnhub的靶机ip的问题"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://ta3shi.github.io/2025/05/23/virtualBox%E6%89%AB%E4%B8%8D%E5%88%B0%E9%9D%B6%E6%9C%BAip%E7%9A%84%E9%97%AE%E9%A2%98/&title=virtualBox 扫不到vulnhub的靶机ip的问题"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://ta3shi.github.io/2025/05/23/virtualBox%E6%89%AB%E4%B8%8D%E5%88%B0%E9%9D%B6%E6%9C%BAip%E7%9A%84%E9%97%AE%E9%A2%98/&title=virtualBox 扫不到vulnhub的靶机ip的问题"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://ta3shi.github.io/2025/05/23/virtualBox%E6%89%AB%E4%B8%8D%E5%88%B0%E9%9D%B6%E6%9C%BAip%E7%9A%84%E9%97%AE%E9%A2%98/&name=virtualBox 扫不到vulnhub的靶机ip的问题&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://ta3shi.github.io/2025/05/23/virtualBox%E6%89%AB%E4%B8%8D%E5%88%B0%E9%9D%B6%E6%9C%BAip%E7%9A%84%E9%97%AE%E9%A2%98/&t=virtualBox 扫不到vulnhub的靶机ip的问题"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">问题描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">修复方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E5%85%A5%E5%8D%95%E7%94%A8%E6%88%B7%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.1.</span> <span class="toc-text">进入单用户模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E7%BD%91%E5%8D%A1%E9%85%8D%E7%BD%AE"><span class="toc-number">2.2.</span> <span class="toc-text">修改网卡配置</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        virtualBox 扫不到vulnhub的靶机ip的问题
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">ta3shi</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-05-22T16:00:00.000Z" class="dt-published" itemprop="datePublished">2025-05-23</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98/">靶场实战</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/linux%E6%8F%90%E6%9D%83/" rel="tag">linux提权</a>, <a class="p-category" href="/tags/vulnhub%E9%9D%B6%E5%9C%BA/" rel="tag">vulnhub靶场</a>, <a class="p-category" href="/tags/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98/" rel="tag">靶场实战</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>靶机： <a target="_blank" rel="noopener" href="https://www.vulnhub.com/entry/dr4g0n-b4ll-1,646/">dr4g0n-b4ll</a></p>
+<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>在对该靶机进行渗透时发现，扫描不到靶机ip地址，我搜了一下，大致原因是作者制作靶场时使用的网卡和我们虚拟机支持的网卡不一致。</p>
+<h2 id="修复方法"><a href="#修复方法" class="headerlink" title="修复方法"></a>修复方法</h2><h3 id="进入单用户模式"><a href="#进入单用户模式" class="headerlink" title="进入单用户模式"></a>进入单用户模式</h3><p>重启靶机，在出现GRUP界面时，按e进入编辑模式<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1748016087110.png"><br>找到<code>ro quiet</code>这段，把ro改成<code>rw single init=/bin/bash</code><br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1748016262400.png"><br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1748016383380.png"><br>然后按下ctrl+x启动，会得到一个单用户模式，init&#x3D;&#x2F;bin&#x2F;bash直接 进入bash，绕过&#x2F;systemd&#x2F;init的主流程，rw参数将根文件系统挂载改为可读写，运行修改系统配置，如重置密码等</p>
+<h3 id="修改网卡配置"><a href="#修改网卡配置" class="headerlink" title="修改网卡配置"></a>修改网卡配置</h3><p>启动之后使用<code>ip a</code>查看当前网卡，我这里是enp0s3<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1748016850999.png"><br>修改配置文件<code>sudo vi /etc/network/interfaces</code>将原来的ens33修改为enp0s3<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1748017074430.png"><br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1748017132339.png"><br>关闭重启之后即可（强制退出也可以）</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/tags/">Tags</a></li>
+        
+          <li><a href="/categories/">Categories</a></li>
+        
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">问题描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">修复方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E5%85%A5%E5%8D%95%E7%94%A8%E6%88%B7%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.1.</span> <span class="toc-text">进入单用户模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E7%BD%91%E5%8D%A1%E9%85%8D%E7%BD%AE"><span class="toc-number">2.2.</span> <span class="toc-text">修改网卡配置</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://ta3shi.github.io/2025/05/23/virtualBox%E6%89%AB%E4%B8%8D%E5%88%B0%E9%9D%B6%E6%9C%BAip%E7%9A%84%E9%97%AE%E9%A2%98/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://ta3shi.github.io/2025/05/23/virtualBox%E6%89%AB%E4%B8%8D%E5%88%B0%E9%9D%B6%E6%9C%BAip%E7%9A%84%E9%97%AE%E9%A2%98/&text=virtualBox 扫不到vulnhub的靶机ip的问题"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://ta3shi.github.io/2025/05/23/virtualBox%E6%89%AB%E4%B8%8D%E5%88%B0%E9%9D%B6%E6%9C%BAip%E7%9A%84%E9%97%AE%E9%A2%98/&title=virtualBox 扫不到vulnhub的靶机ip的问题"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://ta3shi.github.io/2025/05/23/virtualBox%E6%89%AB%E4%B8%8D%E5%88%B0%E9%9D%B6%E6%9C%BAip%E7%9A%84%E9%97%AE%E9%A2%98/&is_video=false&description=virtualBox 扫不到vulnhub的靶机ip的问题"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=virtualBox 扫不到vulnhub的靶机ip的问题&body=Check out this article: https://ta3shi.github.io/2025/05/23/virtualBox%E6%89%AB%E4%B8%8D%E5%88%B0%E9%9D%B6%E6%9C%BAip%E7%9A%84%E9%97%AE%E9%A2%98/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://ta3shi.github.io/2025/05/23/virtualBox%E6%89%AB%E4%B8%8D%E5%88%B0%E9%9D%B6%E6%9C%BAip%E7%9A%84%E9%97%AE%E9%A2%98/&title=virtualBox 扫不到vulnhub的靶机ip的问题"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://ta3shi.github.io/2025/05/23/virtualBox%E6%89%AB%E4%B8%8D%E5%88%B0%E9%9D%B6%E6%9C%BAip%E7%9A%84%E9%97%AE%E9%A2%98/&title=virtualBox 扫不到vulnhub的靶机ip的问题"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://ta3shi.github.io/2025/05/23/virtualBox%E6%89%AB%E4%B8%8D%E5%88%B0%E9%9D%B6%E6%9C%BAip%E7%9A%84%E9%97%AE%E9%A2%98/&title=virtualBox 扫不到vulnhub的靶机ip的问题"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://ta3shi.github.io/2025/05/23/virtualBox%E6%89%AB%E4%B8%8D%E5%88%B0%E9%9D%B6%E6%9C%BAip%E7%9A%84%E9%97%AE%E9%A2%98/&title=virtualBox 扫不到vulnhub的靶机ip的问题"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://ta3shi.github.io/2025/05/23/virtualBox%E6%89%AB%E4%B8%8D%E5%88%B0%E9%9D%B6%E6%9C%BAip%E7%9A%84%E9%97%AE%E9%A2%98/&name=virtualBox 扫不到vulnhub的靶机ip的问题&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://ta3shi.github.io/2025/05/23/virtualBox%E6%89%AB%E4%B8%8D%E5%88%B0%E9%9D%B6%E6%9C%BAip%E7%9A%84%E9%97%AE%E9%A2%98/&t=virtualBox 扫不到vulnhub的靶机ip的问题"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2025
+    ta3shi
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+      --><li><a href="/">Home</a></li><!--
+    --><!--
+      --><li><a href="/about/">About</a></li><!--
+    --><!--
+      --><li><a href="/tags/">Tags</a></li><!--
+    --><!--
+      --><li><a href="/categories/">Categories</a></li><!--
+    --><!--
+      --><li><a href="/search/">Search</a></li><!--
+    -->
+      </ul>
+      <ul>
+        
+          <!-- 不蒜子统计 -->
+          <span id="busuanzi_container_site_pv">
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+          </span>
+          <span class="post-meta-divider">|</span>
+          <span id="busuanzi_container_site_uv" style='display:none'>
+                  本站访客数<span id="busuanzi_value_site_uv"></span>人
+          </span>
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        
+      </ul>
+    </nav>
+  </div>
+  
+</footer>
+
+
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
